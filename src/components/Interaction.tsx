@@ -1,3 +1,4 @@
+import { sendMessageToOpenAI } from '../api/chat';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
@@ -13,15 +14,24 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
   const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState<string[]>([]);
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    setIsSending(true);
-    setTimeout(() => {
-      setMessages([...messages, message]);
-      setMessage('');
-      setIsSending(false);
-    }, 500);
-  };
+const handleSend = async () => {
+  if (!message.trim()) return;
+
+  setIsSending(true);
+  setMessages((prev) => [...prev, message]);
+
+  try {
+    const reply = await sendMessageToOpenAI(message);
+    setMessages((prev) => [...prev, reply]);
+  } catch (error) {
+    console.error("Erro na chamada da API:", error);
+    setMessages((prev) => [...prev, "Erro ao conectar com a IA..."]);
+  }
+
+  setMessage('');
+  setIsSending(false);
+};
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
