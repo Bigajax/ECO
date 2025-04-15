@@ -1,35 +1,26 @@
 export async function sendMessageToOpenAI(message) {
-  try {
-    console.log("API Key:", import.meta.env.VITE_OPENAI_API_KEY);  // Verifica se a chave está sendo lida corretamente
+  console.log("API Key:", import.meta.env.VITE_OPENAI_API_KEY);
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",  // Ou qualquer outro modelo que você tenha permissão de usar
-        messages: [{ role: "user", content: message }],
-      }),
-    });
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+      "HTTP-Referer": "http://localhost:5173",  // ou a URL do seu app se estiver publicado
+      "X-Title": "MeuAppOpenRouter",            // nome do seu projeto
+    },
+    body: JSON.stringify({
+      model: "openai/gpt-3.5-turbo",  // Esse é o nome do modelo no OpenRouter
+      messages: [{ role: "user", content: message }],
+    }),
+  });
 
-    // Verifica se a resposta foi bem-sucedida (status 200)
-    if (!response.ok) {
-      throw new Error(`Erro na API: ${response.statusText}`);
-    }
+  const data = await response.json();
 
-    const data = await response.json();
-
-    // Verifica se a estrutura da resposta é válida
-    if (data.choices && data.choices[0] && data.choices[0].message) {
-      return data.choices[0].message.content;
-    } else {
-      throw new Error("Resposta inesperada da API");
-    }
-
-  } catch (error) {
-    console.error("Erro ao enviar a mensagem:", error);
-    throw error;  // Lança o erro para que o código que chama essa função possa tratá-lo
+  if (!response.ok) {
+    console.error("Erro da API:", data);
+    throw new Error(data.error?.message || "Erro desconhecido");
   }
+
+  return data.choices[0].message.content;
 }
