@@ -1,57 +1,64 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { MeshDistortMaterial, OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 
-const Bubble3D = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+function FloatingBubble() {
+  const mesh = useRef<THREE.Mesh>(null);
+  const [hovered, setHovered] = useState(false);
+  const [pulse, setPulse] = useState(false);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  // Pulsação contínua
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (mesh.current) {
+      // Flutuação suave no eixo Y
+      mesh.current.position.y = Math.sin(time * 1.5) * 0.1;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      // Pulsação leve (escala)
+      const scale = 1 + Math.sin(time * 2) * 0.02;
+      mesh.current.scale.set(scale, scale, scale);
+    }
+  });
 
-    let width = canvas.width = canvas.offsetWidth;
-    let height = canvas.height = canvas.offsetHeight;
-
-    let t = 0;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      const r = 50 + 10 * Math.sin(t);
-      const gradient = ctx.createRadialGradient(width/2, height/2, r * 0.2, width/2, height/2, r);
-      gradient.addColorStop(0, '#ffffff');
-      gradient.addColorStop(1, '#94a3b8');
-
-      ctx.beginPath();
-      ctx.arc(width / 2, height / 2, r, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      t += 0.05;
-      requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    const handleResize = () => {
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const handleClick = () => {
+    setPulse(true);
+    setTimeout(() => setPulse(false), 1000); // Pulso curto
+  };
 
   return (
-    <div className="w-full flex justify-center mb-6">
-      <canvas
-        ref={canvasRef}
-        className="w-32 h-32 md:w-48 md:h-48"
-        style={{ filter: 'blur(1px)' }}
+    <mesh
+      ref={mesh}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      onClick={handleClick}
+    >
+      <sphereGeometry args={[1, 64, 64]} />
+      <MeshDistortMaterial
+        color={'#a5b4fc'} // Azul suave
+        distort={0.3} // Variação da superfície
+        speed={2}
+        roughness={0.05}
+        metalness={0.6}
+        transparent
+        opacity={0.7}
+        emissive={pulse ? new THREE.Color('#c084fc') : new THREE.Color(0x000000)}
+        emissiveIntensity={pulse ? 0.6 : 0.1}
+        envMapIntensity={1}
       />
+    </mesh>
+  );
+}
+
+export default function BubbleCanvas() {
+  return (
+    <div style={{ height: '100vh', background: '#f0f4f8' }}>
+      <Canvas camera={{ position: [0, 0, 3] }}>
+        <ambientLight intensity={0.6} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <FloatingBubble />
+        <OrbitControls enableZoom={false} enablePan={false} />
+      </Canvas>
     </div>
   );
-};
-
-export default Bubble3D;
+}
