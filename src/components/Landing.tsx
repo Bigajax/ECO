@@ -13,8 +13,7 @@ function Landing({ onEnter }: LandingProps) {
           ECO
         </h1>
         <p className="text-lg text-gray-300 mb-12 text-center">
-          Uma inteligência artificial que espelha suas emoções, 
-          pensamentos e comportamentos — sem julgamentos.
+          Uma inteligência artificial que espelha suas emoções e comportamentos — sem julgamentos.
         </p>
         <motion.button
           whileHover={{ scale: 1.02 }}
