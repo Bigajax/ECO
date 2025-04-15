@@ -1,4 +1,4 @@
-import Bubble3D from '@/components/Bubble3D'; // ajuste o caminho se necessário
+import Bubble3D from '@/components/Bubble3D';
 import { sendMessageToOpenAI } from '../api/chat';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -18,20 +18,19 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
   const handleSend = async () => {
     if (!message.trim()) return;
 
-    const userMessage = message;
-    setMessage('');
     setIsSending(true);
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, message]);
 
     try {
-      const reply = await sendMessageToOpenAI(userMessage);
+      const reply = await sendMessageToOpenAI(message);
       setMessages((prev) => [...prev, reply]);
     } catch (error) {
       console.error("Erro na chamada da API:", error);
       setMessages((prev) => [...prev, "Erro ao conectar com a IA..."]);
-    } finally {
-      setIsSending(false);
     }
+
+    setMessage('');
+    setIsSending(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -42,73 +41,65 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col p-4">
+    <div className="min-h-screen flex flex-col p-6">
       <button 
         onClick={onBack}
-        className="text-white/70 hover:text-white flex items-center gap-2 mb-6"
+        className="text-white/70 hover:text-white flex items-center gap-2 mb-8"
       >
         <ArrowLeft size={20} />
         Voltar
       </button>
 
-      {/* BOLHA FIXA NO TOPO CENTRAL */}
-      {isReflecting && (
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-10">
-          <Bubble3D />
-        </div>
-      )}
+      <div className="flex-1 flex flex-col items-center justify-center gap-6">
+        <Bubble3D />
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-4 mt-24">
         {!isReflecting ? (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-md"
+            className="w-full max-w-lg"
           >
             <button
               onClick={() => setIsReflecting(true)}
-              className="w-full bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center
-                         hover:bg-white/15 transition-all"
+              className="w-full bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center
+                       hover:bg-white/15 transition-all"
             >
-              <h2 className="text-xl font-light mb-2">Momento de Reflexão</h2>
-              <p className="text-gray-400 text-sm">
+              <h2 className="text-2xl font-light mb-4">Momento de Reflexão</h2>
+              <p className="text-gray-400">
                 Clique para compartilhar seus pensamentos e sentimentos
               </p>
             </button>
           </motion.div>
         ) : (
           <motion.div
-            initial={{ y: 10, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="w-full max-w-md space-y-3"
+            className="w-full max-w-lg space-y-4"
           >
-            {/* Chat scroll */}
             {messages.length > 0 && (
-              <div className="space-y-2 max-h-[35vh] overflow-y-auto pr-1">
+              <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
                 {messages.map((msg, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/5 backdrop-blur-md rounded-lg p-2 text-sm text-white/90"
+                    className="bg-white/5 backdrop-blur-lg rounded-xl p-3 text-sm text-white/90"
                   >
                     {msg}
                   </motion.div>
                 ))}
               </div>
             )}
-
-            {/* Caixa de texto */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-2">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-3">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="O que você está sentindo agora?"
-                className="w-full h-12 bg-transparent border-none outline-none resize-none
-                         text-white placeholder-gray-400 text-sm leading-tight"
+                className="w-full h-20 bg-transparent border-none outline-none resize-none
+                         text-white placeholder-gray-400 text-sm"
               />
-              <div className="flex justify-end mt-1">
+              <div className="flex justify-end pt-2">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -129,4 +120,3 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
 }
 
 export default Interaction;
-
