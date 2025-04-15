@@ -1,4 +1,6 @@
 export async function sendMessageToOpenAI(message) {
+  console.log("API Key:", import.meta.env.VITE_OPENAI_API_KEY);  // Adiciona esse log para testar a variável de ambiente
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -14,4 +16,3 @@ export async function sendMessageToOpenAI(message) {
   const data = await response.json();
   return data.choices[0].message.content;
 }
-
