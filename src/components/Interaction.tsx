@@ -1,4 +1,4 @@
-import Bubble3D from '@/components/Bubble3D'; // ajuste o caminho se estiver diferente
+import Bubble3D from '@/components/Bubble3D'; // ajuste o caminho se necessário
 import { sendMessageToOpenAI } from '../api/chat';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -15,24 +15,24 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
   const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState<string[]>([]);
 
-const handleSend = async () => {
-  if (!message.trim()) return;
+  const handleSend = async () => {
+    if (!message.trim()) return;
 
-  setIsSending(true);
-  setMessages((prev) => [...prev, message]);
+    const userMessage = message;
+    setMessage('');
+    setIsSending(true);
+    setMessages((prev) => [...prev, userMessage]);
 
-  try {
-    const reply = await sendMessageToOpenAI(message);
-    setMessages((prev) => [...prev, reply]);
-  } catch (error) {
-    console.error("Erro na chamada da API:", error);
-    setMessages((prev) => [...prev, "Erro ao conectar com a IA..."]);
-  }
-
-  setMessage('');
-  setIsSending(false);
-};
-
+    try {
+      const reply = await sendMessageToOpenAI(userMessage);
+      setMessages((prev) => [...prev, reply]);
+    } catch (error) {
+      console.error("Erro na chamada da API:", error);
+      setMessages((prev) => [...prev, "Erro ao conectar com a IA..."]);
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -75,27 +75,35 @@ const handleSend = async () => {
             animate={{ y: 0, opacity: 1 }}
             className="w-full max-w-lg space-y-4"
           >
+            {/* Bolha acima do chat */}
+            <div className="flex justify-center">
+              <Bubble3D />
+            </div>
+
+            {/* Área de mensagens */}
             {messages.length > 0 && (
-              <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+              <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-1">
                 {messages.map((msg, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/5 backdrop-blur-lg rounded-xl p-3 text-sm text-white/90"
+                    className="bg-white/5 backdrop-blur-lg rounded-xl p-2 text-sm text-white/90"
                   >
                     {msg}
                   </motion.div>
                 ))}
               </div>
             )}
+
+            {/* Caixa de entrada */}
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-3">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="O que você está sentindo agora?"
-                className="w-full h-16 bg-transparent border-none outline-none resize-none
+                className="w-full h-14 bg-transparent border-none outline-none resize-none
                          text-white placeholder-gray-400 text-sm"
               />
               <div className="flex justify-end">
