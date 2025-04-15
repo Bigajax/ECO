@@ -1,4 +1,4 @@
-import Bubble3D from '@/components/Bubble3D';
+import Bubble3D from './Bubble3D';
 import { sendMessageToOpenAI } from '../api/chat';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
