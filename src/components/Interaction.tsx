@@ -1,3 +1,4 @@
+import Bubble3D from '@/components/Bubble3D'; // ajuste o caminho se estiver diferente
 import { sendMessageToOpenAI } from '../api/chat';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
