@@ -17,6 +17,32 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
   const [messages, setMessages] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Função para fazer a bolha falar
+  const speak = (text: string) => {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Procura uma voz feminina em português
+    const voices = synth.getVoices();
+    const femalePtVoice = voices.find(
+      (voice) =>
+        voice.lang.includes('pt') &&
+        (voice.name.toLowerCase().includes('feminina') ||
+         voice.name.toLowerCase().includes('female') ||
+         voice.name.toLowerCase().includes('br') ||
+         voice.name.toLowerCase().includes('pt'))
+    );
+
+    if (femalePtVoice) {
+      utterance.voice = femalePtVoice;
+    }
+
+    utterance.rate = 1; // velocidade da fala
+    utterance.pitch = 1.1; // tom da voz
+
+    synth.speak(utterance);
+  };
+
   const handleSend = async () => {
     if (!message.trim()) return;
 
@@ -25,9 +51,12 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
     try {
       const reply = await sendMessageToOpenAI(message);
       setMessages(prev => [...prev, reply]);
+      speak(reply); // Faz a bolha falar
     } catch (error) {
       console.error("Erro na chamada da API:", error);
-      setMessages(prev => [...prev, "Erro ao conectar com a IA..."]);
+      const errorMsg = "Erro ao conectar com a IA...";
+      setMessages(prev => [...prev, errorMsg]);
+      speak(errorMsg);
     }
 
     setMessage('');
