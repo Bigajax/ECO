@@ -1,6 +1,6 @@
 // src/Login.tsx
-import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { LogIn } from 'lucide-react';
 
 interface LoginProps {
   onLoginSuccess: () => void;
@@ -8,67 +8,42 @@ interface LoginProps {
 
 export default function Login({ onLoginSuccess }: LoginProps) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [senha, setSenha] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Aqui você pode colocar validações reais depois
-    if (email === 'admin@email.com' && password === '123456') {
+  const fazerLogin = () => {
+    // Aqui você pode adicionar uma lógica real de autenticação
+    if (email === 'teste@teste.com' && senha === '123456') {
       onLoginSuccess();
     } else {
-      alert('Login inválido');
+      alert('Email ou senha inválidos');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-        <div className="flex justify-center mb-8">
-          <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent flex items-center">
-            EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 ml-1"></div>
-          </div>
-        </div>
-
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Entrar com e-mail</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm text-gray-600 mb-1">E-mail</label>
-            <div className="relative">
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="seu@email.com"
-              />
-              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm text-gray-600 mb-1">Senha</label>
-            <div className="relative">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="••••••••"
-              />
-              <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition-colors font-medium"
-          >
-            Entrar
-          </button>
-        </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-sm">
+        <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full mb-3 p-2 border border-gray-300 rounded-lg"
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+        />
+        <button
+          onClick={fazerLogin}
+          className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl transition duration-200"
+        >
+          <LogIn className="w-5 h-5" />
+          Entrar
+        </button>
       </div>
     </div>
   );
