@@ -1,56 +1,126 @@
-import { useState } from "react";
-import ChatInput from "./ChatInput";
-import { sendMessageToOpenAI } from "../sendMessageToOpenAI";
+// src/components/Chat.tsx
+import { useState, useRef } from "react";
+import { sendMessageToOpenAI } from "../utils/sendMessageToOpenAI";
 
 const Chat = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [input, setInput] = useState("");
+  const recognitionRef = useRef<any>(null);
 
-  const handleSendMessage = async (userMessage: string) => {
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    const newMessages = [...messages, { role: "user", content: input }];
+    setMessages(newMessages);
+    setInput("");
 
-    const response = await sendMessageToOpenAI(userMessage);
-    setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+    const reply = await sendMessageToOpenAI(input);
+    setMessages([...newMessages, { role: "assistant", content: reply }]);
+  };
+
+  const handleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Reconhecimento de voz não é suportado nesse navegador.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "pt-BR";
+    recognition.interimResults = false;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Erro no reconhecimento de voz:", event);
+    };
+
+    recognition.start();
+    recognitionRef.current = recognition;
   };
 
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      height: "100vh",
-      backgroundColor: "#f5f5f5",
-    }}>
-      <div style={{
-        flex: 1,
-        padding: "16px",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-      }}>
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            style={{
-              alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-              backgroundColor: msg.role === "user" ? "#007aff" : "#e5e5ea",
-              color: msg.role === "user" ? "white" : "black",
-              padding: "10px 14px",
-              borderRadius: "20px",
-              maxWidth: "70%",
-              fontSize: "15px",
-              lineHeight: "1.4",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-            }}
-          >
+    <div style={styles.chatContainer}>
+      <div style={styles.messages}>
+        {messages.map((msg, idx) => (
+          <div key={idx} style={msg.role === "user" ? styles.userMsg : styles.botMsg}>
             {msg.content}
           </div>
         ))}
       </div>
-
-      <ChatInput onSendMessage={handleSendMessage} />
+      <div style={styles.inputContainer}>
+        <button onClick={handleVoiceInput} style={styles.micButton}>🎤</button>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Digite sua reflexão..."
+          style={styles.input}
+        />
+        <button onClick={handleSend} style={styles.sendButton}>Enviar</button>
+      </div>
     </div>
   );
 };
 
-export default Chat;
+const styles: { [key: string]: React.CSSProperties } = {
+  chatContainer: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh",
+    fontFamily: "sans-serif",
+    backgroundColor: "#f7f7f7",
+    padding: 16,
+  },
+  messages: {
+    flex: 1,
+    overflowY: "auto",
+    paddingBottom: 16,
+  },
+  userMsg: {
+    textAlign: "right",
+    margin: "8px 0",
+    padding: 10,
+    borderRadius: 12,
+    background: "#d1e7ff",
+    display: "inline-block",
+  },
+  botMsg: {
+    textAlign: "left",
+    margin: "8px 0",
+    padding: 10,
+    borderRadius: 12,
+    background: "#e5e5e5",
+    display: "inline-block",
+  },
+  inputContainer: {
+    display: "flex",
+    gap: 8,
+    alignItems: "center",
+  },
+  micButton: {
+    fontSize: 20,
+    background: "white",
+    border: "1px solid #ccc",
+    borderRadius: 8,
+    padding: "6px 10px",
+    cursor: "pointer",
+  },
+  input: {
+    flex: 1,
+    padding: "10px",
+    borderRadius: 8,
+    border: "1px solid #ccc",
+  },
+  sendButton: {
+    padding: "10px 16px",
+    borderRadius: 8,
+    border: "none",
+    background: "#333",
+    color: "white",
+    cursor: "pointer",
+  },
+};
 
+export default Chat;
