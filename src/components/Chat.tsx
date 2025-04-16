@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ChatInput from "./ChatInput";
-import { sendMessageToOpenAI } from "../utils/sendMessageToOpenAI";
+import { sendMessageToOpenAI } from "../sendMessageToOpenAI";
 
 const Chat = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
