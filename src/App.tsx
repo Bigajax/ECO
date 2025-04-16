@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Landing from './components/Landing';
-import Interaction from './components/Interaction';
+import Landing from './Landing';
+import Interaction from './Interaction';
 
-function App() {
+export default function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'interaction'>('landing');
   const [message, setMessage] = useState('');
 
@@ -37,6 +37,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
-
