@@ -1,10 +1,9 @@
-import MicrophoneButton from './MicrophoneButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
 import Bubble3D from './Bubble3D';
 import { sendMessageToOpenAI } from '../api/chat';
-import MicrophoneButton from './MicrophoneButton'; // <-- Adicionado aqui
+import MicrophoneButton from './MicrophoneButton';
 
 interface InteractionProps {
   message: string;
@@ -82,7 +81,7 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-lg space-y-4"
+            className="w-full max-w-lg space-y-4 mt-4"
           >
             <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 scroll-smooth">
               {messages.map((msg, index) => (
@@ -110,25 +109,23 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="O que você está sentindo agora?"
-                className="w-full h-20 bg-transparent border-none outline-none resize-none text-white placeholder-gray-400 text-sm"
+                className="w-full h-16 bg-transparent border-none outline-none resize-none text-white placeholder-gray-400 text-sm"
               />
               <div className="flex justify-between items-center pt-2 gap-2">
                 <MicrophoneButton
                   onTranscript={(text) => setMessage((prev) => prev + ' ' + text)}
                 />
-                <div className="flex justify-end pt-2 gap-2">
-  <MicrophoneButton setMessage={setMessage} />
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={handleSend}
-    disabled={isSending || !message.trim()}
-    className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-all
-              disabled:opacity-50 disabled:hover:bg-white/20 disabled:cursor-not-allowed"
-  >
-    <Send size={16} className={isSending ? 'animate-pulse' : ''} />
-  </motion.button>
-</div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSend}
+                  disabled={isSending || !message.trim()}
+                  className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-all
+                            disabled:opacity-50 disabled:hover:bg-white/20 disabled:cursor-not-allowed"
+                >
+                  <Send size={16} className={isSending ? 'animate-pulse' : ''} />
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         )}
