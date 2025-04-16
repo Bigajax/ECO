@@ -5,16 +5,31 @@ import { sendMessageToOpenAI } from "../utils/sendMessageToOpenAI";
 const Chat = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [input, setInput] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
-    setInput("");
 
-    const reply = await sendMessageToOpenAI(input);
-    setMessages([...newMessages, { role: "assistant", content: reply }]);
+    const userMessage = { role: "user", content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setIsThinking(true);
+
+    try {
+      const reply = await sendMessageToOpenAI(input);
+      const assistantMessage = { role: "assistant", content: reply };
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (err) {
+      console.error(err);
+      const errorMessage = {
+        role: "assistant",
+        content: "Desculpe, houve um erro ao tentar responder. Tente novamente.",
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsThinking(false);
+    }
   };
 
   const handleVoiceInput = () => {
@@ -49,6 +64,9 @@ const Chat = () => {
             {msg.content}
           </div>
         ))}
+        {isThinking && (
+          <div style={styles.botMsg}>...</div>
+        )}
       </div>
       <div style={styles.inputContainer}>
         <button onClick={handleVoiceInput} style={styles.micButton}>🎤</button>
