@@ -1,34 +1,28 @@
-// src/components/Chat.tsx
 import { useState, useRef } from "react";
 import { sendMessageToOpenAI } from "../utils/sendMessageToOpenAI";
 
 const Chat = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [input, setInput] = useState("");
-  const [isThinking, setIsThinking] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
     const userMessage = { role: "user", content: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
     setInput("");
-    setIsThinking(true);
 
     try {
       const reply = await sendMessageToOpenAI(input);
       const assistantMessage = { role: "assistant", content: reply };
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (err) {
-      console.error(err);
+      setMessages(prevMessages => [...prevMessages, assistantMessage]);
+    } catch (error) {
       const errorMessage = {
         role: "assistant",
-        content: "Desculpe, houve um erro ao tentar responder. Tente novamente.",
+        content: "Desculpe, houve um erro ao responder.",
       };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsThinking(false);
+      setMessages(prevMessages => [...prevMessages, errorMessage]);
     }
   };
 
@@ -64,9 +58,6 @@ const Chat = () => {
             {msg.content}
           </div>
         ))}
-        {isThinking && (
-          <div style={styles.botMsg}>...</div>
-        )}
       </div>
       <div style={styles.inputContainer}>
         <button onClick={handleVoiceInput} style={styles.micButton}>🎤</button>
@@ -103,6 +94,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: 12,
     background: "#d1e7ff",
     display: "inline-block",
+    maxWidth: "80%",
   },
   botMsg: {
     textAlign: "left",
@@ -111,6 +103,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: 12,
     background: "#e5e5e5",
     display: "inline-block",
+    maxWidth: "80%",
   },
   inputContainer: {
     display: "flex",
