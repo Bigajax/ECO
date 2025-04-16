@@ -23,14 +23,14 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Login - ECO</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login - ECO</h2>
 
         <input
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-2 mb-4 border rounded text-gray-800"
           required
         />
 
@@ -39,7 +39,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
           placeholder="Senha"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-2 mb-4 border rounded text-gray-800"
           required
         />
 
