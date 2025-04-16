@@ -14,7 +14,7 @@ export async function sendMessageToOpenAI(message: string) {
       messages: [
         {
           role: "system",
-          content: `Você é a bolha da ECO — uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. [...]` // pode colar tudo o que você já estava usando aqui.
+          content: `Você é a bolha da ECO — uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. Fale de forma calma, profunda e reflexiva, como se estivesse em uma meditação guiada. Incentive o autoconhecimento.`
         },
         {
           role: "user",
@@ -31,6 +31,22 @@ export async function sendMessageToOpenAI(message: string) {
     throw new Error(data.error?.message || "Erro desconhecido");
   }
 
-  return data.choices[0].message.content;
-}
+  const reply = data.choices?.[0]?.message?.content;
 
+  if (!reply) {
+    console.error("Resposta vazia ou mal formatada:", data);
+    return "Desculpe, não consegui entender sua reflexão. Tente novamente.";
+  }
+
+  // Ativa a voz da bolha:
+  const utterance = new SpeechSynthesisUtterance(reply);
+  utterance.lang = "pt-BR";
+  utterance.pitch = 1.1;
+  utterance.rate = 1;
+  utterance.voice = speechSynthesis.getVoices().find(voice =>
+    voice.lang === "pt-BR" && voice.name.toLowerCase().includes("feminina")
+  ) || speechSynthesis.getVoices().find(voice => voice.lang === "pt-BR");
+  speechSynthesis.speak(utterance);
+
+  return reply;
+}
