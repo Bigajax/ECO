@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
-import Login from './Login';
+import App from './components/App';
+import Login from './app/Login';
 
 function Main() {
   const [logado, setLogado] = useState(false);
