@@ -1,3 +1,4 @@
+import MicrophoneButton from './MicrophoneButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
@@ -115,17 +116,19 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
                 <MicrophoneButton
                   onTranscript={(text) => setMessage((prev) => prev + ' ' + text)}
                 />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleSend}
-                  disabled={isSending || !message.trim()}
-                  className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-all
-                             disabled:opacity-50 disabled:hover:bg-white/20 disabled:cursor-not-allowed"
-                >
-                  <Send size={16} className={isSending ? 'animate-pulse' : ''} />
-                </motion.button>
-              </div>
+                <div className="flex justify-end pt-2 gap-2">
+  <MicrophoneButton setMessage={setMessage} />
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={handleSend}
+    disabled={isSending || !message.trim()}
+    className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-all
+              disabled:opacity-50 disabled:hover:bg-white/20 disabled:cursor-not-allowed"
+  >
+    <Send size={16} className={isSending ? 'animate-pulse' : ''} />
+  </motion.button>
+</div>
             </div>
           </motion.div>
         )}
