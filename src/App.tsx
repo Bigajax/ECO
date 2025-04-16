@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Landing from './Landing';
-import Interaction from './Interaction';
+import Landing from '../Landing'; // Ajuste o caminho se necessário
+import Interaction from '../Interaction'; // Ajuste o caminho se necessário
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'interaction'>('landing');
@@ -26,10 +26,10 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <Interaction 
-              message={message} 
+            <Interaction
+              message={message}
               setMessage={setMessage}
-              onBack={() => setCurrentView('landing')} 
+              onBack={() => setCurrentView('landing')}
             />
           </motion.div>
         )}
