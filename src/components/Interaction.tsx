@@ -22,7 +22,6 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
 
     setIsSending(true);
     setMessages(prev => [...prev, message]);
-
     try {
       const reply = await sendMessageToOpenAI(message);
       setMessages(prev => [...prev, reply]);
@@ -56,54 +55,17 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
         Voltar
       </button>
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-6">
+      <div className="flex-1 flex flex-col items-center justify-center relative">
         <Bubble3D />
 
-        {!isReflecting ? (
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-lg"
-          >
-            <button
-              onClick={() => setIsReflecting(true)}
-              className="w-full bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/15 transition-all"
-            >
-              <h2 className="text-2xl font-light mb-4">Momento de Reflexão</h2>
-              <p className="text-gray-400">
-                Clique para compartilhar seus pensamentos e sentimentos
-              </p>
-            </button>
-          </motion.div>
-        ) : (
+        {isReflecting && (
           <motion.div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-lg space-y-4 mt-4"
+            className="absolute bottom-10 w-full max-w-lg px-4"
           >
-            <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 scroll-smooth">
-              {messages.map((msg, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`rounded-xl p-3 text-sm text-white/90 
-                    ${index % 2 === 0
-                      ? 'bg-white/10 self-end text-right'
-                      : 'bg-white/5 self-start text-left'
-                    }`}
-                >
-                  {msg}
-                </motion.div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Campo de digitação */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-3">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 shadow-lg">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -127,6 +89,25 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
                 </motion.button>
               </div>
             </div>
+          </motion.div>
+        )}
+
+        {!isReflecting && (
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-lg mt-8"
+          >
+            <button
+              onClick={() => setIsReflecting(true)}
+              className="w-full bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/15 transition-all"
+            >
+              <h2 className="text-2xl font-light mb-4">Momento de Reflexão</h2>
+              <p className="text-gray-400">
+                Clique para compartilhar seus pensamentos e sentimentos
+              </p>
+            </button>
           </motion.div>
         )}
       </div>
