@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
 import Bubble3D from './Bubble3D';
 import { sendMessageToOpenAI } from '../api/chat';
+import MicrophoneButton from './MicrophoneButton'; // <-- Adicionado aqui
 
 interface InteractionProps {
   message: string;
@@ -47,7 +48,6 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
 
   return (
     <div className="min-h-screen flex flex-col p-6">
-      {/* Botão de Voltar */}
       <button
         onClick={onBack}
         className="text-white/70 hover:text-white flex items-center gap-2 mb-8"
@@ -56,11 +56,9 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
         Voltar
       </button>
 
-      {/* Área principal */}
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
         <Bubble3D />
 
-        {/* Tela inicial com botão de reflexão */}
         {!isReflecting ? (
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -85,7 +83,6 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
             transition={{ duration: 0.5 }}
             className="w-full max-w-lg space-y-4"
           >
-            {/* Caixa de mensagens */}
             <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 scroll-smooth">
               {messages.map((msg, index) => (
                 <motion.div
@@ -114,7 +111,10 @@ function Interaction({ message, setMessage, onBack }: InteractionProps) {
                 placeholder="O que você está sentindo agora?"
                 className="w-full h-20 bg-transparent border-none outline-none resize-none text-white placeholder-gray-400 text-sm"
               />
-              <div className="flex justify-end pt-2">
+              <div className="flex justify-between items-center pt-2 gap-2">
+                <MicrophoneButton
+                  onTranscript={(text) => setMessage((prev) => prev + ' ' + text)}
+                />
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
