@@ -1,5 +1,5 @@
 // src/components/EcoBubbleInterface.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
@@ -17,23 +17,24 @@ function EcoBubbleInterface() {
   };
 
   const handleSendMessage = async () => {
-    if (message.trim()) {
+    if (message.trim() && !isSending) {
       setIsSending(true);
-      setConversation((prevConversation) => [...prevConversation, `Você: ${message}`]);
+      const userMessage = message;
+      setMessage(''); // Limpa a caixa de mensagem imediatamente após o envio
+      setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
       try {
-        const aiResponse = await sendMessageToOpenAI(message); // Agora 'aiResponse' conterá tanto o texto quanto o áudio (se bem-sucedido)
+        const aiResponse = await sendMessageToOpenAI(userMessage);
         if (aiResponse?.text) {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]); // Exibe o texto da resposta
+          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]);
         } else {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]); // Fallback se não houver texto
+          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]);
         }
-        setAudioPlayer(aiResponse?.audio || null); // Define o player de áudio
-        setIsPlaying(true); // Começa como tocando (se houver áudio)
+        setAudioPlayer(aiResponse?.audio || null);
+        setIsPlaying(true);
       } catch (error: any) {
         setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
         setIsSending(false);
-        setMessage('');
       }
     }
   };
@@ -55,15 +56,10 @@ function EcoBubbleInterface() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isSending) {
+      e.preventDefault(); // Evita a quebra de linha padrão no textarea
       handleSendMessage();
     }
   };
-
-  useEffect(() => {
-    if (audioPlayer) {
-      audioPlayer.onended = () => setIsPlaying(false); // Reset o estado quando o áudio terminar
-    }
-  }, [audioPlayer]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
