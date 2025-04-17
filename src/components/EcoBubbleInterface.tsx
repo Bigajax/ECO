@@ -3,6 +3,7 @@ import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 import './EcoBubbleInterface.css';
+import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -16,6 +17,7 @@ function EcoBubbleInterface() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
@@ -120,6 +122,10 @@ function EcoBubbleInterface() {
     }
   }, [isSending, handleSendMessage]);
 
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(prev => !prev);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
       {/* Botão Voltar */}
@@ -128,12 +134,36 @@ function EcoBubbleInterface() {
         Voltar
       </button>
 
-      {/* Bolha ECO */}
-      <div className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative ${
-        isEcoSpeaking ? 'eco-bubble-vibrate' : ''
-      }`}>
-        <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
-        <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
+      {/* Bolha ECO com Menu */}
+      <div className="relative mb-8">
+        <div
+          className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${
+            isEcoSpeaking ? 'eco-bubble-vibrate' : ''
+          }`}
+          onClick={toggleMenu}
+        >
+          <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
+          <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
+          {/* Pode adicionar um ícone central aqui para indicar o menu */}
+        </div>
+
+        {/* Menu Flutuante */}
+        {isMenuOpen && (
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/80 backdrop-blur-lg rounded-lg shadow-md p-4 grid grid-cols-2 gap-4">
+            <button className="p-2 hover:opacity-75 transition-opacity">
+              <FiMoon className="w-6 h-6 text-gray-500" />
+            </button>
+            <button className="p-2 hover:opacity-75 transition-opacity">
+              <FiHeart className="w-6 h-6 text-gray-500" />
+            </button>
+            <button className="p-2 hover:opacity-75 transition-opacity">
+              <FiBook className="w-6 h-6 text-gray-500" />
+            </button>
+            <button className="p-2 hover:opacity-75 transition-opacity">
+              <FiSettings className="w-6 h-6 text-gray-500" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Caixa de conversa */}
