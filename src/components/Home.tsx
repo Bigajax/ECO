@@ -1,53 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 
-function Home() {
-  const navigate = useNavigate();
-  const [greeting, setGreeting] = useState('');
-
-  const loggedInUserName = 'Rafael'; // Substitua pela lógica real
-
-  useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
-
-    if (hour >= 0 && hour < 12) {
-      setGreeting('Bom dia');
-    } else if (hour >= 12 && hour < 18) {
-      setGreeting('Boa tarde');
-    } else {
-      setGreeting('Boa noite');
-    }
-  }, []);
-
-  const handleReceberOrientacaoClick = () => {
-    navigate('/eco-bubble');
-  };
-
+export default function ReflexaoPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
+    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       
-      {/* Logo ECO (importado do Login) */}
-      <div className="flex justify-center mb-8 mt-12">
-        <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent flex items-center">
-          EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 ml-1"></div>
-        </div>
+      {/* Menu superior */}
+      <div className="w-full max-w-4xl flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-semibold text-gray-800">Reflexões</h1>
+        
+        {/* Botão de Criar Nova Reflexão */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 shadow">
+              Criar Nova Reflexão
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] bg-white rounded-xl shadow-lg">
+            <DialogHeader>
+              <DialogTitle>Nova Reflexão</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input placeholder="Título da reflexão" />
+              <Textarea placeholder="Escreva aqui sua reflexão..." rows={5} />
+            </div>
+            <DialogFooter className="pt-4">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
+                Salvar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Saudação */}
-      <h1 className="text-4xl font-medium text-gray-900 mb-4 tracking-tight">
-        {greeting}, {loggedInUserName}
-      </h1>
+      {/* Cards das Reflexões */}
+      <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <Card className="bg-white p-4 shadow rounded-xl">
+          <CardContent>
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">O sentido do agora</h2>
+            <p className="text-gray-600 text-sm">
+              Quando me conecto com o momento presente, percebo que todas as respostas que busco já estão aqui...
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white p-4 shadow rounded-xl">
+          <CardContent>
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">Aceitação e controle</h2>
+            <p className="text-gray-600 text-sm">
+              A aceitação não é resignação, é compreender que nem tudo precisa estar sob o meu controle...
+            </p>
+          </CardContent>
+        </Card>
 
-      {/* Botão de navegação */}
-      <button
-        onClick={handleReceberOrientacaoClick}
-        className="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-lg shadow-lg transition-all"
-      >
-        Receber Orientação
-      </button>
+        {/* Exemplo de outro card */}
+        <Card className="bg-white p-4 shadow rounded-xl">
+          <CardContent>
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">Dualidade interna</h2>
+            <p className="text-gray-600 text-sm">
+              Dentro de mim coexistem dúvidas e certezas, luzes e sombras — e todas fazem parte do meu caminho.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-  );
+  )
 }
-
-export default Home;
