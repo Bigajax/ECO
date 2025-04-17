@@ -5,8 +5,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
       {/* Logo */}
-      <div className="flex items-center text-6xl font-light mb-20 mt-12">
-        integrando tudo, ou seja, quando coloco login e senha cai nesta página... interface principal 
+      <div className="flex items-center text-6xl font-light mb-20 mt-12"> 
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] rounded-full blur-md opacity-50"></div>
