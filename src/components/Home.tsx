@@ -1,7 +1,14 @@
 import React from 'react';
 import { Circle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Importe useNavigate
 
 function Home() {
+  const navigate = useNavigate(); // Inicialize useNavigate
+
+  const handleReceberOrientacaoClick = () => {
+    navigate('/eco-bubble'); // Navega para a rota da Bolha ECO
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
       {/* Logo */}
@@ -53,7 +60,10 @@ function Home() {
           </div>
         </div>
 
-        <button className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white rounded-full py-4 px-8 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 hover:opacity-95">
+        <button
+          className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white rounded-full py-4 px-8 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 hover:opacity-95"
+          onClick={handleReceberOrientacaoClick} // Adiciona o evento onClick
+        >
           Receber orientação
         </button>
       </div>
