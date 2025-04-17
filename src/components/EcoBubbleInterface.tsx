@@ -211,4 +211,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
