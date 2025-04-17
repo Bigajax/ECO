@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
 import { Apple, Facebook, Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient'; // Importe o cliente Supabase
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    // Simulação de login bem-sucedido (SUBSTITUA PELA INTEGRAÇÃO REAL COM SUPABASE AUTH)
-    if (email && password) {
-      navigate('/home'); // Navega para a tela Home
-    } else {
-      // Aqui você pode adicionar lógica para exibir mensagens de erro de login
-      console.log('Credenciais inválidas (simulação)');
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        setError(error);
+        console.error('Erro ao fazer login:', error);
+      } else {
+        console.log('Login realizado com sucesso!');
+        navigate('/home'); // Navega para a tela Home em caso de sucesso
+      }
+    } catch (err) {
+      setError(err);
+      console.error('Erro inesperado durante o login:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +61,7 @@ function Login() {
               />
               <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
+            {error && <p className="text-red-500 text-xs italic mt-1">{error.message}</p>}
           </div>
 
           <div className="relative">
@@ -70,6 +88,7 @@ function Login() {
           <button
             type="submit"
             className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition-colors font-medium"
+            disabled={loading}
           >
             Entrar
           </button>
