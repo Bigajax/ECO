@@ -28,7 +28,7 @@
 }
 
 .eco-message {
-  font-size: 0.9rem; /* Ajustei o tamanho da fonte para a mensagem da ECO */
+  font-size: 1rem; /* AUMENTADO o tamanho da fonte para a mensagem da ECO */
   padding: 8px;
   border-radius: 8px;
   background-color: rgba(144, 238, 144, 0.3); /* Um verde claro de fundo */
