@@ -1,12 +1,18 @@
 // src/components/EcoBubbleInterface.tsx
 import React, { useState } from 'react';
-import { Image, Mic } from 'lucide-react';
-import { sendMessageToOpenAI } from '../sendMessageToOpenAI'; // Importe a função da API
+import { Image, Mic, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState<string[]>([]);
-  const [isSending, setIsSending] = useState(false); // Para indicar se a mensagem está sendo enviada
+  const [isSending, setIsSending] = useState(false);
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate('/home');
+  };
 
   const handleSendMessage = async () => {
     if (message.trim()) {
@@ -19,7 +25,7 @@ function EcoBubbleInterface() {
         setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
         setIsSending(false);
-        setMessage(''); // Limpa o input após enviar (com ou sem erro)
+        setMessage('');
       }
     }
   };
@@ -35,7 +41,13 @@ function EcoBubbleInterface() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
+      {/* Botão Voltar */}
+      <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
+        <ArrowLeft size={20} />
+        Voltar
+      </button>
+
       {/* Floating ECO Bubble */}
       <div className="w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-12 relative">
         <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
