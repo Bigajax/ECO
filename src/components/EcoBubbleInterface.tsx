@@ -62,24 +62,36 @@ function EcoBubbleInterface() {
       const userMessage = message;
       setMessage('');
       latestUserMessage.current = userMessage;
-      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
+
+      console.log('Enviando mensagem:', userMessage);
+      setConversation((prev) => {
+        const updated = [...prev, `Você: ${userMessage}`];
+        console.log('Estado conversation após mensagem do usuário:', updated);
+        return updated;
+      });
+
       setEcoResponseText('');
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
-        setConversation((prev) => [
-          ...prev,
-          `ECO: ${aiResponse?.text || '...'}`,
-        ]);
+        console.log('Resposta da API recebida:', aiResponse);
+        const ecoText = aiResponse?.text || '...';
+        setConversation((prev) => {
+          const updated = [...prev, `ECO: ${ecoText}`];
+          console.log('Estado conversation após resposta da ECO:', updated);
+          return updated;
+        });
         setAudioPlayer(aiResponse?.audio || null);
         setIsPlaying(true);
       } catch (error: any) {
-        setConversation((prev) => [
-          ...prev,
-          `ECO: Erro ao obter resposta: ${error.message}`,
-        ]);
+        console.error('Erro ao obter resposta da API:', error);
+        setConversation((prev) => {
+          const updated = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
+          console.log('Estado conversation após erro da ECO:', updated);
+          return updated;
+        });
       } finally {
         setIsSending(false);
       }
