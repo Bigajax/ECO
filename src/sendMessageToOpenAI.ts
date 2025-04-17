@@ -1,7 +1,8 @@
+// src/sendMessageToOpenAI.ts
 export async function sendMessageToOpenAI(message: string) {
-  console.log("API Key:", import.meta.env.VITE_OPENAI_API_KEY);
+  console.log("API Key (OpenAI):", import.meta.env.VITE_OPENAI_API_KEY);
 
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const openAiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -24,29 +25,67 @@ export async function sendMessageToOpenAI(message: string) {
     }),
   });
 
-  const data = await response.json();
+  const openAiData = await openAiResponse.json();
 
-  if (!response.ok) {
-    console.error("Erro da API:", data);
-    throw new Error(data.error?.message || "Erro desconhecido");
+  if (!openAiResponse.ok) {
+    console.error("Erro da API (OpenAI):", openAiData);
+    throw new Error(openAiData.error?.message || "Erro desconhecido ao obter resposta da IA.");
   }
 
-  const reply = data.choices?.[0]?.message?.content;
+  const reply = openAiData.choices?.[0]?.message?.content;
 
   if (!reply) {
-    console.error("Resposta vazia ou mal formatada:", data);
+    console.error("Resposta vazia ou mal formatada da IA:", openAiData);
     return "Desculpe, não consegui entender sua reflexão. Tente novamente.";
   }
 
-  // Ativa a voz da bolha:
-  const utterance = new SpeechSynthesisUtterance(reply);
-  utterance.lang = "pt-BR";
-  utterance.pitch = 1.1;
-  utterance.rate = 1;
-  utterance.voice = speechSynthesis.getVoices().find(voice =>
-    voice.lang === "pt-BR" && voice.name.toLowerCase().includes("feminina")
-  ) || speechSynthesis.getVoices().find(voice => voice.lang === "pt-BR");
-  speechSynthesis.speak(utterance);
+  // --- INTEGRAÇÃO COM ELEVENLABS (VOZ DA RACHEL) ---
+  const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+  const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // ID da voz da Rachel
+
+  if (!ELEVENLABS_API_KEY) {
+    console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
+    return reply;
+  }
+
+  try {
+    const elevenLabsResponse = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'xi-api-key': ELEVENLABS_API_KEY,
+        },
+        body: JSON.stringify({
+          text: reply,
+          model_id: 'eleven_multilingual_v2', // Modelo recomendado para português
+          voice_settings: {
+            stability: 0.75, // Ajuste conforme necessário (0 a 1)
+            similarity_boost: 0.75, // Ajuste conforme necessário (0 a 1)
+          },
+        }),
+      }
+    );
+
+    if (!elevenLabsResponse.ok) {
+      const errorData = await elevenLabsResponse.json();
+      console.error("Erro ao chamar a API do ElevenLabs:", errorData);
+      return reply; // Em caso de erro na TTS, ainda retorna o texto
+    }
+
+    const audioBlob = await elevenLabsResponse.blob();
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+    audio.play();
+
+    // Limpar a URL do objeto para liberar recursos
+    audio.onended = () => URL.revokeObjectURL(audioUrl);
+
+  } catch (error) {
+    console.error("Erro ao processar a resposta do ElevenLabs:", error);
+  }
+  // --- FIM DA INTEGRAÇÃO COM ELEVENLABS ---
 
   return reply;
 }
