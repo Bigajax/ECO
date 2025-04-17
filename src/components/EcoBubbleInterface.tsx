@@ -13,6 +13,7 @@ function EcoBubbleInterface() {
   const [ecoResponseText, setEcoResponseText] = useState('');
   const ecoResponseIndex = useRef(0);
   const vibrationInterval = useRef<NodeJS.Timeout | null>(null);
+  const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
 
   const handleGoBack = () => {
     navigate('/home');
@@ -20,6 +21,7 @@ function EcoBubbleInterface() {
 
   const startVibration = () => {
     console.log('startVibration chamado');
+    setIsEcoSpeaking(true); // Define o estado de "falando"
     if ("vibrate" in navigator) {
       vibrationInterval.current = setInterval(() => {
         console.log('Vibrando...');
@@ -32,6 +34,7 @@ function EcoBubbleInterface() {
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
+    setIsEcoSpeaking(false); // Reseta o estado de "falando"
     if (vibrationInterval.current) {
       clearInterval(vibrationInterval.current);
       vibrationInterval.current = null;
@@ -46,10 +49,9 @@ function EcoBubbleInterface() {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
-      stopVibration(); // Para qualquer vibração anterior
+      stopVibration(); // Parar qualquer vibração anterior
 
       if (latestEcoResponse) {
-        startVibration();
         const intervalId = setInterval(() => {
           if (ecoResponseIndex.current < latestEcoResponse.length) {
             setEcoResponseText((prevText) => prevText + latestEcoResponse[ecoResponseIndex.current]);
@@ -70,6 +72,14 @@ function EcoBubbleInterface() {
       stopVibration();
     }
   }, [conversation]);
+
+  useEffect(() => {
+    if (isEcoSpeaking && !vibrationInterval.current && "vibrate" in navigator) {
+      startVibration(); // Inicia a vibração se estiver "falando" e não vibrando
+    } else if (!isEcoSpeaking && vibrationInterval.current) {
+      stopVibration(); // Para a vibração se não estiver "falando" e estiver vibrando
+    }
+  }, [isEcoSpeaking]);
 
   const handleSendMessage = async () => {
     if (message.trim() && !isSending) {
