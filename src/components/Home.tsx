@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Circle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Importe useNavigate
+import { useNavigate } from 'react-router-dom';
+
+// Supondo que você tenha um contexto para o usuário logado
+// import { AuthContext } from '../contexts/AuthContext';
 
 function Home() {
-  const navigate = useNavigate(); // Inicialize useNavigate
+  const navigate = useNavigate();
+  const [greeting, setGreeting] = useState('');
+
+  // Supondo que o nome do usuário esteja armazenado em um contexto
+  // const { user } = useContext(AuthContext);
+  // Substitua a linha abaixo pela forma como você acessa o nome do usuário
+  const loggedInUserName = 'Rafael'; // Valor padrão, substitua pela sua lógica
+
+  useEffect(() => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (hour >= 0 && hour < 12) {
+      setGreeting('Bom dia');
+    } else if (hour >= 12 && hour < 18) {
+      setGreeting('Boa tarde');
+    } else {
+      setGreeting('Boa noite');
+    }
+  }, []);
 
   const handleReceberOrientacaoClick = () => {
-    navigate('/eco-bubble'); // Navega para a rota da Bolha ECO
+    navigate('/eco-bubble');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
-      {/* Logo */}
+      {/* Logo (igual ao da tela de login) */}
       <div className="flex items-center text-6xl font-light mb-20 mt-12">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
         <div className="relative">
@@ -20,9 +42,9 @@ function Home() {
         </div>
       </div>
 
-      {/* Welcome Message */}
+      {/* Greeting with User's Name */}
       <h1 className="text-4xl font-medium text-gray-900 mb-4 tracking-tight">
-        Bom dia, Rafael
+        {greeting}, {loggedInUserName}
       </h1>
       <p className="text-xl text-gray-600 text-center max-w-md mb-16 leading-relaxed">
         A calma não está no mundo,
@@ -43,17 +65,16 @@ function Home() {
         </button>
       </nav>
 
-      {/* Chat Card */}
+      {/* Chat Card with ECO Bubble Icon */}
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
         <div className="flex items-center gap-4 mb-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] rounded-full blur-md opacity-30"></div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8B5CF6]/20 to-[#6366F1]/20 flex items-center justify-center relative z-10">
-              <Circle className="w-8 h-8 text-[#6366F1]" />
-            </div>
+          {/* Bolha ECO (igual à da tela de mensagem) */}
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg relative shadow-inner">
+            <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-white/60 blur-sm"></div>
           </div>
           <div>
-            <h2 className="text-2xl text-gray-900 font-medium mb-1">Olá, Rafael.</h2>
+            <h2 className="text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
             <p className="text-gray-600">
               Estou aqui se precisar de uma conversa para começar seu dia.
             </p>
@@ -62,7 +83,7 @@ function Home() {
 
         <button
           className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white rounded-full py-4 px-8 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 hover:opacity-95"
-          onClick={handleReceberOrientacaoClick} // Adiciona o evento onClick
+          onClick={handleReceberOrientacaoClick}
         >
           Receber orientação
         </button>
