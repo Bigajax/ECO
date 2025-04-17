@@ -15,6 +15,7 @@ function EcoBubbleInterface() {
   const ecoResponseIndex = useRef(0);
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
+  const latestUserMessage = useRef<string | null>(null);
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
@@ -24,7 +25,7 @@ function EcoBubbleInterface() {
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
 
   useEffect(() => {
-    if (conversation.length > 0 && conversation[conversation.length - 1].startsWith('ECO:')) {
+    if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
@@ -56,10 +57,11 @@ function EcoBubbleInterface() {
   }, [conversation, startVibration, stopVibration]);
 
   const handleSendMessage = useCallback(async () => {
-    if (message.trim() && !isSending) {
+    if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
       setIsSending(true);
       const userMessage = message;
       setMessage('');
+      latestUserMessage.current = userMessage;
       setConversation((prev) => [...prev, `Você: ${userMessage}`]);
       setEcoResponseText('');
       stopVibration();
