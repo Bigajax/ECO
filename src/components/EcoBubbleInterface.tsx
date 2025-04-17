@@ -127,7 +127,7 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="**min-h-screen flex-col flex p-4**">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
       {/* Botão Voltar */}
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
@@ -135,7 +135,7 @@ function EcoBubbleInterface() {
       </button>
 
       {/* Bolha ECO com Menu */}
-      <div className="relative mb-8 **self-center**">
+      <div className="relative mb-8">
         <div
           className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${
             isEcoSpeaking ? 'eco-bubble-vibrate' : ''
@@ -167,7 +167,7 @@ function EcoBubbleInterface() {
       </div>
 
       {/* Caixa de conversa */}
-      <div className="**w-full max-w-md flex-grow overflow-y-auto** bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container">
         {conversation.map((msg, index) => (
           <p
             key={index}
@@ -186,7 +186,7 @@ function EcoBubbleInterface() {
       )}
 
       {/* Campo de entrada de mensagem */}
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 **self-end mb-4**">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4">
         <div className="flex items-center gap-3">
           <input
             type="text"
@@ -211,3 +211,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
