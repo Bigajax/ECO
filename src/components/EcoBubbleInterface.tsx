@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
-import './EcoBubbleInterface.css'; // Certifique-se de que esta linha está presente
+import './EcoBubbleInterface.css';
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -22,15 +22,11 @@ function EcoBubbleInterface() {
   }, [navigate]);
 
   const startVibration = useCallback(() => {
-    console.log('startVibration chamado');
     setIsEcoSpeaking(true);
-    // Agora a vibração é controlada pela classe CSS
   }, []);
 
   const stopVibration = useCallback(() => {
-    console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
-    // A classe CSS será removida, interrompendo a animação
   }, []);
 
   useEffect(() => {
@@ -38,7 +34,7 @@ function EcoBubbleInterface() {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
-      stopVibration(); // Para qualquer "fala" anterior
+      stopVibration();
 
       if (latestEcoResponse) {
         startVibration();
@@ -76,7 +72,11 @@ function EcoBubbleInterface() {
       setIsSending(true);
       const userMessage = message;
       setMessage('');
-      setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
+      setConversation((prevConversation) => {
+        const updatedConversation = [...prevConversation, `Você: ${userMessage}`];
+        console.log('Após adicionar mensagem do usuário:', updatedConversation);
+        return updatedConversation;
+      });
       setEcoResponseText('');
       stopVibration();
       if (typingIntervalRef.current) {
@@ -85,15 +85,28 @@ function EcoBubbleInterface() {
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
+        console.log('Resposta da API:', aiResponse);
         if (aiResponse?.text) {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]);
+          setConversation((prevConversation) => {
+            const updatedConversation = [...prevConversation, `ECO: ${aiResponse.text}`];
+            console.log('Após adicionar resposta da ECO:', updatedConversation);
+            return updatedConversation;
+          });
         } else {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]);
+          setConversation((prevConversation) => {
+            const updatedConversation = [...prevConversation, `ECO: ...`];
+            console.log('Após adicionar resposta vazia da ECO:', updatedConversation);
+            return updatedConversation;
+          });
         }
         setAudioPlayer(aiResponse?.audio || null);
         setIsPlaying(true);
       } catch (error: any) {
-        setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
+        setConversation((prevConversation) => {
+          const updatedConversation = [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`];
+          console.log('Após adicionar erro da ECO:', updatedConversation);
+          return updatedConversation;
+        });
       } finally {
         setIsSending(false);
       }
