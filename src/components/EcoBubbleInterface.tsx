@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
-import './EcoBubbleInterface.css'; // Importe o arquivo CSS
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -23,13 +22,13 @@ function EcoBubbleInterface() {
   const startVibration = () => {
     console.log('startVibration chamado');
     setIsEcoSpeaking(true);
-    // Agora a vibração é controlada pela classe CSS
+    // Agora a vibração é controlada pela classe CSS (se você decidir reativar)
   };
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
-    // A classe CSS será removida, interrompendo a animação
+    // A classe CSS será removida, interrompendo a animação (se você decidir reativar)
   };
 
   useEffect(() => {
@@ -130,13 +129,21 @@ function EcoBubbleInterface() {
       </div>
 
       {/* Conversation Display */}
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 mb-4 overflow-y-auto h-64">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 mb-4 overflow-y-auto h-64 flex flex-col p-2">
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={`mb-2 whitespace-pre-wrap ${
-              msg.startsWith('Você:') ? 'user-message' : 'eco-message'
-            }`}
+            className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'self-end' : 'self-start'}`}
+            style={{
+              fontSize: msg.startsWith('Você:') ? '1rem' : '0.9rem',
+              padding: '8px',
+              borderRadius: '8px',
+              backgroundColor: msg.startsWith('Você:') ? 'rgba(173, 216, 230, 0.3)' : 'rgba(144, 238, 144, 0.3)',
+              color: '#333',
+              marginBottom: '6px',
+              textAlign: 'left',
+              maxWidth: '80%', // Para não ocupar toda a largura
+            }}
           >
             {msg.startsWith('ECO:') ? (
               <>ECO: {ecoResponseText}</>
