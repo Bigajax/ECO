@@ -16,3 +16,30 @@
 .eco-bubble-vibrate {
   animation: vibrate-waves-simple 0.25s ease-in-out infinite alternate;
 }
+
+.user-message {
+  font-size: 1rem; /* Ajuste o tamanho da fonte conforme necessário */
+  padding: 8px; /* Adicione um pouco de padding para respiro */
+  border-radius: 8px;
+  background-color: rgba(173, 216, 230, 0.3); /* Um azul claro de fundo */
+  color: #333; /* Cor do texto */
+  margin-bottom: 6px;
+  align-self: flex-end; /* Alinha as mensagens do usuário à direita (se o container for flex) */
+}
+
+.eco-message {
+  font-size: 1rem; /* Ajuste o tamanho da fonte conforme necessário */
+  padding: 8px;
+  border-radius: 8px;
+  background-color: rgba(144, 238, 144, 0.3); /* Um verde claro de fundo */
+  color: #333;
+  margin-bottom: 6px;
+  align-self: flex-start; /* Alinha as mensagens da ECO à esquerda (se o container for flex) */
+}
+
+/* O container das mensagens precisa ser flex para alinhar as mensagens */
+.overflow-y-auto {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
