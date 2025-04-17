@@ -10,7 +10,7 @@ function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simulação de login bem-sucedido
+    // Simulação de login bem-sucedido (SUBSTITUA PELA INTEGRAÇÃO REAL COM SUPABASE AUTH)
     if (email && password) {
       navigate('/home'); // Navega para a tela Home
     } else {
@@ -78,9 +78,9 @@ function Login() {
         <div className="mt-8 text-center">
           <p className="text-gray-600">
             Você ainda não tem um perfil?{' '}
-            <a href="#" className="text-purple-600 hover:text-purple-700">
+            <button onClick={() => navigate('/signup')} className="text-purple-600 hover:text-purple-700">
               Criar meu perfil
-            </a>
+            </button>
           </p>
 
           <div className="mt-6">
