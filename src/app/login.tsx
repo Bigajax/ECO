@@ -1,57 +1,53 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface LoginProps {
-  onLoginSuccess: () => void;
-}
-
-export default function Login({ onLoginSuccess }: LoginProps) {
-  const [email, setEmail] = useState('');
+const Login = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Login fake (validação simples)
-    if (email === 'eco@teste.com' && password === '123456') {
-      onLoginSuccess();
-    } else {
-      setError('E-mail ou senha incorretos');
+    // Simulação de login bem-sucedido
+    if (username && password) {
+      navigate('/home'); // Vai para a página principal
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login - ECO</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA]">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-md max-w-md w-full space-y-6"
+      >
+        <h1 className="text-3xl font-medium text-center text-gray-800">Entrar</h1>
 
         <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="w-full p-2 mb-4 border rounded text-gray-800"
-          required
+          type="text"
+          placeholder="Usuário"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
         />
 
         <input
           type="password"
           placeholder="Senha"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded text-gray-800"
-          required
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
         />
-
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
+          className="w-full bg-indigo-500 text-white py-3 rounded-xl font-medium hover:bg-indigo-600 transition"
         >
           Entrar
         </button>
       </form>
     </div>
   );
-}
+};
+
+export default Login;
