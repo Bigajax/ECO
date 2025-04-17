@@ -1,5 +1,5 @@
 // src/sendMessageToOpenAI.ts
-export async function sendMessageToOpenAI(message: string) {
+export async function sendMessageToOpenAI(message: string): Promise<HTMLAudioElement | null> {
   console.log("API Key (OpenAI):", import.meta.env.VITE_OPENAI_API_KEY);
 
   const openAiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -36,7 +36,7 @@ export async function sendMessageToOpenAI(message: string) {
 
   if (!reply) {
     console.error("Resposta vazia ou mal formatada da IA:", openAiData);
-    return "Desculpe, não consegui entender sua reflexão. Tente novamente.";
+    return null; // Retorna null se não houver resposta de texto
   }
 
   // --- INTEGRAÇÃO COM ELEVENLABS (VOZ DA RACHEL) ---
@@ -45,7 +45,7 @@ export async function sendMessageToOpenAI(message: string) {
 
   if (!ELEVENLABS_API_KEY) {
     console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
-    return reply;
+    return null; // Retorna null se a chave não estiver configurada
   }
 
   try {
@@ -71,21 +71,19 @@ export async function sendMessageToOpenAI(message: string) {
     if (!elevenLabsResponse.ok) {
       const errorData = await elevenLabsResponse.json();
       console.error("Erro ao chamar a API do ElevenLabs:", errorData);
-      return reply; // Em caso de erro na TTS, ainda retorna o texto
+      return null; // Retorna null em caso de erro na TTS
     }
 
     const audioBlob = await elevenLabsResponse.blob();
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
-    audio.play();
-
-    // Limpar a URL do objeto para liberar recursos
-    audio.onended = () => URL.revokeObjectURL(audioUrl);
-
+    audio.onended = () => URL.revokeObjectURL(audioUrl); // Limpar a URL ao terminar
+    return audio; // Retorna o objeto Audio
   } catch (error) {
     console.error("Erro ao processar a resposta do ElevenLabs:", error);
+    return null; // Retorna null em caso de erro
   }
   // --- FIM DA INTEGRAÇÃO COM ELEVENLABS ---
 
-  return reply;
+  return null; // Retorna null se não houver áudio para reproduzir
 }
