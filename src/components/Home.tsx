@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Moon, Compass, Music, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-function App() {
+function Home() {
   const navigate = useNavigate();
-  const [loggedInUserName, setLoggedInUserName] = useState('Rafael'); // Substitua pela lógica real
+  const loggedInUserName = 'Rafael'; // Substitua pela lógica real
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 p-6 flex flex-col items-center">
       {/* Logo ECO com bolha animada */}
-      <div className="flex items-center text-4xl md:text-6xl font-light mb-12 mt-8">
+      <div className="flex items-center text-4xl md:text-6xl font-light mb-8 mt-8">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
         <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto flex items-center justify-center ml-2">
           <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
@@ -20,6 +20,13 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Reflexão (adicionada aqui - a mensagem abaixo do logo) */}
+      <p className="text-xl text-gray-600 text-center max-w-md mb-10 leading-relaxed">
+        A calma não está no mundo,
+        <br />
+        está dentro de você.
+      </p>
 
       {/* Navegação */}
       <div className="flex justify-center gap-8 md:gap-12 mb-10">
@@ -44,7 +51,7 @@ function App() {
       </div>
 
       {/* Card com bolha estilizada */}
-      <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
+      <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full mb-8"> {/* Adicionei mb-8 aqui para espaçamento */}
         <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
           <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto flex items-center justify-center">
             <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
@@ -71,8 +78,8 @@ function App() {
         </button>
       </div>
 
-      {/* O Reflection Card da Home nova pode vir aqui se você quiser mantê-lo */}
-      {/* <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100">
+      {/* Reflection Card (DESCOMENTADO) */}
+      <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100 max-w-6xl w-full">
         <div
           className="h-48 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
           style={{
@@ -91,9 +98,9 @@ function App() {
             <span>Ver detalhes</span>
           </button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
 
-export default App;
+export default Home;
