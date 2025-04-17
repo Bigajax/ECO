@@ -1,6 +1,6 @@
 // src/components/EcoBubbleInterface.tsx
-import React, { useState } from 'react';
-import { Image, Mic, ArrowLeft } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 
@@ -9,6 +9,8 @@ function EcoBubbleInterface() {
   const [conversation, setConversation] = useState<string[]>([]);
   const [isSending, setIsSending] = useState(false);
   const navigate = useNavigate();
+  const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleGoBack = () => {
     navigate('/home');
@@ -19,14 +21,27 @@ function EcoBubbleInterface() {
       setIsSending(true);
       setConversation((prevConversation) => [...prevConversation, `Você: ${message}`]);
       try {
-        const response = await sendMessageToOpenAI(message);
-        setConversation((prevConversation) => [...prevConversation, `ECO: ${response}`]);
+        const audio = await sendMessageToOpenAI(message);
+        setConversation((prevConversation) => [...prevConversation, `ECO: ${audio?.textContent || '...'}`]); // Exibe o texto da resposta
+        setAudioPlayer(audio);
+        setIsPlaying(true); // Começa como tocando
       } catch (error: any) {
         setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
         setIsSending(false);
         setMessage('');
       }
+    }
+  };
+
+  const togglePlayPause = () => {
+    if (audioPlayer) {
+      if (isPlaying) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.play();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
@@ -40,6 +55,12 @@ function EcoBubbleInterface() {
     }
   };
 
+  useEffect(() => {
+    if (audioPlayer) {
+      audioPlayer.onended = () => setIsPlaying(false); // Reset o estado quando o áudio terminar
+    }
+  }, [audioPlayer]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
       {/* Botão Voltar */}
@@ -49,7 +70,7 @@ function EcoBubbleInterface() {
       </button>
 
       {/* Floating ECO Bubble */}
-      <div className="w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-12 relative">
+      <div className="w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative">
         <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
         <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
       </div>
@@ -62,6 +83,13 @@ function EcoBubbleInterface() {
           </p>
         ))}
       </div>
+
+      {/* Audio Control Button */}
+      {audioPlayer && (
+        <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
+          {isPlaying ? <Pause className="w-6 h-6 text-gray-600" /> : <Play className="w-6 h-6 text-gray-600" />}
+        </button>
+      )}
 
       {/* Message Input Container */}
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4">
