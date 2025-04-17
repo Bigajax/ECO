@@ -1,5 +1,5 @@
 // src/sendMessageToOpenAI.ts
-export async function sendMessageToOpenAI(message: string): Promise<HTMLAudioElement | null> {
+export async function sendMessageToOpenAI(message: string): Promise<{ text: string | null; audio: HTMLAudioElement | null }> {
   console.log("API Key (OpenAI):", import.meta.env.VITE_OPENAI_API_KEY);
 
   const openAiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -36,54 +36,50 @@ export async function sendMessageToOpenAI(message: string): Promise<HTMLAudioEle
 
   if (!reply) {
     console.error("Resposta vazia ou mal formatada da IA:", openAiData);
-    return null; // Retorna null se não houver resposta de texto
+    return { text: "Desculpe, não consegui entender sua reflexão. Tente novamente.", audio: null };
   }
 
   // --- INTEGRAÇÃO COM ELEVENLABS (VOZ DA RACHEL) ---
   const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
   const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // ID da voz da Rachel
+  let audioElement: HTMLAudioElement | null = null;
 
-  if (!ELEVENLABS_API_KEY) {
-    console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
-    return null; // Retorna null se a chave não estiver configurada
-  }
-
-  try {
-    const elevenLabsResponse = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'xi-api-key': ELEVENLABS_API_KEY,
-        },
-        body: JSON.stringify({
-          text: reply,
-          model_id: 'eleven_multilingual_v2', // Modelo recomendado para português
-          voice_settings: {
-            stability: 0.75, // Ajuste conforme necessário (0 a 1)
-            similarity_boost: 0.75, // Ajuste conforme necessário (0 a 1)
+  if (ELEVENLABS_API_KEY) {
+    try {
+      const elevenLabsResponse = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'xi-api-key': ELEVENLABS_API_KEY,
           },
-        }),
+          body: JSON.stringify({
+            text: reply,
+            model_id: 'eleven_multilingual_v2', // Modelo recomendado para português
+            voice_settings: {
+              stability: 0.75, // Ajuste conforme necessário (0 a 1)
+              similarity_boost: 0.75, // Ajuste conforme necessário (0 a 1)
+            },
+          }),
+        }
+      );
+
+      if (elevenLabsResponse.ok) {
+        const audioBlob = await elevenLabsResponse.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        audioElement = new Audio(audioUrl);
+        audioElement.onended = () => URL.revokeObjectURL(audioUrl); // Limpar a URL ao terminar
+      } else {
+        const errorData = await elevenLabsResponse.json();
+        console.error("Erro ao chamar a API do ElevenLabs:", errorData);
       }
-    );
-
-    if (!elevenLabsResponse.ok) {
-      const errorData = await elevenLabsResponse.json();
-      console.error("Erro ao chamar a API do ElevenLabs:", errorData);
-      return null; // Retorna null em caso de erro na TTS
+    } catch (error) {
+      console.error("Erro ao processar a resposta do ElevenLabs:", error);
     }
-
-    const audioBlob = await elevenLabsResponse.blob();
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
-    audio.onended = () => URL.revokeObjectURL(audioUrl); // Limpar a URL ao terminar
-    return audio; // Retorna o objeto Audio
-  } catch (error) {
-    console.error("Erro ao processar a resposta do ElevenLabs:", error);
-    return null; // Retorna null em caso de erro
+  } else {
+    console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
   }
-  // --- FIM DA INTEGRAÇÃO COM ELEVENLABS ---
 
-  return null; // Retorna null se não houver áudio para reproduzir
+  return { text: reply, audio: audioElement };
 }
