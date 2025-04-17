@@ -26,6 +26,7 @@
   margin-bottom: 6px;
   align-self: flex-end;
   max-width: 80%;
+  word-break: break-word; /* Adicionado para quebrar palavras longas */
 }
 
 .eco-message {
@@ -37,6 +38,7 @@
   margin-bottom: 6px;
   align-self: flex-start;
   max-width: 80%;
+  word-break: break-word; /* Adicionado para quebrar palavras longas */
 }
 
 .conversation-container {
@@ -65,7 +67,7 @@
 }
 
 .transform {
-  transform: translate(-50%);
+  transform: translateX(-50%); /* Correção para centralizar corretamente */
 }
 
 .mb-4 {
