@@ -29,7 +29,7 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
-      {/* Logo (igual ao da tela de login) - Mantenha este como estava, precisaremos da sua descrição para ajustar */}
+      {/* Logo (igual ao da tela de login) */}
       <div className="flex items-center text-6xl font-light mb-20 mt-12">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
         <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] shadow-md flex items-center justify-center">
@@ -64,15 +64,12 @@ function Home() {
       {/* Chat Card with ECO Bubble Icon */}
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
         <div className="flex items-center gap-4 mb-6">
-          {/* Bolha ECO (igual à da tela de mensagem) */}
-          <div className="relative w-12 h-12 rounded-full bg-white/60 shadow-lg flex items-center justify-center overflow-hidden">
-            {/* Gradiente sutil */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#E0E0E0]/30 via-white/50 to-[#F0F0F0]/30 rounded-full"></div>
-            {/* Brilho superior esquerdo */}
-            <div className="absolute top-1 left-1 w-3 h-3 rounded-full bg-white/80 blur-sm"></div>
-            {/* Pequenos pontos de luz */}
-            <div className="absolute top-2 right-2 w-0.5 h-0.5 rounded-full bg-white/70"></div>
-            <div className="absolute bottom-2 left-2 w-0.5 h-0.5 rounded-full bg-white/70"></div>
+          {/* Bolha ECO (igual à da tela de mensagem - TENTATIVA SIMPLIFICADA) */}
+          <div className="relative w-12 h-12 rounded-full bg-white/70 shadow-md flex items-center justify-center overflow-hidden">
+            {/* Gradiente suave */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/50 to-white/30 rounded-full"></div>
+            {/* Brilho */}
+            <div className="absolute top-0 left-0 w-6 h-6 rounded-full bg-white/90 blur-sm opacity-70"></div>
           </div>
           <div>
             <h2 className="text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
