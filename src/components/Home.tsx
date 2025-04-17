@@ -65,9 +65,9 @@ function Home() {
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
         <div className="flex items-center gap-4 mb-6">
           {/* Bolha ECO (igual à da tela de mensagem) */}
-          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-inner flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-white/40 blur-md opacity-80"></div>
-            <div className="w-3 h-3 rounded-full bg-white/70 absolute top-1/4 left-1/4 blur-sm"></div>
+          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#8B5CF6]/80 to-[#6366F1]/80 backdrop-blur-lg shadow-inner flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-white/20 blur-md opacity-70"></div>
+            <div className="w-3 h-3 rounded-full bg-white/80 absolute top-1/4 left-1/4 blur-sm"></div>
           </div>
           <div>
             <h2 className="text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
