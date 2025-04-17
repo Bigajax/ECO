@@ -23,13 +23,13 @@ function EcoBubbleInterface() {
   const startVibration = () => {
     console.log('startVibration chamado');
     setIsEcoSpeaking(true);
-    // Remova a vibração nativa do navegador para usar a animação CSS
+    // Agora a vibração é controlada pela classe CSS
   };
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
-    // Não precisamos mais parar a vibração nativa aqui
+    // A classe CSS será removida, interrompendo a animação
   };
 
   useEffect(() => {
@@ -62,6 +62,54 @@ function EcoBubbleInterface() {
       stopVibration();
     }
   }, [conversation]);
+
+  const handleSendMessage = async () => {
+    if (message.trim() && !isSending) {
+      setIsSending(true);
+      const userMessage = message;
+      setMessage('');
+      setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
+      setEcoResponseText('');
+      stopVibration();
+
+      try {
+        const aiResponse = await sendMessageToOpenAI(userMessage);
+        if (aiResponse?.text) {
+          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]);
+        } else {
+          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]);
+        }
+        setAudioPlayer(aiResponse?.audio || null);
+        setIsPlaying(true);
+      } catch (error: any) {
+        setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
+      } finally {
+        setIsSending(false);
+      }
+    }
+  };
+
+  const togglePlayPause = () => {
+    if (audioPlayer) {
+      if (isPlaying) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isSending) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
