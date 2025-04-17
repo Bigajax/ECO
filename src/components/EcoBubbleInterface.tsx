@@ -13,21 +13,15 @@ function EcoBubbleInterface() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [ecoResponseText, setEcoResponseText] = useState('');
   const ecoResponseIndex = useRef(0);
-  const vibrationInterval = useRef<NodeJS.Timeout | null>(null);
-  const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
   }, [navigate]);
 
-  const startVibration = useCallback(() => {
-    setIsEcoSpeaking(true);
-  }, []);
-
-  const stopVibration = useCallback(() => {
-    setIsEcoSpeaking(false);
-  }, []);
+  const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
+  const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
 
   useEffect(() => {
     if (conversation.length > 0 && conversation[conversation.length - 1].startsWith('ECO:')) {
@@ -38,15 +32,13 @@ function EcoBubbleInterface() {
 
       if (latestEcoResponse) {
         startVibration();
-        if (typingIntervalRef.current) {
-          clearInterval(typingIntervalRef.current);
-        }
+        if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
         typingIntervalRef.current = setInterval(() => {
           if (ecoResponseIndex.current < latestEcoResponse.length) {
-            setEcoResponseText((prevText) => prevText + latestEcoResponse[ecoResponseIndex.current]);
+            setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
             ecoResponseIndex.current++;
           } else {
-            clearInterval(typingIntervalRef.current);
+            clearInterval(typingIntervalRef.current!);
             stopVibration();
           }
         }, 50);
@@ -54,15 +46,11 @@ function EcoBubbleInterface() {
     } else {
       setEcoResponseText('');
       stopVibration();
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-      }
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
     }
 
     return () => {
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-      }
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
       stopVibration();
     };
   }, [conversation, startVibration, stopVibration]);
@@ -72,46 +60,29 @@ function EcoBubbleInterface() {
       setIsSending(true);
       const userMessage = message;
       setMessage('');
-      setConversation((prevConversation) => {
-        const updatedConversation = [...prevConversation, `Você: ${userMessage}`];
-        console.log('Após adicionar mensagem do usuário:', updatedConversation);
-        return updatedConversation;
-      });
+      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
       setEcoResponseText('');
       stopVibration();
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-      }
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
-        console.log('Resposta da API:', aiResponse);
-        if (aiResponse?.text) {
-          setConversation((prevConversation) => {
-            const updatedConversation = [...prevConversation, `ECO: ${aiResponse.text}`];
-            console.log('Após adicionar resposta da ECO:', updatedConversation);
-            return updatedConversation;
-          });
-        } else {
-          setConversation((prevConversation) => {
-            const updatedConversation = [...prevConversation, `ECO: ...`];
-            console.log('Após adicionar resposta vazia da ECO:', updatedConversation);
-            return updatedConversation;
-          });
-        }
+        setConversation((prev) => [
+          ...prev,
+          `ECO: ${aiResponse?.text || '...'}`,
+        ]);
         setAudioPlayer(aiResponse?.audio || null);
         setIsPlaying(true);
       } catch (error: any) {
-        setConversation((prevConversation) => {
-          const updatedConversation = [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`];
-          console.log('Após adicionar erro da ECO:', updatedConversation);
-          return updatedConversation;
-        });
+        setConversation((prev) => [
+          ...prev,
+          `ECO: Erro ao obter resposta: ${error.message}`,
+        ]);
       } finally {
         setIsSending(false);
       }
     }
-  }, [message, isSending, setConversation, stopVibration]);
+  }, [message, isSending]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
@@ -126,7 +97,7 @@ function EcoBubbleInterface() {
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
-  }, [setMessage]);
+  }, []);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isSending) {
@@ -143,40 +114,34 @@ function EcoBubbleInterface() {
         Voltar
       </button>
 
-      {/* Floating ECO Bubble */}
-      <div
-        className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative ${
-          isEcoSpeaking ? 'eco-bubble-vibrate' : ''
-        }`}
-      >
+      {/* Bolha ECO */}
+      <div className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative ${
+        isEcoSpeaking ? 'eco-bubble-vibrate' : ''
+      }`}>
         <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
         <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
       </div>
 
-      {/* Conversation Display */}
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 mb-4 overflow-y-auto h-64 flex flex-col p-2">
+      {/* Caixa de conversa */}
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container">
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'user-message' : 'eco-message'}`}
+            className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
           >
-            {msg.startsWith('ECO:') ? (
-              <>ECO: {ecoResponseText}</>
-            ) : (
-              msg
-            )}
+            {msg.startsWith('ECO:') ? `ECO: ${ecoResponseText}` : msg}
           </p>
         ))}
       </div>
 
-      {/* Audio Control Button */}
+      {/* Botão de áudio */}
       {audioPlayer && (
         <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
           {isPlaying ? <Pause className="w-6 h-6 text-gray-600" /> : <Play className="w-6 h-6 text-gray-600" />}
         </button>
       )}
 
-      {/* Message Input Container */}
+      {/* Campo de entrada de mensagem */}
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4">
         <div className="flex items-center gap-3">
           <input
@@ -191,7 +156,7 @@ function EcoBubbleInterface() {
           <button onClick={handleSendMessage} className="p-2 hover:bg-gray-100 rounded-full transition-colors" disabled={isSending}>
             <Image className="w-6 h-6 text-gray-600" />
           </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors" disabled={isSending}>
+          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors" disabled>
             <Mic className="w-6 h-6 text-gray-600" />
           </button>
         </div>
