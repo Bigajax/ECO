@@ -4,14 +4,10 @@ import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './app/login';
 import Home from './components/Home';
+import App from './App'; // Importe o componente App que define as rotas
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>
 );
