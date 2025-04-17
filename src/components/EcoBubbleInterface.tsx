@@ -132,7 +132,12 @@ function EcoBubbleInterface() {
       {/* Conversation Display */}
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 mb-4 overflow-y-auto h-64">
         {conversation.map((msg, index) => (
-          <p key={index} className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'text-blue-700' : 'text-green-700'}`}>
+          <p
+            key={index}
+            className={`mb-2 whitespace-pre-wrap ${
+              msg.startsWith('Você:') ? 'user-message' : 'eco-message'
+            }`}
+          >
             {msg.startsWith('ECO:') ? (
               <>ECO: {ecoResponseText}</>
             ) : (
