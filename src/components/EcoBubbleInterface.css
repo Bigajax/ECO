@@ -1,26 +1,18 @@
-@keyframes vibrate-waves {
+@keyframes vibrate-waves-simple {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  25% {
-    transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    opacity: 1;
   }
   50% {
-    transform: scale(1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  75% {
-    transform: scale(0.98);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    transform: scale(1.02);
+    opacity: 0.9;
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
   }
 }
 
 .eco-bubble-vibrate {
-  animation: vibrate-waves 0.3s ease-in-out infinite alternate;
+  animation: vibrate-waves-simple 0.25s ease-in-out infinite alternate;
 }
