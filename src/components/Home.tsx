@@ -26,17 +26,17 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
+      
       {/* Logo ECO */}
       <div className="flex items-center text-6xl font-light mb-20 mt-12">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
-        <div className="relative w-12 h-12 rounded-full flex items-center justify-center">
-          {/* Bolha translúcida */}
-          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-white/30 via-white/10 to-white/0 backdrop-blur-sm shadow-inner shadow-white/20">
-            <div className="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-40" />
-            <div className="absolute w-full h-full animate-pulse-slow rounded-full" />
-            {/* Pontos ao redor da bolha */}
+        
+        {/* Novo Ícone da Bolha com fundo sólido */}
+        <div className="relative w-12 h-12 mx-auto flex items-center justify-center ml-2">
+          <div className="w-12 h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+            <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full h-full animate-spin-slow rounded-full border-dotted border-2 border-white/20 opacity-30" />
+              <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
             </div>
           </div>
         </div>
@@ -62,13 +62,13 @@ function Home() {
       {/* Card com bolha estilizada */}
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
         <div className="flex items-center gap-4 mb-6">
-          {/* Bolha translúcida no ícone */}
-          <div className="relative w-12 h-12 flex items-center justify-center">
-            <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-white/30 via-white/10 to-white/0 backdrop-blur-sm shadow-inner shadow-white/20">
-              <div className="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-40" />
-              <div className="absolute w-full h-full animate-pulse-slow rounded-full" />
+          
+          {/* Novo ícone dentro do card */}
+          <div className="relative w-12 h-12 mx-auto flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+              <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full animate-spin-slower rounded-full border-dotted border-2 border-white/20 opacity-30" />
+                <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
               </div>
             </div>
           </div>
