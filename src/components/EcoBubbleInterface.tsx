@@ -1,5 +1,4 @@
-// src/components/EcoBubbleInterface.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
@@ -11,17 +10,71 @@ function EcoBubbleInterface() {
   const navigate = useNavigate();
   const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [ecoResponseText, setEcoResponseText] = useState('');
+  const ecoResponseIndex = useRef(0);
+  const vibrationInterval = useRef<NodeJS.Timeout | null>(null);
 
   const handleGoBack = () => {
     navigate('/home');
   };
 
+  const startVibration = () => {
+    if ("vibrate" in navigator) {
+      vibrationInterval.current = setInterval(() => {
+        navigator.vibrate(50); // Vibra por 50ms a cada intervalo
+      }, 150); // Intervalo entre vibrações
+    }
+  };
+
+  const stopVibration = () => {
+    if (vibrationInterval.current) {
+      clearInterval(vibrationInterval.current);
+      vibrationInterval.current = null;
+      if ("vibrate" in navigator) {
+        navigator.vibrate(0); // Cancela qualquer vibração pendente
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (conversation.length > 0 && conversation[conversation.length - 1].startsWith('ECO:')) {
+      const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
+      setEcoResponseText('');
+      ecoResponseIndex.current = 0;
+      stopVibration(); // Para qualquer vibração anterior
+
+      if (latestEcoResponse) {
+        startVibration();
+        const intervalId = setInterval(() => {
+          if (ecoResponseIndex.current < latestEcoResponse.length) {
+            setEcoResponseText((prevText) => prevText + latestEcoResponse[ecoResponseIndex.current]);
+            ecoResponseIndex.current++;
+          } else {
+            clearInterval(intervalId);
+            stopVibration();
+          }
+        }, 50); // Ajuste a velocidade da "fala"
+
+        return () => {
+          clearInterval(intervalId);
+          stopVibration();
+        };
+      }
+    } else {
+      setEcoResponseText('');
+      stopVibration();
+    }
+  }, [conversation]);
+
   const handleSendMessage = async () => {
     if (message.trim() && !isSending) {
       setIsSending(true);
       const userMessage = message;
-      setMessage(''); // Limpa a caixa de mensagem imediatamente após o envio
+      setMessage('');
       setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
+      setEcoResponseText(''); // Limpa o texto da resposta anterior
+      stopVibration(); // Para qualquer vibração anterior
+
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         if (aiResponse?.text) {
@@ -56,7 +109,7 @@ function EcoBubbleInterface() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isSending) {
-      e.preventDefault(); // Evita a quebra de linha padrão no textarea
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -79,7 +132,11 @@ function EcoBubbleInterface() {
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4 mb-4 overflow-y-auto h-64">
         {conversation.map((msg, index) => (
           <p key={index} className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'text-blue-700' : 'text-green-700'}`}>
-            {msg}
+            {msg.startsWith('ECO:') ? (
+              <>ECO: {ecoResponseText}</>
+            ) : (
+              msg
+            )}
           </p>
         ))}
       </div>
