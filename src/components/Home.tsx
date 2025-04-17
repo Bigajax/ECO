@@ -1,94 +1,97 @@
+"use client";
 
-export default Login; import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 function Home() {
-  const navigate = useNavigate();
-  const [greeting, setGreeting] = useState('');
+  const [reflexao, setReflexao] = useState("");
+  const [resposta, setResposta] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const loggedInUserName = 'Rafael'; // Substitua pela lógica real
+  async function gerarResposta() {
+    if (!reflexao.trim()) return;
+    setLoading(true);
+    setResposta("");
 
-  useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
+    try {
+      const res = await fetch("/api/gerar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensagem: reflexao }),
+      });
 
-    if (hour >= 0 && hour < 12) {
-      setGreeting('Bom dia');
-    } else if (hour >= 12 && hour < 18) {
-      setGreeting('Boa tarde');
-    } else {
-      setGreeting('Boa noite');
+      const data = await res.json();
+      setResposta(data.resultado);
+    } catch (err) {
+      console.error("Erro ao gerar resposta:", err);
+      setResposta("Ocorreu um erro ao gerar a resposta.");
+    } finally {
+      setLoading(false);
     }
-  }, []);
-
-  const handleReceberOrientacaoClick = () => {
-    navigate('/eco-bubble');
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#E9DEFA] via-[#FBFCDB] to-[#E9DEFA] flex flex-col items-center p-8">
-      
-      {/* Logo ECO */}
-      <div className="flex items-center text-6xl font-light mb-20 mt-12">
-        <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
-        
-        {/* Novo Ícone da Bolha com fundo sólido */}
-        <div className="relative w-12 h-12 mx-auto flex items-center justify-center ml-2">
-          <div className="w-12 h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
-            <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
+    <div className="min-h-screen w-full bg-black flex flex-col items-center justify-center px-4 py-12">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-white text-4xl font-semibold mb-8 text-center"
+      >
+        ECO — Seu espelho interno
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-2xl"
+      >
+        <Card className="bg-zinc-900 border-zinc-700 text-white shadow-xl rounded-2xl">
+          <CardContent className="p-6">
+            <label className="text-sm mb-2 block">Escreva sua reflexão:</label>
+            <Textarea
+              value={reflexao}
+              onChange={(e) => setReflexao(e.target.value)}
+              placeholder="O que você está sentindo, pensando ou vivendo hoje?"
+              className="bg-zinc-800 text-white border-zinc-600 focus-visible:ring-1 focus-visible:ring-white"
+              rows={5}
+            />
+
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={gerarResposta}
+                disabled={loading}
+                className="bg-white text-black hover:bg-gray-300 transition-all"
+              >
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Refletir com a bolha"
+                )}
+              </Button>
             </div>
-          </div>
-        </div>
-      </div>
+          </CardContent>
+        </Card>
 
-      {/* Saudação */}
-      <h1 className="text-4xl font-medium text-gray-900 mb-4 tracking-tight">
-        {greeting}, {loggedInUserName}
-      </h1>
-      <p className="text-xl text-gray-600 text-center max-w-md mb-16 leading-relaxed">
-        A calma não está no mundo,
-        <br />
-        está dentro de você.
-      </p>
-
-      {/* Navegação */}
-      <nav className="flex gap-12 mb-20">
-        <button className="text-gray-600 text-lg font-medium hover:text-[#6366F1] transition-colors">Hoje</button>
-        <button className="text-gray-600 text-lg font-medium hover:text-[#6366F1] transition-colors">Explorar</button>
-        <button className="text-gray-600 text-lg font-medium hover:text-[#6366F1] transition-colors">Músicas</button>
-      </nav>
-
-      {/* Card com bolha estilizada */}
-      <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
-        <div className="flex items-center gap-4 mb-6">
-          
-          {/* Novo ícone dentro do card */}
-          <div className="relative w-12 h-12 mx-auto flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
-              <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
-            <p className="text-gray-600">
-              Estou aqui se precisar de uma conversa para começar seu dia.
-            </p>
-          </div>
-        </div>
-
-        <button
-          className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white rounded-full py-4 px-8 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 hover:opacity-95"
-          onClick={handleReceberOrientacaoClick}
-        >
-          Receber orientação
-        </button>
-      </div>
+        {resposta && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-8 text-white bg-zinc-800 border border-zinc-700 rounded-2xl p-6 shadow-lg"
+          >
+            <div className="text-sm text-zinc-400 mb-2">Reflexo da bolha:</div>
+            <div className="whitespace-pre-line leading-relaxed">{resposta}</div>
+          </motion.div>
+        )}
+      </motion.div>
     </div>
   );
 }
