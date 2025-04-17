@@ -29,9 +29,16 @@ function Home() {
       {/* Logo ECO */}
       <div className="flex items-center text-6xl font-light mb-20 mt-12">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
-        <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] shadow-md flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-white/20 blur-lg opacity-70"></div>
-          <div className="w-8 h-8 rounded-full bg-white/80"></div>
+        <div className="relative w-12 h-12 rounded-full flex items-center justify-center">
+          {/* Bolha translúcida */}
+          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-white/30 via-white/10 to-white/0 backdrop-blur-sm shadow-inner shadow-white/20">
+            <div className="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-40" />
+            <div className="absolute w-full h-full animate-pulse-slow rounded-full" />
+            {/* Pontos ao redor da bolha */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-full h-full animate-spin-slow rounded-full border-dotted border-2 border-white/20 opacity-30" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -52,15 +59,18 @@ function Home() {
         <button className="text-gray-600 text-lg font-medium hover:text-[#6366F1] transition-colors">Músicas</button>
       </nav>
 
-      {/* Card com a bolha ECO atualizada */}
+      {/* Card com bolha estilizada */}
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full">
         <div className="flex items-center gap-4 mb-6">
-          {/* Ícone com bolha ECO */}
-          <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] shadow-md flex items-center justify-center overflow-hidden">
-            {/* Halo/brilho */}
-            <div className="absolute inset-0 rounded-full bg-white/20 blur-[6px] opacity-70 z-0"></div>
-            {/* Núcleo da bolha */}
-            <div className="w-6 h-6 rounded-full bg-white/80 z-10 shadow-inner shadow-white/30"></div>
+          {/* Bolha translúcida no ícone */}
+          <div className="relative w-12 h-12 flex items-center justify-center">
+            <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-white/30 via-white/10 to-white/0 backdrop-blur-sm shadow-inner shadow-white/20">
+              <div className="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-40" />
+              <div className="absolute w-full h-full animate-pulse-slow rounded-full" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-full h-full animate-spin-slower rounded-full border-dotted border-2 border-white/20 opacity-30" />
+              </div>
+            </div>
           </div>
 
           <div>
