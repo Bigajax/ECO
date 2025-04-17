@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
+import './EcoBubbleInterface.css'; // Importe o arquivo CSS
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -22,26 +23,13 @@ function EcoBubbleInterface() {
   const startVibration = () => {
     console.log('startVibration chamado');
     setIsEcoSpeaking(true);
-    if ("vibrate" in navigator) {
-      vibrationInterval.current = setInterval(() => {
-        console.log('Vibrando...');
-        navigator.vibrate(50);
-      }, 200); // Intervalo aumentado para 200ms
-    } else {
-      console.log('API de vibração não suportada neste navegador.');
-    }
+    // Remova a vibração nativa do navegador para usar a animação CSS
   };
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
-    if (vibrationInterval.current) {
-      clearInterval(vibrationInterval.current);
-      vibrationInterval.current = null;
-      if ("vibrate" in navigator) {
-        navigator.vibrate(0);
-      }
-    }
+    // Não precisamos mais parar a vibração nativa aqui
   };
 
   useEffect(() => {
@@ -49,7 +37,7 @@ function EcoBubbleInterface() {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
-      stopVibration();
+      stopVibration(); // Para qualquer "fala" anterior
 
       if (latestEcoResponse) {
         startVibration();
@@ -75,62 +63,6 @@ function EcoBubbleInterface() {
     }
   }, [conversation]);
 
-  useEffect(() => {
-    if (isEcoSpeaking && !vibrationInterval.current && "vibrate" in navigator) {
-      startVibration();
-    } else if (!isEcoSpeaking && vibrationInterval.current) {
-      stopVibration();
-    }
-  }, [isEcoSpeaking]);
-
-  const handleSendMessage = async () => {
-    if (message.trim() && !isSending) {
-      setIsSending(true);
-      const userMessage = message;
-      setMessage('');
-      setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
-      setEcoResponseText('');
-      stopVibration();
-
-      try {
-        const aiResponse = await sendMessageToOpenAI(userMessage);
-        if (aiResponse?.text) {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]);
-        } else {
-          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]);
-        }
-        setAudioPlayer(aiResponse?.audio || null);
-        setIsPlaying(true);
-      } catch (error: any) {
-        setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
-      } finally {
-        setIsSending(false);
-      }
-    }
-  };
-
-  const togglePlayPause = () => {
-    if (audioPlayer) {
-      if (isPlaying) {
-        audioPlayer.pause();
-      } else {
-        audioPlayer.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isSending) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
       {/* Botão Voltar */}
@@ -140,7 +72,11 @@ function EcoBubbleInterface() {
       </button>
 
       {/* Floating ECO Bubble */}
-      <div className="w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative">
+      <div
+        className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl mb-8 relative ${
+          isEcoSpeaking ? 'eco-bubble-vibrate' : ''
+        }`}
+      >
         <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
         <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
       </div>
