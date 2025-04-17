@@ -19,14 +19,19 @@ function EcoBubbleInterface() {
   };
 
   const startVibration = () => {
+    console.log('startVibration chamado');
     if ("vibrate" in navigator) {
       vibrationInterval.current = setInterval(() => {
+        console.log('Vibrando...');
         navigator.vibrate(50); // Vibra por 50ms a cada intervalo
       }, 150); // Intervalo entre vibrações
+    } else {
+      console.log('API de vibração não suportada neste navegador.');
     }
   };
 
   const stopVibration = () => {
+    console.log('stopVibration chamado');
     if (vibrationInterval.current) {
       clearInterval(vibrationInterval.current);
       vibrationInterval.current = null;
