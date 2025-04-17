@@ -21,10 +21,14 @@ function EcoBubbleInterface() {
       setIsSending(true);
       setConversation((prevConversation) => [...prevConversation, `Você: ${message}`]);
       try {
-        const audio = await sendMessageToOpenAI(message);
-        setConversation((prevConversation) => [...prevConversation, `ECO: ${audio?.textContent || '...'}`]); // Exibe o texto da resposta
-        setAudioPlayer(audio);
-        setIsPlaying(true); // Começa como tocando
+        const aiResponse = await sendMessageToOpenAI(message); // Agora 'aiResponse' conterá tanto o texto quanto o áudio (se bem-sucedido)
+        if (aiResponse?.text) {
+          setConversation((prevConversation) => [...prevConversation, `ECO: ${aiResponse.text}`]); // Exibe o texto da resposta
+        } else {
+          setConversation((prevConversation) => [...prevConversation, `ECO: ...`]); // Fallback se não houver texto
+        }
+        setAudioPlayer(aiResponse?.audio || null); // Define o player de áudio
+        setIsPlaying(true); // Começa como tocando (se houver áudio)
       } catch (error: any) {
         setConversation((prevConversation) => [...prevConversation, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
