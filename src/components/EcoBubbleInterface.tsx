@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
+import './EcoBubbleInterface.css'; // Certifique-se de que esta linha está presente
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -22,13 +23,13 @@ function EcoBubbleInterface() {
   const startVibration = () => {
     console.log('startVibration chamado');
     setIsEcoSpeaking(true);
-    // Agora a vibração é controlada pela classe CSS (se você decidir reativar)
+    // Agora a vibração é controlada pela classe CSS
   };
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
-    // A classe CSS será removida, interrompendo a animação (se você decidir reativar)
+    // A classe CSS será removida, interrompendo a animação
   };
 
   useEffect(() => {
@@ -133,17 +134,7 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'self-end' : 'self-start'}`}
-            style={{
-              fontSize: msg.startsWith('Você:') ? '1rem' : '0.9rem',
-              padding: '8px',
-              borderRadius: '8px',
-              backgroundColor: msg.startsWith('Você:') ? 'rgba(173, 216, 230, 0.3)' : 'rgba(144, 238, 144, 0.3)',
-              color: '#333',
-              marginBottom: '6px',
-              textAlign: 'left',
-              maxWidth: '80%', // Para não ocupar toda a largura
-            }}
+            className={`mb-2 whitespace-pre-wrap ${msg.startsWith('Você:') ? 'user-message' : 'eco-message'}`}
           >
             {msg.startsWith('ECO:') ? (
               <>ECO: {ecoResponseText}</>
