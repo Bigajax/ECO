@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Apple, Facebook, Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient'; // Importe o cliente Supabase
+import { supabase } from '../supabaseClient'; // Certifique-se de que este caminho esteja correto
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -26,7 +26,7 @@ function Login() {
         console.error('Erro ao fazer login:', error);
       } else {
         console.log('Login realizado com sucesso!');
-        navigate('/home'); // Navega para a tela Home em caso de sucesso
+        navigate('/home');
       }
     } catch (err) {
       setError(err);
@@ -90,7 +90,7 @@ function Login() {
             className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition-colors font-medium"
             disabled={loading}
           >
-            Entrar
+            {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
