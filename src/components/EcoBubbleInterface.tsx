@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
@@ -15,22 +15,23 @@ function EcoBubbleInterface() {
   const ecoResponseIndex = useRef(0);
   const vibrationInterval = useRef<NodeJS.Timeout | null>(null);
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleGoBack = () => {
+  const handleGoBack = useCallback(() => {
     navigate('/home');
-  };
+  }, [navigate]);
 
-  const startVibration = () => {
+  const startVibration = useCallback(() => {
     console.log('startVibration chamado');
     setIsEcoSpeaking(true);
     // Agora a vibração é controlada pela classe CSS
-  };
+  }, []);
 
-  const stopVibration = () => {
+  const stopVibration = useCallback(() => {
     console.log('stopVibration chamado');
     setIsEcoSpeaking(false);
     // A classe CSS será removida, interrompendo a animação
-  };
+  }, []);
 
   useEffect(() => {
     if (conversation.length > 0 && conversation[conversation.length - 1].startsWith('ECO:')) {
@@ -41,29 +42,36 @@ function EcoBubbleInterface() {
 
       if (latestEcoResponse) {
         startVibration();
-        const intervalId = setInterval(() => {
+        if (typingIntervalRef.current) {
+          clearInterval(typingIntervalRef.current);
+        }
+        typingIntervalRef.current = setInterval(() => {
           if (ecoResponseIndex.current < latestEcoResponse.length) {
-            console.log(`Index: ${ecoResponseIndex.current}, Caracter: ${latestEcoResponse[ecoResponseIndex.current]}`);
             setEcoResponseText((prevText) => prevText + latestEcoResponse[ecoResponseIndex.current]);
             ecoResponseIndex.current++;
           } else {
-            clearInterval(intervalId);
+            clearInterval(typingIntervalRef.current);
             stopVibration();
           }
         }, 50);
-
-        return () => {
-          clearInterval(intervalId);
-          stopVibration();
-        };
       }
     } else {
       setEcoResponseText('');
       stopVibration();
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
     }
-  }, [conversation]);
 
-  const handleSendMessage = async () => {
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+      stopVibration();
+    };
+  }, [conversation, startVibration, stopVibration]);
+
+  const handleSendMessage = useCallback(async () => {
     if (message.trim() && !isSending) {
       setIsSending(true);
       const userMessage = message;
@@ -71,6 +79,9 @@ function EcoBubbleInterface() {
       setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
       setEcoResponseText('');
       stopVibration();
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
@@ -87,9 +98,9 @@ function EcoBubbleInterface() {
         setIsSending(false);
       }
     }
-  };
+  }, [message, isSending, setConversation, stopVibration]);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
       if (isPlaying) {
         audioPlayer.pause();
@@ -98,18 +109,18 @@ function EcoBubbleInterface() {
       }
       setIsPlaying(!isPlaying);
     }
-  };
+  }, [audioPlayer, isPlaying]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
-  };
+  }, [setMessage]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isSending) {
       e.preventDefault();
       handleSendMessage();
     }
-  };
+  }, [isSending, handleSendMessage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
