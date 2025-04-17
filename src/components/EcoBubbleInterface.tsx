@@ -21,12 +21,12 @@ function EcoBubbleInterface() {
 
   const startVibration = () => {
     console.log('startVibration chamado');
-    setIsEcoSpeaking(true); // Define o estado de "falando"
+    setIsEcoSpeaking(true);
     if ("vibrate" in navigator) {
       vibrationInterval.current = setInterval(() => {
         console.log('Vibrando...');
-        navigator.vibrate(50); // Vibra por 50ms a cada intervalo
-      }, 150); // Intervalo entre vibrações
+        navigator.vibrate(50);
+      }, 200); // Intervalo aumentado para 200ms
     } else {
       console.log('API de vibração não suportada neste navegador.');
     }
@@ -34,12 +34,12 @@ function EcoBubbleInterface() {
 
   const stopVibration = () => {
     console.log('stopVibration chamado');
-    setIsEcoSpeaking(false); // Reseta o estado de "falando"
+    setIsEcoSpeaking(false);
     if (vibrationInterval.current) {
       clearInterval(vibrationInterval.current);
       vibrationInterval.current = null;
       if ("vibrate" in navigator) {
-        navigator.vibrate(0); // Cancela qualquer vibração pendente
+        navigator.vibrate(0);
       }
     }
   };
@@ -49,18 +49,20 @@ function EcoBubbleInterface() {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
-      stopVibration(); // Parar qualquer vibração anterior
+      stopVibration();
 
       if (latestEcoResponse) {
+        startVibration();
         const intervalId = setInterval(() => {
           if (ecoResponseIndex.current < latestEcoResponse.length) {
+            console.log(`Index: ${ecoResponseIndex.current}, Caracter: ${latestEcoResponse[ecoResponseIndex.current]}`);
             setEcoResponseText((prevText) => prevText + latestEcoResponse[ecoResponseIndex.current]);
             ecoResponseIndex.current++;
           } else {
             clearInterval(intervalId);
             stopVibration();
           }
-        }, 50); // Ajuste a velocidade da "fala"
+        }, 50);
 
         return () => {
           clearInterval(intervalId);
@@ -75,9 +77,9 @@ function EcoBubbleInterface() {
 
   useEffect(() => {
     if (isEcoSpeaking && !vibrationInterval.current && "vibrate" in navigator) {
-      startVibration(); // Inicia a vibração se estiver "falando" e não vibrando
+      startVibration();
     } else if (!isEcoSpeaking && vibrationInterval.current) {
-      stopVibration(); // Para a vibração se não estiver "falando" e estiver vibrando
+      stopVibration();
     }
   }, [isEcoSpeaking]);
 
@@ -87,8 +89,8 @@ function EcoBubbleInterface() {
       const userMessage = message;
       setMessage('');
       setConversation((prevConversation) => [...prevConversation, `Você: ${userMessage}`]);
-      setEcoResponseText(''); // Limpa o texto da resposta anterior
-      stopVibration(); // Para qualquer vibração anterior
+      setEcoResponseText('');
+      stopVibration();
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
