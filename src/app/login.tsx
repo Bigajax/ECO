@@ -12,7 +12,10 @@ function Login() {
 
     // Simulação de login bem-sucedido
     if (email && password) {
-      navigate('/app'); // Vai para a página principal
+      navigate('/home'); // Navega para a tela Home
+    } else {
+      // Aqui você pode adicionar lógica para exibir mensagens de erro de login
+      console.log('Credenciais inválidas (simulação)');
     }
   };
 
