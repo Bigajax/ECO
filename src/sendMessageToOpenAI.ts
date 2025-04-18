@@ -45,7 +45,7 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
     return { text: "Desculpe, não consegui entender sua reflexão. Tente novamente.", audio: null };
   }
 
-  // --- DESATIVANDO INTEGRAÇÃO COM ELEVENLABS ---
+  // --- DESATIVANDO INTEGRAÇÃO COM ELEVENLABS PARA TESTE ---
   // const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
   // const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // ID da voz da Rachel
   // let audioElement: HTMLAudioElement | null = null;
@@ -87,5 +87,5 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
   //   console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
   // }
 
-  return { text: reply, audio: null }; // Retornando null para audio
+  return { text: reply, audio: null };
 }
