@@ -173,7 +173,7 @@ function EcoBubbleInterface() {
             key={index}
             className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
           >
-            {msg.startsWith('ECO:') ? `ECO: ${ecoResponseText}` : msg}
+            {msg} {/* Alteração feita aqui! */}
           </p>
         ))}
       </div>
