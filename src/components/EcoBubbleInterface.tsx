@@ -1,3 +1,4 @@
+// EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -59,6 +60,7 @@ function EcoBubbleInterface() {
   }, [conversation, startVibration, stopVibration]);
 
   const handleSendMessage = useCallback(async () => {
+    console.log('handleSendMessage foi chamada com a mensagem:', message); // ADICIONE ESTE LOG
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
       setIsSending(true);
       const userMessage = message;
@@ -86,7 +88,7 @@ function EcoBubbleInterface() {
           return updated;
         });
         setAudioPlayer(aiResponse?.audio || null);
-        setIsPlaying(true);
+        setIsPlaying(false);
       } catch (error: any) {
         console.error('Erro ao obter resposta da API:', error);
         setConversation((prev) => {
@@ -173,7 +175,7 @@ function EcoBubbleInterface() {
             key={index}
             className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
           >
-            {msg} {/* Alteração feita aqui! */}
+            {msg}
           </p>
         ))}
       </div>
