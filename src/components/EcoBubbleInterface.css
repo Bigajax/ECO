@@ -1,3 +1,4 @@
+/* EcoBubbleInterface.css */
 @keyframes vibrate-waves-simple {
   0% {
     transform: scale(1);
@@ -71,67 +72,4 @@
 }
 
 .mb-4 {
-  margin-bottom: 1rem;
-}
-
-.bg-white\/80 {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.backdrop-blur-lg {
-  backdrop-filter: blur(12px);
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.p-4 {
-  padding: 1rem;
-}
-
-.grid {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.p-2 {
-  padding: 0.5rem;
-}
-
-.hover\:opacity-75:hover {
-  opacity: 0.75;
-}
-
-.transition-opacity {
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
+  margin-bottom: 1
