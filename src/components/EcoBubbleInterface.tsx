@@ -15,7 +15,6 @@ function EcoBubbleInterface() {
   const [ecoResponseText, setEcoResponseText] = useState('');
   const ecoResponseIndex = useRef(0);
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -23,18 +22,19 @@ function EcoBubbleInterface() {
     navigate('/home');
   }, [navigate]);
 
-  const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
-  const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
+  // Removendo as funções e chamadas de vibração
+  // const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
+  // const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
 
   useEffect(() => {
     if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
       const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
       setEcoResponseText('');
       ecoResponseIndex.current = 0;
-      stopVibration();
+      // stopVibration(); // Removido
 
       if (latestEcoResponse) {
-        startVibration();
+        // startVibration(); // Removido
         if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
         typingIntervalRef.current = setInterval(() => {
           if (ecoResponseIndex.current < latestEcoResponse.length) {
@@ -42,21 +42,21 @@ function EcoBubbleInterface() {
             ecoResponseIndex.current++;
           } else {
             clearInterval(typingIntervalRef.current!);
-            stopVibration();
+            // stopVibration(); // Removido
           }
         }, 50);
       }
     } else {
       setEcoResponseText('');
-      stopVibration();
+      // stopVibration(); // Removido
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
     }
 
     return () => {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-      stopVibration();
+      // stopVibration(); // Removido
     };
-  }, [conversation, startVibration, stopVibration]);
+  }, [conversation]); // Removidas dependências startVibration e stopVibration
 
   const handleSendMessage = useCallback(async () => {
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
@@ -73,7 +73,7 @@ function EcoBubbleInterface() {
       });
 
       setEcoResponseText('');
-      stopVibration();
+      // stopVibration(); // Removido
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
@@ -138,7 +138,7 @@ function EcoBubbleInterface() {
       <div className="relative mb-8">
         <div
           className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${
-            isEcoSpeaking ? 'eco-bubble-vibrate' : ''
+            false // Removida a lógica de vibração
           }`}
           onClick={toggleMenu}
         >
