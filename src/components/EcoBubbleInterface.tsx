@@ -32,7 +32,7 @@ function EcoBubbleInterface() {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
       stopVibration();
     };
-  }, []); // Removi as dependências para este efeito não rodar a cada atualização da conversa
+  }, []);
 
   const handleSendMessage = useCallback(async () => {
     console.log('handleSendMessage foi chamada com a mensagem:', message);
@@ -46,7 +46,7 @@ function EcoBubbleInterface() {
       setConversation((prev) => {
         const updated = [...prev, `Você: ${userMessage}`];
         console.log('Estado conversation após mensagem do usuário:', updated);
-        console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
+        console.log('CONVERSATION AGORA:', updated);
         return updated;
       });
 
@@ -57,11 +57,12 @@ function EcoBubbleInterface() {
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         console.log('Resposta da API recebida:', aiResponse);
+        console.log('AI RESPONSE COMPLETA:', aiResponse); // ADICIONEI ESTE LOG
         const ecoText = aiResponse?.text || '...';
         setConversation((prev) => {
           const updated = [...prev, `ECO: ${ecoText}`];
           console.log('Estado conversation após resposta da ECO:', updated);
-          console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
+          console.log('CONVERSATION AGORA:', updated);
           return updated;
         });
         setAudioPlayer(aiResponse?.audio || null);
@@ -71,7 +72,7 @@ function EcoBubbleInterface() {
         setConversation((prev) => {
           const updated = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
           console.log('Estado conversation após erro da ECO:', updated);
-          console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
+          console.log('CONVERSATION AGORA:', updated);
           return updated;
         });
       } finally {
