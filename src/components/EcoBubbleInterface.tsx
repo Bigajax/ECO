@@ -28,39 +28,14 @@ function EcoBubbleInterface() {
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
 
   useEffect(() => {
-    // if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
-    //   const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
-    //   setEcoResponseText('');
-    //   ecoResponseIndex.current = 0;
-    //   stopVibration();
-
-    //   if (latestEcoResponse) {
-    //     startVibration();
-    //     if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-    //     typingIntervalRef.current = setInterval(() => {
-    //       if (ecoResponseIndex.current < latestEcoResponse.length) {
-    //         setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
-    //         ecoResponseIndex.current++;
-    //       } else {
-    //         clearInterval(typingIntervalRef.current!);
-    //         stopVibration();
-    //       }
-    //     }, 50);
-    //   }
-    // } else {
-    //   setEcoResponseText('');
-    //   stopVibration();
-    //   if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-    // }
-
     return () => {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
       stopVibration();
     };
-  }, [conversation, startVibration, stopVibration]);
+  }, []); // Removi as dependências para este efeito não rodar a cada atualização da conversa
 
   const handleSendMessage = useCallback(async () => {
-    console.log('handleSendMessage foi chamada com a mensagem:', message); // Já adicionado
+    console.log('handleSendMessage foi chamada com a mensagem:', message);
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
       setIsSending(true);
       const userMessage = message;
@@ -71,6 +46,7 @@ function EcoBubbleInterface() {
       setConversation((prev) => {
         const updated = [...prev, `Você: ${userMessage}`];
         console.log('Estado conversation após mensagem do usuário:', updated);
+        console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
         return updated;
       });
 
@@ -85,6 +61,7 @@ function EcoBubbleInterface() {
         setConversation((prev) => {
           const updated = [...prev, `ECO: ${ecoText}`];
           console.log('Estado conversation após resposta da ECO:', updated);
+          console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
           return updated;
         });
         setAudioPlayer(aiResponse?.audio || null);
@@ -94,6 +71,7 @@ function EcoBubbleInterface() {
         setConversation((prev) => {
           const updated = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
           console.log('Estado conversation após erro da ECO:', updated);
+          console.log('CONVERSATION AGORA:', updated); // ADICIONEI ESTE LOG
           return updated;
         });
       } finally {
@@ -101,6 +79,33 @@ function EcoBubbleInterface() {
       }
     }
   }, [message, isSending]);
+
+  useEffect(() => {
+    if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
+      const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
+      setEcoResponseText('');
+      ecoResponseIndex.current = 0;
+      stopVibration();
+
+      if (latestEcoResponse) {
+        startVibration();
+        if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = setInterval(() => {
+          if (ecoResponseIndex.current < latestEcoResponse.length) {
+            setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
+            ecoResponseIndex.current++;
+          } else {
+            clearInterval(typingIntervalRef.current!);
+            stopVibration();
+          }
+        }, 50);
+      }
+    } else {
+      setEcoResponseText('');
+      stopVibration();
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+    }
+  }, [conversation, startVibration, stopVibration]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
