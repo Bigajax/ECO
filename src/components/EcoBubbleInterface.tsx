@@ -221,7 +221,7 @@ function EcoBubbleInterface() {
           >
             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
               {!msg.isUser && <BubbleIcon />}
-              <p className="text-sm break-words" style={{ fontSize: '0.9rem' }}>
+              <p className="text-sm break-words" style={{ fontSize: '1.1rem' }}>
                 {!msg.isUser && <span className="font-semibold">ECO: </span>}
                 {msg.text}
               </p>
