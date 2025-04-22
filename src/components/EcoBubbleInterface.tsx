@@ -3,11 +3,11 @@ import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
-import { sendMessageToOpenAI } from '../../src/sendMessageToOpenAI'; // IMPORTAÇÃO ADICIONADA
+import { sendMessageToOpenAI } from '../../src/sendMessageToOpenAI'; // Importação da função
 
-// Defina as cores azul Serylda e rosa quartzo diretamente no componente
+// Defina as cores azul Serylda e um tom de rosa mais escuro
 const seryldaBlue = '#6495ED';
-const quartzPink = '#F7CAC9';
+const ecoResponseColor = '#E91E63'; // Um rosa mais vibrante
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -22,6 +22,7 @@ function EcoBubbleInterface() {
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hasInitialMessageSent = useRef(false); // Controla se a mensagem inicial já foi enviada
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
@@ -90,6 +91,15 @@ function EcoBubbleInterface() {
     }
   }, [conversation, startVibration, stopVibration]);
 
+  useEffect(() => {
+    // Envia a mensagem inicial da ECO apenas uma vez
+    if (!hasInitialMessageSent.current && conversation.length === 0) {
+      const initialMessage = 'Olá! Como você está se sentindo hoje? Existe algo em particular que gostaria de compartilhar ou refletir juntos?';
+      setConversation((prev) => [...prev, `ECO: ${initialMessage}`]);
+      hasInitialMessageSent.current = true;
+    }
+  }, [conversation]);
+
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
       if (isPlaying) {
@@ -118,7 +128,7 @@ function EcoBubbleInterface() {
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4" style={{
-      background: `linear-gradient(to bottom right, ${seryldaBlue}, ${quartzPink})`
+      background: `linear-gradient(to bottom right, ${seryldaBlue}, ${ecoResponseColor})` // Cor de fundo ligeiramente alterada para harmonia
     }}>
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
@@ -161,13 +171,13 @@ function EcoBubbleInterface() {
             className={`text-sm my-1 ${
               msg.startsWith('Você:') ? 'text-right' : 'text-left'
             }`}
-            style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
+            style={{ color: msg.startsWith('Você:') ? seryldaBlue : ecoResponseColor }} // Aplicando a nova cor
           >
             {msg}
           </p>
         ))}
         {ecoResponseText && (
-          <p className="text-left text-sm my-1" style={{ color: quartzPink }}>
+          <p className="text-left text-sm my-1" style={{ color: ecoResponseColor }}>
             ECO: {ecoResponseText}
           </p>
         )}
