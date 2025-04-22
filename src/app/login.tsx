@@ -6,7 +6,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Divider from '../components/Divider';
 
-const Login: React.FC = () => {
+const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,11 +19,7 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         console.error('Erro ao fazer login:', error);
         setError(error.message || 'Erro ao fazer login. Verifique seus dados.');
@@ -32,7 +28,7 @@ const Login: React.FC = () => {
         navigate('/home');
       }
     } catch (err: any) {
-      console.error('Erro inesperado durante o login:', err);
+      console.error('Erro inesperado:', err);
       setError(err?.message || 'Erro inesperado. Tente novamente.');
     } finally {
       setLoading(false);
@@ -55,11 +51,7 @@ const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {error && (
-                <p className="text-red-500 text-sm mt-1">
-                  {error}
-                </p>
-              )}
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
             <div>
               <Input
@@ -70,7 +62,9 @@ const Login: React.FC = () => {
               />
             </div>
             <div className="pt-2 text-right">
-              <a href="#" className="text-sm text-blue-600 hover:underline">Esqueceu a senha?</a>
+              <a href="#" className="text-sm text-blue-600 hover:underline">
+                Esqueceu a senha?
+              </a>
             </div>
             <div className="pt-2">
               <Button type="submit" variant="primary" disabled={loading}>
@@ -133,4 +127,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
