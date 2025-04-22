@@ -219,18 +219,16 @@ function EcoBubbleInterface() {
 
       <div className="w-full max-w-sm bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4">
         {isListening ? (
-          // Interface de gravação de áudio minimalista
           <div className="flex items-center justify-between">
             <button onClick={handleCancelRecording} className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none">
-              <Lucide.X className="w-8 h-8 text-gray-700" /> {/* Ícone maior */}
+              <Lucide.X className="w-8 h-8 text-gray-700" />
             </button>
             <div className="text-gray-600 text-sm">Gravando áudio...</div>
             <button onClick={handleConfirmRecording} className="p-2 bg-green-500 text-white rounded-full focus:outline-none">
-              <Lucide.Check className="w-8 h-8" /> {/* Ícone maior */}
+              <Lucide.Check className="w-8 h-8" />
             </button>
           </div>
         ) : (
-          // Interface normal de digitação
           <div className="flex items-center gap-3">
             <input
               type="text"
@@ -239,6 +237,7 @@ function EcoBubbleInterface() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
+              style={{ padding: '8px 0' }} // Adicionando padding vertical
               disabled={isSending || isListening}
             />
             <button
