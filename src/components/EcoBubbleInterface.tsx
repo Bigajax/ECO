@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
-import { sendMessageToOpenAI } from '../../sendMessageToOpenAI'; // CORREÇÃO AQUI
+import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -52,7 +52,13 @@ function EcoBubbleInterface() {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
-        setConversation((prev) => [...prev, { text: ecoText, isUser: false }]);
+        **setConversation((prev) => {
+          // Verifique se a última mensagem na conversa não é a mesma resposta da IA
+          if (!prev.length || prev[prev.length - 1].text !== ecoText) {
+            return [...prev, { text: ecoText, isUser: false }];
+          }
+          return prev; // Se for a mesma, não adicione novamente
+        });**
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
@@ -156,9 +162,43 @@ function EcoBubbleInterface() {
         )}
       </div>
 
-      {/* Resto da interface: caixa de mensagens, entrada de texto, botões de voz e enviar, etc. */}
-    </div>
-  );
-}
+      <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto">
+        {conversation.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 text-black ${msg.isUser ? 'ml-auto' : 'mr-auto'}`}
+            style={{ marginLeft: msg.isUser ? 'auto' : '10px' }}
+          >
+            <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
+              {!msg.isUser && <BubbleIcon />}
+              <p className="text-sm break-words" style={{ fontSize: '1.1rem' }}>
+                {!msg.isUser && <span className="font-semibold">ECO: </span>}
+                {msg.text}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-export default EcoBubbleInterface;
+      <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-4 w-full max-w-lg flex items-center rounded-b-2xl shadow-lg">
+        <textarea
+          ref={inputRef}
+          value={message}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Sua reflexão..."
+          className="flex-grow p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+          style={{ maxHeight: '100px', overflowY: 'auto' }}
+        />
+        <button
+          onClick={handleSendMessage}
+          className="ml-2 p-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+          disabled={isSending}
+        >
+          <Lucide.Send size={20} />
+        </button>
+        <button
+          onClick={handleMicClick}
+          className={`ml-2 p-2 rounded-full ${
+            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:bg-gray-400'
+          } focus
