@@ -51,40 +51,13 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
   // let audioElement: HTMLAudioElement | null = null;
 
   // if (ELEVENLABS_API_KEY) {
-  //   try {
-  //     const elevenLabsResponse = await fetch(
-  //       `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'xi-api-key': ELEVENLABS_API_KEY,
-  //         },
-  //         body: JSON.stringify({
-  //           text: reply,
-  //           model_id: 'eleven_multilingual_v2', // Modelo recomendado para português
-  //           voice_settings: {
-  //             stability: 0.75, // Ajuste conforme necessário (0 a 1)
-  //             similarity_boost: 0.75, // Ajuste conforme necessário (0 a 1)
-  //           },
-  //         }),
-  //       }
-  //     );
-
-  //     if (elevenLabsResponse.ok) {
-  //       const audioBlob = await elevenLabsResponse.blob();
-  //       const audioUrl = URL.createObjectURL(audioBlob);
-  //       audioElement = new Audio(audioUrl);
-  //       audioElement.onended = () => URL.revokeObjectURL(audioUrl); // Limpar a URL ao terminar
-  //     } else {
-  //       const errorData = await elevenLabsResponse.json();
-  //       console.error("Erro ao chamar a API do ElevenLabs:", errorData);
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao processar a resposta do ElevenLabs:", error);
-  //   }
+  //  try {
+  //    // ... código para chamar a API do ElevenLabs ...
+  //  } catch (error) {
+  //    console.error("Erro ao processar a resposta do ElevenLabs:", error);
+  //  }
   // } else {
-  //   console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
+  //  console.warn("Chave da API do ElevenLabs não configurada. A voz da IA não será reproduzida.");
   // }
 
   return { text: reply, audio: null };
