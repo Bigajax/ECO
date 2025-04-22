@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
+import { Image, Mic, ArrowLeft, Pause, Play, Bubble } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
@@ -150,7 +150,16 @@ function EcoBubbleInterface() {
               msg.startsWith('Você:') ? 'bg-white ml-auto' : 'bg-white mr-auto'
             }`}
           >
-            <p className="text-sm">{msg}</p>
+            <p className="text-sm">
+              {msg.startsWith('ECO:') ? (
+                <>
+                  <Bubble className="inline-block mr-1 align-text-bottom" size={16} />
+                  {msg}
+                </>
+              ) : (
+                msg
+              )}
+            </p>
           </div>
         ))}
       </div>
