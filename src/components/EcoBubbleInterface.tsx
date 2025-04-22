@@ -1,4 +1,3 @@
-// EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -135,7 +134,7 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex flex-col items-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#6495ED] via-pink-100 to-[#F7CAC9] flex flex-col items-center p-4">
       {/* Botão Voltar */}
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
@@ -155,7 +154,6 @@ function EcoBubbleInterface() {
           {/* Pode adicionar um ícone central aqui para indicar o menu */}
         </div>
 
-        {/* Menu Flutuante */}
         {isMenuOpen && (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/80 backdrop-blur-lg rounded-lg shadow-md p-4 grid grid-cols-2 gap-4">
             <button className="p-2 hover:opacity-75 transition-opacity">
