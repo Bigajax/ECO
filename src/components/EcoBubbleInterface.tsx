@@ -1,3 +1,4 @@
+// src/components/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,14 +11,13 @@ const quartzPink = '#F7CAC9';
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
-  const [conversation, setConversation] = useState<string[]>([]);
+  const [conversation, setConversation] = useState<
+    { text: string; isUser: boolean }[]
+  >([]);
   const [isSending, setIsSending] = useState(false);
   const navigate = useNavigate();
   const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [ecoResponseText, setEcoResponseText] = useState('');
-  const ecoResponseIndex = useRef(0);
-  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,29 +40,36 @@ function EcoBubbleInterface() {
   }, []);
 
   const handleSendMessage = useCallback(async () => {
-    if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
+    if (
+      message.trim() &&
+      !isSending &&
+      message.trim() !== latestUserMessage.current
+    ) {
       setIsSending(true);
       const userMessage = message;
       setMessage('');
       latestUserMessage.current = userMessage;
 
-      console.log("handleSendMessage: Mensagem do usuário:", userMessage);
-      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
-      setEcoResponseText('');
+      console.log('handleSendMessage: Mensagem do usuário:', userMessage);
+      setConversation((prev) => [...prev, { text: userMessage, isUser: true }]);
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
-        console.log("handleSendMessage: Resposta da API:", ecoText);
-        console.log("handleSendMessage: Audio da API:", aiResponse?.audio);
         const audioUrl = aiResponse?.audio;
+        console.log('handleSendMessage: Resposta da API:', ecoText);
+        console.log('handleSendMessage: Audio da API:', audioUrl);
+        setConversation((prev) => [...prev, { text: ecoText, isUser: false }]);
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
-        console.error("handleSendMessage: Erro da API:", error);
-        setConversation((prev) => [...prev, `ECO: Erro ao obter resposta: ${error.message}`]);
+        console.error('handleSendMessage: Erro da API:', error);
+        setConversation((prev) => [
+          ...prev,
+          { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false },
+        ]);
       } finally {
         setIsSending(false);
       }
@@ -74,25 +81,31 @@ function EcoBubbleInterface() {
       if (isPlaying) {
         audioPlayer.pause();
       } else {
-        audioPlayer.play().catch(error => console.error("Erro ao reproduzir áudio:", error));
+        audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
       }
       setIsPlaying(!isPlaying);
     }
   }, [audioPlayer, isPlaying]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  }, []);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setMessage(e.target.value);
+    },
+    [],
+  );
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isSending) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  }, [isSending, handleSendMessage]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !isSending) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    },
+    [isSending, handleSendMessage],
+  );
 
   const toggleMenu = useCallback(() => {
-    setIsMenuOpen(prev => !prev);
+    setIsMenuOpen((prev) => !prev);
   }, []);
 
   const handleMicClick = useCallback(() => {
@@ -117,7 +130,7 @@ function EcoBubbleInterface() {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
-      setMessage(prev => prev ? `${prev} ${transcript}` : transcript);
+      setMessage((prev) => (prev ? `${prev} ${transcript}` : transcript));
     };
 
     recognition.onerror = (event: any) => {
@@ -140,9 +153,23 @@ function EcoBubbleInterface() {
     }
   }, [isListening]);
 
+  const BubbleIcon = () => (
+    <div className="relative w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+        <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
-      <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2"
+      >
         <Lucide.ArrowLeft size={20} />
         Voltar
       </button>
@@ -180,27 +207,31 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <div
             key={index}
-            className={`flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 text-black ${
-              msg.startsWith('Você:') ? 'bg-white ml-auto' : 'bg-white mr-auto'
+            className={`flex flex-col w-fit max-w-[80%] rounded-lg p-3 my-2 text-black ${
+              msg.isUser ? 'bg-white ml-auto' : 'bg-white mr-auto'
             }`}
           >
-            <p className="text-sm">
-              {msg.startsWith('ECO:') ? (
-                <>
-                  <Lucide.Bubble className="inline-block mr-1 align-text-bottom" size={16} />
-                  {msg}
-                </>
-              ) : (
-                msg
-              )}
-            </p>
+            <div className="flex items-start gap-2">
+              {!msg.isUser && <BubbleIcon />}
+              <p className="text-sm break-words">
+                {!msg.isUser && <span className="font-semibold">ECO: </span>}
+                {msg.text}
+              </p>
+            </div>
           </div>
         ))}
       </div>
 
       {audioPlayer && (
-        <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-white/30 rounded-full transition-colors">
-          {isPlaying ? <Lucide.Pause className="w-6 h-6 text-gray-700" /> : <Lucide.Play className="w-6 h-6 text-gray-700" />}
+        <button
+          onClick={togglePlayPause}
+          className="mb-4 p-2 hover:bg-white/30 rounded-full transition-colors"
+        >
+          {isPlaying ? (
+            <Lucide.Pause className="w-6 h-6 text-gray-700" />
+          ) : (
+            <Lucide.Play className="w-6 h-6 text-gray-700" />
+          )}
         </button>
       )}
 
@@ -220,7 +251,10 @@ function EcoBubbleInterface() {
                 <span style={{ '--i': 8, '--color': '#f08080' }}></span>
               </div>
             </div>
-            <button onClick={handleStopRecording} className="mt-4 p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none">
+            <button
+              onClick={handleStopRecording}
+              className="mt-4 p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
+            >
               <Lucide.StopCircle className="w-8 h-8 text-gray-700" /> {/* Ícone de parar */}
             </button>
             <p className="text-gray-500 text-sm mt-2">Gravando áudio...</p>
