@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, Mic, ArrowLeft, Pause, Play, MicOff } from 'lucide-react';
-import { Bubble } from 'lucide-react';
+import * as Lucide from 'lucide-react'; // IMPORTAÇÃO MODIFICADA
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
@@ -137,7 +136,7 @@ function EcoBubbleInterface() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
-        <ArrowLeft size={20} />
+        <Lucide.ArrowLeft size={20} />
         Voltar
       </button>
 
@@ -155,16 +154,16 @@ function EcoBubbleInterface() {
         {isMenuOpen && (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/90 backdrop-blur-lg rounded-lg shadow-md p-4 grid grid-cols-2 gap-4">
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiMoon className="w-6 h-6 text-gray-600" />
+              <Lucide.Moon className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiHeart className="w-6 h-6 text-gray-600" />
+              <Lucide.Heart className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiBook className="w-6 h-6 text-gray-600" />
+              <Lucide.Book className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiSettings className="w-6 h-6 text-gray-600" />
+              <Lucide.Settings className="w-6 h-6 text-gray-600" />
             </button>
           </div>
         )}
@@ -181,7 +180,7 @@ function EcoBubbleInterface() {
             <p className="text-sm">
               {msg.startsWith('ECO:') ? (
                 <>
-                  <Bubble className="inline-block mr-1 align-text-bottom" size={16} />
+                  <Lucide.Bubble className="inline-block mr-1 align-text-bottom" size={16} />
                   {msg}
                 </>
               ) : (
@@ -194,7 +193,7 @@ function EcoBubbleInterface() {
 
       {audioPlayer && (
         <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-white/30 rounded-full transition-colors">
-          {isPlaying ? <Pause className="w-6 h-6 text-gray-700" /> : <Play className="w-6 h-6 text-gray-700" />}
+          {isPlaying ? <Lucide.Pause className="w-6 h-6 text-gray-700" /> : <Lucide.Play className="w-6 h-6 text-gray-700" />}
         </button>
       )}
 
@@ -214,14 +213,14 @@ function EcoBubbleInterface() {
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
             disabled={isSending || isListening || !message.trim()}
           >
-            <Image className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            <Lucide.Image className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
           </button>
           <button
             onClick={handleMicClick}
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
             disabled={isSending}
           >
-            {isListening ? <MicOff className="w-6 h-6 text-red-500 hover:scale-105 transition-transform" /> : <Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />}
+            {isListening ? <Lucide.MicOff className="w-6 h-6 text-red-500 hover:scale-105 transition-transform" /> : <Lucide.Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />}
           </button>
         </div>
         <p className="text-gray-500 text-sm mt-2">
