@@ -216,8 +216,10 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <div
             key={index}
-            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 text-black mr-auto`}
-            style={{ marginLeft: '10px' }}
+            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 text-black ${
+              msg.isUser ? 'ml-auto' : 'mr-auto'
+            }`}
+            style={{ marginLeft: msg.isUser ? 'auto' : '10px' }}
           >
             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
               {!msg.isUser && <BubbleIcon />}
@@ -227,16 +229,6 @@ function EcoBubbleInterface() {
               </p>
             </div>
           </div>
-        ))}
-        {conversation.map((msg, index) => (
-          msg.isUser && (
-            <div
-              key={index}
-              className={`flex flex-col w-fit max-w-[80%] rounded-lg p-3 my-2 text-black ml-auto`}
-            >
-              <p className="text-sm break-words">{msg.text}</p>
-            </div>
-          )
         ))}
       </div>
 
