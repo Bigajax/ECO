@@ -54,6 +54,8 @@ function EcoBubbleInterface() {
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
+      console.log("handleSendMessage: Chamando sendMessageToOpenAI com:", userMessage);
+
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
@@ -144,8 +146,8 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <div
             key={index}
-            className={`flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 ${
-              msg.startsWith('Você:') ? 'bg-blue-200 text-black ml-auto' : 'bg-pink-200 text-black mr-auto'
+            className={`flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 text-black ${
+              msg.startsWith('Você:') ? 'bg-white ml-auto' : 'bg-white mr-auto'
             }`}
           >
             <p className="text-sm">{msg}</p>
