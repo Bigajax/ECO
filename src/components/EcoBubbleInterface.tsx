@@ -140,19 +140,6 @@ function EcoBubbleInterface() {
     }
   }, [isListening]);
 
-  const handleCancelRecording = useCallback(() => {
-    if (isListening && recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-      setMessage(''); // Limpar a mensagem gravada
-    }
-  }, [isListening]);
-
-  const handleConfirmRecording = useCallback(() => {
-    handleStopRecording();
-    handleSendMessage(); // Simula o envio após parar
-  }, [handleStopRecording, handleSendMessage]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
@@ -219,16 +206,27 @@ function EcoBubbleInterface() {
 
       <div className="w-full max-w-sm bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4">
         {isListening ? (
-          <div className="flex items-center justify-between">
-            <button onClick={handleCancelRecording} className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none">
-              <Lucide.X className="w-8 h-8 text-gray-700" />
+          // Interface de gravação de áudio minimalista com visualizador simulado
+          <div className="flex flex-col items-center">
+            <div className="flex items-center w-full justify-center py-2">
+              <div className="audio-visualizer">
+                <span style={{ '--i': 1, '--color': '#ff6b6b' }}></span>
+                <span style={{ '--i': 2, '--color': '#ffa502' }}></span>
+                <span style={{ '--i': 3, '--color': '#ffda79' }}></span>
+                <span style={{ '--i': 4, '--color': '#77dd77' }}></span>
+                <span style={{ '--i': 5, '--color': '#20b2aa' }}></span>
+                <span style={{ '--i': 6, '--color': '#6495ed' }}></span>
+                <span style={{ '--i': 7, '--color': '#ba55d3' }}></span>
+                <span style={{ '--i': 8, '--color': '#f08080' }}></span>
+              </div>
+            </div>
+            <button onClick={handleStopRecording} className="mt-4 p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none">
+              <Lucide.StopCircle className="w-8 h-8 text-gray-700" /> {/* Ícone de parar */}
             </button>
-            <div className="text-gray-600 text-sm">Gravando áudio...</div>
-            <button onClick={handleConfirmRecording} className="p-2 bg-green-500 text-white rounded-full focus:outline-none">
-              <Lucide.Check className="w-8 h-8" />
-            </button>
+            <p className="text-gray-500 text-sm mt-2">Gravando áudio...</p>
           </div>
         ) : (
+          // Interface normal de digitação
           <div className="flex items-center gap-3">
             <input
               type="text"
@@ -237,7 +235,7 @@ function EcoBubbleInterface() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
-              style={{ padding: '8px 0' }} // Adicionando padding vertical
+              style={{ padding: '8px 0' }}
               disabled={isSending || isListening}
             />
             <button
@@ -255,11 +253,6 @@ function EcoBubbleInterface() {
               <Lucide.Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
             </button>
           </div>
-        )}
-        {isListening && (
-          <p className="text-gray-500 text-sm mt-2 text-center">
-            Toque no <Lucide.Check className="inline-block w-4 h-4 text-green-500 align-text-bottom" /> para enviar ou no <Lucide.X className="inline-block w-4 h-4 text-gray-700 align-text-bottom" /> para cancelar.
-          </p>
         )}
         {!isListening && (
           <p className="text-gray-500 text-sm mt-2">
