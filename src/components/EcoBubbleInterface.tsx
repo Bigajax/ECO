@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
-// TENTE ESTA IMPORTAÇÃO (ou ajuste conforme a estrutura de pastas em node_modules):
+import { Image, Mic, ArrowLeft, Pause, Play, MicOff } from 'lucide-react';
 import { Bubble } from 'lucide-react/dist/esm/icons';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
-import { sendMessageToOpenAI } from '../../src/sendMessageToOpenAI'; // IMPORTAÇÃO ADICIONADA
+import { sendMessageToOpenAI } from '../../src/sendMessageToOpenAI';
 
-// Defina as cores azul Serylda e rosa quartzo diretamente no componente
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
 
@@ -24,6 +22,8 @@ function EcoBubbleInterface() {
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
@@ -36,6 +36,7 @@ function EcoBubbleInterface() {
     return () => {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
       stopVibration();
+      if (recognitionRef.current) recognitionRef.current.stop(); // Parar reconhecimento ao desmontar
     };
   }, []);
 
@@ -47,32 +48,22 @@ function EcoBubbleInterface() {
       latestUserMessage.current = userMessage;
 
       console.log("handleSendMessage: Mensagem do usuário:", userMessage);
-      setConversation((prev) => {
-        const newState = [...prev, `Você: ${userMessage}`];
-        console.log("handleSendMessage: Estado conversation após mensagem do usuário:", newState);
-        return newState;
-      });
+      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
       setEcoResponseText('');
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-
-      console.log("handleSendMessage: Chamando sendMessageToOpenAI com:", userMessage);
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
         console.log("handleSendMessage: Resposta da API:", ecoText);
-        console.log("handleSendMessage: Audio da API:", aiResponse?.audio); // VERIFICAR ESTE LOG
+        console.log("handleSendMessage: Audio da API:", aiResponse?.audio);
         const audioUrl = aiResponse?.audio;
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
         console.error("handleSendMessage: Erro da API:", error);
-        setConversation((prev) => {
-          const newState = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
-          console.log("handleSendMessage: Estado conversation após erro:", newState);
-          return newState;
-        });
+        setConversation((prev) => [...prev, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
         setIsSending(false);
       }
@@ -83,15 +74,10 @@ function EcoBubbleInterface() {
     if (audioPlayer) {
       if (isPlaying) {
         audioPlayer.pause();
-        console.log("togglePlayPause: Pausado"); // VERIFICAR ESTE LOG
       } else {
-        audioPlayer.play().catch(error => {
-          console.error("Erro ao tentar reproduzir áudio:", error); // VERIFICAR ESTE LOG
-        });
-        console.log("togglePlayPause: Tocando"); // VERIFICAR ESTE LOG
+        audioPlayer.play().catch(error => console.error("Erro ao reproduzir áudio:", error));
       }
       setIsPlaying(!isPlaying);
-      console.log("togglePlayPause: isPlaying agora:", !isPlaying); // VERIFICAR ESTE LOG
     }
   }, [audioPlayer, isPlaying]);
 
@@ -109,6 +95,44 @@ function EcoBubbleInterface() {
   const toggleMenu = useCallback(() => {
     setIsMenuOpen(prev => !prev);
   }, []);
+
+  const handleMicClick = useCallback(() => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert('Reconhecimento de voz não é suportado no seu navegador.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0][0].transcript;
+      setMessage(prev => prev ? `${prev} ${transcript}` : transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Erro no reconhecimento de voz:', event.error);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsListening(true);
+  }, [isListening, setMessage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
@@ -183,23 +207,26 @@ function EcoBubbleInterface() {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
-            disabled={isSending}
+            disabled={isSending || isListening}
           />
           <button
             onClick={handleSendMessage}
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
-            disabled={isSending}
+            disabled={isSending || isListening || !message.trim()}
           >
             <Image className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
           </button>
           <button
+            onClick={handleMicClick}
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
-            disabled
+            disabled={isSending}
           >
-            <Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            {isListening ? <MicOff className="w-6 h-6 text-red-500 hover:scale-105 transition-transform" /> : <Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />}
           </button>
         </div>
-        <p className="text-gray-500 text-sm mt-2">Compartilhe sua reflexão e deixe a ECO te espelhar.</p>
+        <p className="text-gray-500 text-sm mt-2">
+          {isListening ? 'Ouvindo...' : 'Compartilhe sua reflexão e deixe a ECO te espelhar.'}
+        </p>
       </div>
     </div>
   );
