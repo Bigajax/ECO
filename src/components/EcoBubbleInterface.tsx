@@ -216,7 +216,7 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <div
             key={index}
-            className={`flex flex-col w-fit max-w-[95%] rounded-lg p-3 my-2 text-black mr-auto`}
+            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-3 my-2 text-black mr-auto`}
             style={{ marginLeft: '10px' }}
           >
             <div className="flex items-start gap-2">
