@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-// import Logo from '../components/Logo'; // REMOVA ESTA LINHA
-import Input from '../components/Input';
-import Button from '../components/Button';
-import Divider from '../components/Divider';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -40,25 +36,27 @@ const LoginPage: React.FC = () => {
       <div className="w-full max-w-md">
         {/* <div className="flex justify-center mb-16 scale-in-center">
           <Logo />
-        </div> */} {/* REMOVA ESTE BLOCO */}
+        </div> */}
 
         <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-3xl p-8 shadow-lg fade-in-bottom">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Input
+              <input // Substituindo Input
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
               />
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
             <div>
-              <Input
+              <input // Substituindo Input
                 type="password"
                 placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
               />
             </div>
             <div className="pt-2 text-right">
@@ -67,40 +65,44 @@ const LoginPage: React.FC = () => {
               </a>
             </div>
             <div className="pt-2">
-              <Button type="submit" variant="primary" disabled={loading}>
+              <button // Substituindo Button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 rounded-md text-white font-semibold focus:outline-none ${
+                  loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 transition-colors'
+                }`}
+              >
                 {loading ? 'Entrando...' : 'Entrar'}
-              </Button>
+              </button>
             </div>
           </form>
 
-          <Divider text="ou" />
+          <div className="mt-6 border-t pt-6 text-center"> {/* Substituindo Divider */}
+            <span className="bg-white px-3 -mt-3 inline-block text-gray-500">ou</span>
+          </div>
 
-          <div className="space-y-4">
-            <Button
-              variant="social"
-              icon={
-                <img
-                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                  alt="Google"
-                  className="w-5 h-5"
-                />
-              }
+          <div className="space-y-4 mt-6">
+            <button // Substituindo Button
+              className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
               onClick={() => console.log('Google login')}
             >
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                className="w-5 h-5 mr-2"
+              />
               Entrar com o Google
-            </Button>
+            </button>
 
-            <Button
-              variant="social"
-              icon={
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                  <path d="M14.94,5.19A4.38,4.38,0,0,0,16,2.5a4.38,4.38,0,0,0-3,.19,4.38,4.38,0,0,0-1.06,2.69A4.38,4.38,0,0,0,14.94,5.19Zm3.85,9.06a4.83,4.83,0,0,0,2.33-3.06,4.83,4.83,0,0,0-3,.19,4.83,4.83,0,0,0-2.33,3.06A4.83,4.83,0,0,0,18.79,14.25ZM17.5,8.19a6.9,6.9,0,0,0-2.94-2.94,6.9,6.9,0,0,0-3.81,0A6.9,6.9,0,0,0,7.81,8.19a6.9,6.9,0,0,0,0,3.81,6.9,6.9,0,0,0,2.94,2.94,6.9,6.9,0,0,0,3.81,0,6.9,6.9,0,0,0,2.94-2.94A6.9,6.9,0,0,0,17.5,8.19Zm-5.75,9.56a4.38,4.38,0,0,0,2.69-1.06,4.38,4.38,0,0,0,.19-3,4.38,4.38,0,0,0-2.69,1.06A4.38,4.38,0,0,0,11.75,17.75Zm-6.31-3.5a4.83,4.83,0,0,0,3.06,2.33,4.83,4.83,0,0,0-.19-3,4.83,4.83,0,0,0-3.06-2.33A4.83,4.83,0,0,0,5.44,14.25ZM8.19,6.5a4.38,4.38,0,0,0,1.06,2.69,4.38,4.38,0,0,0,3,.19A4.38,4.38,0,0,0,11.19,6.5,4.38,4.38,0,0,0,8.19,6.5Z" />
-                </svg>
-              }
+            <button // Substituindo Button
+              className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
               onClick={() => console.log('Apple login')}
             >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 mr-2" fill="currentColor">
+                <path d="M14.94,5.19A4.38,4.38,0,0,0,16,2.5a4.38,4.38,0,0,0-3,.19,4.38,4.38,0,0,0-1.06,2.69A4.38,4.38,0,0,0,14.94,5.19Zm3.85,9.06a4.83,4.83,0,0,0,2.33-3.06,4.83,4.83,0,0,0-3,.19,4.83,4.83,0,0,0-2.33,3.06A4.83,4.83,0,0,0,18.79,14.25ZM17.5,8.19a6.9,6.9,0,0,0-2.94-2.94,6.9,6.9,0,0,0-3.81,0A6.9,6.9,0,0,0,7.81,8.19a6.9,6.9,0,0,0,0,3.81,6.9,6.9,0,0,0,2.94,2.94,6.9,6.9,0,0,0,3.81,0,6.9,6.9,0,0,0,2.94-2.94A6.9,6.9,0,0,0,17.5,8.19Zm-5.75,9.56a4.38,4.38,0,0,0,2.69-1.06,4.38,4.38,0,0,0,.19-3,4.38,4.38,0,0,0-2.69,1.06A4.38,4.38,0,0,0,11.75,17.75Zm-6.31-3.5a4.83,4.83,0,0,0,3.06,2.33,4.83,4.83,0,0,0-.19-3,4.83,4.83,0,0,0-3.06-2.33A4.83,4.83,0,0,0,5.44,14.25ZM8.19,6.5a4.38,4.38,0,0,0,1.06,2.69,4.38,4.38,0,0,0,3,.19A4.38,4.38,0,0,0,11.19,6.5,4.38,4.38,0,0,0,8.19,6.5Z" />
+              </svg>
               Entrar com a Apple
-            </Button>
+            </button>
           </div>
 
           <div className="mt-8 text-center">
