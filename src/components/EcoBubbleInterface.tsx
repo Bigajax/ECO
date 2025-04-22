@@ -133,6 +133,26 @@ function EcoBubbleInterface() {
     setIsListening(true);
   }, [isListening, setMessage]);
 
+  const handleStopRecording = useCallback(() => {
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  }, [isListening]);
+
+  const handleCancelRecording = useCallback(() => {
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      setMessage(''); // Limpar a mensagem gravada
+    }
+  }, [isListening]);
+
+  const handleConfirmRecording = useCallback(() => {
+    handleStopRecording();
+    handleSendMessage(); // Simula o envio após parar
+  }, [handleStopRecording, handleSendMessage]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
@@ -197,34 +217,51 @@ function EcoBubbleInterface() {
         </button>
       )}
 
-      <div className="w-full max-w-sm bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4"> {/* ALTERAÇÃO AQUI: max-w-sm */}
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Sua reflexão..."
-            value={message}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
-            disabled={isSending || isListening}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
-            disabled={isSending || isListening || !message.trim()}
-          >
-            <Lucide.Send className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
-          </button>
-          <button
-            onClick={handleMicClick}
-            className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
-            disabled={isSending}
-          >
-            {isListening ? <Lucide.MicOff className="w-6 h-6 text-red-500 hover:scale-105 transition-transform" /> : <Lucide.Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />}
-          </button>
-        </div>
+      <div className="w-full max-w-sm bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4">
+        {isListening ? (
+          // Interface de gravação de áudio
+          <div className="flex items-center justify-between">
+            <button onClick={handleCancelRecording} className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none">
+              <Lucide.X className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            </button>
+            <div className="flex-grow bg-gray-200 rounded-full h-8 mx-2 flex items-center justify-center">
+              {/* Visualizador de áudio estático - podemos melhorar isso com CSS */}
+              <div className="w-4/5 h-4 bg-gray-400 rounded-full animate-pulse" />
+            </div>
+            <button onClick={handleConfirmRecording} className="p-2 bg-green-500 text-white rounded-full focus:outline-none">
+              <Lucide.Check className="w-6 h-6" />
+            </button>
+          </div>
+        ) : (
+          // Interface normal de digitação
+          <div className="flex items-center gap-3">
+            <input
+              type="text"
+              placeholder="Sua reflexão..."
+              value={message}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
+              disabled={isSending || isListening}
+            />
+            <button
+              onClick={handleSendMessage}
+              className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
+              disabled={isSending || isListening || !message.trim()}
+            >
+              <Lucide.Send className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            </button>
+            <button
+              onClick={handleMicClick}
+              className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
+              disabled={isSending}
+            >
+              <Lucide.Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            </button>
+          </div>
+        )}
         <p className="text-gray-500 text-sm mt-2">
-          {isListening ? 'Ouvindo...' : 'Compartilhe sua reflexão e deixe a ECO te espelhar.'}
+          {isListening ? 'Gravando áudio...' : 'Compartilhe sua reflexão e deixe a ECO te espelhar.'}
         </p>
       </div>
     </div>
