@@ -154,22 +154,19 @@ function EcoBubbleInterface() {
 
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto">
         {conversation.map((msg, index) => (
-          <p
+          <div
             key={index}
-            className={`text-sm my-1 rounded-md p-1 ${
-              msg.startsWith('Você:')
-                ? 'text-right bg-blue-200 text-blue-800'
-                : 'text-left bg-pink-200 text-pink-800'
+            className={`flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 ${
+              msg.startsWith('Você:') ? 'bg-blue-200 text-blue-800 ml-auto' : 'bg-pink-200 text-pink-800 mr-auto'
             }`}
-            style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
           >
-            {msg}
-          </p>
+            <p className="text-sm">{msg}</p>
+          </div>
         ))}
         {ecoResponseText && (
-          <p className="text-left text-sm my-1 rounded-md p-1 bg-pink-200 text-pink-800">
-            ECO: {ecoResponseText}
-          </p>
+          <div className="flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 bg-pink-200 text-pink-800 mr-auto">
+            <p className="text-sm">ECO: {ecoResponseText}</p>
+          </div>
         )}
       </div>
 
