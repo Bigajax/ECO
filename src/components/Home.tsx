@@ -9,7 +9,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6 flex flex-col items-center">
       {/* Logo ECO com bolha animada */}
-      <div className="flex items-center text-4xl md:text-6xl font-light mb-8 mt-8">
+      <div className="flex items-center text-4xl md:text-6xl font-light mb-4 mt-8">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
         <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto flex items-center justify-center ml-2">
           <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
@@ -21,27 +21,31 @@ function Home() {
         </div>
       </div>
 
-      {/* Frase "A calma não está no mundo..." REMOVIDA */}
+      {/* Frase "A calma não está no mundo..." ADICIONADA */}
+      <p className="text-lg text-gray-700 mb-8 text-center">
+        A calma não está no mundo, <br />
+        está dentro de você.
+      </p>
 
-      {/* Navegação Centralizada */}
-      <div className="flex justify-center gap-8 md:gap-12 mb-10">
+      {/* Navegação Centralizada com ícones menores */}
+      <div className="flex justify-center gap-6 md:gap-10 mb-10">
         <button onClick={() => console.log('Hoje clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Moon size={40} md:size={48} />
+            <Moon size={32} md:size={36} /> {/* Ícones menores */}
           </div>
-          <span className="mt-2">Hoje</span>
+          <span className="mt-2 text-sm md:text-base">Hoje</span>
         </button>
         <button onClick={() => console.log('Explorar clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Compass size={40} md:size={48} />
+            <Compass size={32} md:size={36} /> {/* Ícones menores */}
           </div>
-          <span className="mt-2">Explorar</span>
+          <span className="mt-2 text-sm md:text-base">Explorar</span>
         </button>
         <button onClick={() => console.log('Músicas clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Music size={40} md:size={48} />
+            <Music size={32} md:size={36} /> {/* Ícones menores */}
           </div>
-          <span className="mt-2">Músicas</span>
+          <span className="mt-2 text-sm md:text-base">Músicas</span>
         </button>
       </div>
 
