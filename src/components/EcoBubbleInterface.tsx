@@ -44,7 +44,12 @@ function EcoBubbleInterface() {
       setMessage('');
       latestUserMessage.current = userMessage;
 
-      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
+      console.log("handleSendMessage: Mensagem do usuário:", userMessage);
+      setConversation((prev) => {
+        const newState = [...prev, `Você: ${userMessage}`];
+        console.log("handleSendMessage: Estado conversation após mensagem do usuário:", newState);
+        return newState;
+      });
       setEcoResponseText('');
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
@@ -52,44 +57,26 @@ function EcoBubbleInterface() {
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
-        setConversation((prev) => [...prev, `ECO: ${ecoText}`]);
+        console.log("handleSendMessage: Resposta da API:", ecoText);
+        setConversation((prev) => {
+          const newState = [...prev, `ECO: ${ecoText}`];
+          console.log("handleSendMessage: Estado conversation após resposta da ECO:", newState);
+          return newState;
+        });
         setAudioPlayer(aiResponse?.audio || null);
         setIsPlaying(false);
       } catch (error: any) {
-        setConversation((prev) => [...prev, `ECO: Erro ao obter resposta: ${error.message}`]);
+        console.error("handleSendMessage: Erro da API:", error);
+        setConversation((prev) => {
+          const newState = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
+          console.log("handleSendMessage: Estado conversation após erro:", newState);
+          return newState;
+        });
       } finally {
         setIsSending(false);
       }
     }
   }, [message, isSending]);
-
-  // REMOVENDO O EFEITO DE "DIGITAÇÃO"
-  // useEffect(() => {
-  //   if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
-  //     const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
-  //     setEcoResponseText('');
-  //     ecoResponseIndex.current = 0;
-  //     stopVibration();
-
-  //     if (latestEcoResponse) {
-  //       startVibration();
-  //       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-  //       typingIntervalRef.current = setInterval(() => {
-  //         if (ecoResponseIndex.current < latestEcoResponse.length) {
-  //           setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
-  //           ecoResponseIndex.current++;
-  //         } else {
-  //           clearInterval(typingIntervalRef.current!);
-  //           stopVibration();
-  //         }
-  //       }, 50);
-  //     }
-  //   } else {
-  //     setEcoResponseText('');
-  //     stopVibration();
-  //     if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-  //   }
-  // }, [conversation, startVibration, stopVibration]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
@@ -164,12 +151,6 @@ function EcoBubbleInterface() {
             <p className="text-sm">{msg}</p>
           </div>
         ))}
-        {/* REMOVENDO A EXIBIÇÃO SEPARADA DO ecoResponseText */}
-        {/* {ecoResponseText && (
-          <div className="flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 bg-pink-200 text-black mr-auto">
-            <p className="text-sm">ECO: {ecoResponseText}</p>
-          </div>
-        )} */}
       </div>
 
       {audioPlayer && (
