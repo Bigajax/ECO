@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play, MicOff } from 'lucide-react';
-import { Bubble } from 'lucide-react/dist/esm/icons';
+import { Bubble } from 'lucide-react'; // TENTE ESTA IMPORTAÇÃO (Opção 1)
+// import * as Lucide from 'lucide-react'; // TENTE ESTA IMPORTAÇÃO (Opção 2 - e ajuste o JSX)
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
@@ -181,6 +182,7 @@ function EcoBubbleInterface() {
             <p className="text-sm">
               {msg.startsWith('ECO:') ? (
                 <>
+                  {/* Se você usou a Opção 2 de importação, use <Lucide.Bubble ... /> aqui */}
                   <Bubble className="inline-block mr-1 align-text-bottom" size={16} />
                   {msg}
                 </>
