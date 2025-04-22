@@ -3,6 +3,7 @@ import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
+import { sendMessageToOpenAI } from '../../src/sendMessageToOpenAI'; // IMPORTAÇÃO ADICIONADA
 
 // Defina as cores azul Serylda e rosa quartzo diretamente no componente
 const seryldaBlue = '#6495ED';
@@ -165,6 +166,11 @@ function EcoBubbleInterface() {
             {msg}
           </p>
         ))}
+        {ecoResponseText && (
+          <p className="text-left text-sm my-1" style={{ color: quartzPink }}>
+            ECO: {ecoResponseText}
+          </p>
+        )}
       </div>
 
       {audioPlayer && (
