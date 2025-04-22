@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,20 +20,20 @@ const Login: React.FC = () => {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
       if (error) {
-        setError(error);
         console.error('Erro ao fazer login:', error);
+        setError(error.message || 'Erro ao fazer login. Verifique seus dados.');
       } else {
         console.log('Login realizado com sucesso!');
         navigate('/home');
       }
-    } catch (err) {
-      setError(err);
+    } catch (err: any) {
       console.error('Erro inesperado durante o login:', err);
+      setError(err?.message || 'Erro inesperado. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,11 @@ const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
+              {error && (
+                <p className="text-red-500 text-sm mt-1">
+                  {error}
+                </p>
+              )}
             </div>
             <div>
               <Input
