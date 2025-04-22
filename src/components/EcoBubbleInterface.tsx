@@ -158,8 +158,8 @@ function EcoBubbleInterface() {
             key={index}
             className={`text-sm my-1 rounded-md p-1 ${
               msg.startsWith('Você:')
-                ? 'text-right bg-blue-100 text-blue-600 opacity-90'
-                : 'text-left text-pink-600 opacity-80'
+                ? 'text-right bg-blue-200 text-blue-800'
+                : 'text-left bg-pink-200 text-pink-800'
             }`}
             style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
           >
@@ -167,7 +167,7 @@ function EcoBubbleInterface() {
           </p>
         ))}
         {ecoResponseText && (
-          <p className="text-left text-sm my-1 rounded-md p-1 bg-pink-100 text-pink-600 opacity-80">
+          <p className="text-left text-sm my-1 rounded-md p-1 bg-pink-200 text-pink-800">
             ECO: {ecoResponseText}
           </p>
         )}
@@ -187,7 +187,7 @@ function EcoBubbleInterface() {
             value={message}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent outline-none placeholder-gray-500 text-gray-800"
+            className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
             disabled={isSending}
           />
           <button
