@@ -36,8 +36,8 @@ textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
   font-size: inherit; /* Herda o tamanho da fonte do pai, se necessário */
   line-height: inherit; /* Herda a altura da linha, se necessário */
   padding: 12px; /* Adicione um padding padrão para a textarea */
-  min-height: 50px;
-  max-height: 200px;
+  min-height: 70px; /* Aumentando a altura mínima */
+  max-height: 250px; /* Aumentando a altura máxima */
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
@@ -56,9 +56,3 @@ textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
   width: 3px; /* Ajustando a largura das barras */
   margin: 0 1.5px; /* Ajustando o espaçamento entre as barras */
   height: 5px; /* Altura base das barras */
-  background-color: #ccc; /* Default color */
-  animation: visualizer 0.3s infinite alternate;
-}
-
-.audio-visualizer span:nth-child(1) {
-  --i: 1;
