@@ -52,13 +52,13 @@ function EcoBubbleInterface() {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
-        **setConversation((prev) => {
+        setConversation((prev) => {
           // Verifique se a última mensagem na conversa não é a mesma resposta da IA
           if (!prev.length || prev[prev.length - 1].text !== ecoText) {
             return [...prev, { text: ecoText, isUser: false }];
           }
           return prev; // Se for a mesma, não adicione novamente
-        });**
+        });
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
@@ -67,7 +67,7 @@ function EcoBubbleInterface() {
         setIsSending(false);
       }
     }
-  }, [message, isSending]);
+  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
@@ -200,5 +200,4 @@ function EcoBubbleInterface() {
         <button
           onClick={handleMicClick}
           className={`ml-2 p-2 rounded-full ${
-            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:bg-gray-400'
-          } focus
+            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:
