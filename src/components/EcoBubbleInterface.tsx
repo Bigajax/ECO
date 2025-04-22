@@ -59,11 +59,11 @@ function EcoBubbleInterface() {
       setMessage('');
       latestUserMessage.current = userMessage;
 
-      console.log('handleSendMessage: Mensagem do usuário (antes do setState):', userMessage);
+      console.log('handleSendMessage: Mensagem do usuário:', userMessage);
       setConversation((prev) => {
-        const newUserMessage = { text: userMessage, isUser: true };
-        console.log('handleSendMessage: Nova mensagem do usuário:', newUserMessage);
-        return [...prev, newUserMessage];
+        const newState = [...prev, { text: userMessage, isUser: true }];
+        console.log('setConversation (handleSendMessage - user):', newState);
+        return newState;
       });
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
@@ -75,18 +75,19 @@ function EcoBubbleInterface() {
         console.log('handleSendMessage: Resposta da API:', ecoText);
         console.log('handleSendMessage: Audio da API:', audioUrl);
         setConversation((prev) => {
-          const newEcoMessage = { text: ecoText, isUser: false };
-          console.log('handleSendMessage: Nova mensagem da ECO:', newEcoMessage);
-          return [...prev, newEcoMessage];
+          const newState = [...prev, { text: ecoText, isUser: false }];
+          console.log('setConversation (handleSendMessage - eco):', newState);
+          return newState;
         });
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
         console.error('handleSendMessage: Erro da API:', error);
-        setConversation((prev) => [
-          ...prev,
-          { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false },
-        ]);
+        setConversation((prev) => {
+          const newState = [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }];
+          console.log('setConversation (handleSendMessage - error):', newState);
+          return newState;
+        });
       } finally {
         setIsSending(false);
       }
