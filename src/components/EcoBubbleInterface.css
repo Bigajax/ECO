@@ -1,11 +1,52 @@
+/* EcoBubbleInterface.css */
+
+.eco-bubble-vibrate {
+  animation: vibrate 0.3s infinite linear alternate;
+}
+
+@keyframes vibrate {
+  0% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(2px, 2px);
+  }
+}
+
+.conversation-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.conversation-container::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 4px;
+}
+
+.conversation-container::-webkit-scrollbar-track {
+  background-color: #edf2f7;
+  border-radius: 4px;
+}
+
+.expanded-input {
+  /* Mantenha outros estilos que você possa ter */
+}
+
+textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
+  border-radius: 8px; /* Adicione uma borda arredondada se o input tinha */
+  font-size: inherit; /* Herda o tamanho da fonte do pai, se necessário */
+  line-height: inherit; /* Herda a altura da linha, se necessário */
+  padding: 12px; /* Adicione um padding padrão para a textarea */
+  min-height: 50px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .audio-visualizer {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60%; /* Diminuindo a largura do visualizador */
   height: 30px; /* Diminuindo a altura do visualizador */
-  /* background-color: #f0f0f0; */
-  /* border-radius: 10px; */
   overflow: hidden;
 }
 
