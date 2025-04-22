@@ -197,7 +197,7 @@ function EcoBubbleInterface() {
         </button>
       )}
 
-      <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4">
+      <div className="w-full max-w-sm bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4"> {/* ALTERAÇÃO AQUI: max-w-sm */}
         <div className="flex items-center gap-3">
           <input
             type="text"
@@ -208,7 +208,6 @@ function EcoBubbleInterface() {
             className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
             disabled={isSending || isListening}
           />
-          {/* ÍCONE DE ENVIAR MENSAGEM SUBSTITUINDO O DE IMAGEM */}
           <button
             onClick={handleSendMessage}
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
