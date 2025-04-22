@@ -24,6 +24,7 @@ function EcoBubbleInterface() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   // DECLARE typingIntervalRef HERE using useRef
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null); // Referência para a textarea
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
@@ -39,6 +40,13 @@ function EcoBubbleInterface() {
       if (recognitionRef.current) recognitionRef.current.stop();
     };
   }, []);
+
+  useEffect(() => {
+    // Rola a textarea para baixo sempre que o valor de 'message' mudar
+    if (inputRef.current) {
+      inputRef.current.scrollTop = inputRef.current.scrollHeight;
+    }
+  }, [message]);
 
   const handleSendMessage = useCallback(async () => {
     if (
@@ -264,6 +272,7 @@ function EcoBubbleInterface() {
           // Interface normal de digitação
           <div className="flex items-center gap-3" style={{ minHeight: '50px' }}> {/* AUMENTANDO A ALTURA MÍNIMA */}
             <textarea
+              ref={inputRef} // Adicionando a referência à textarea
               placeholder="Sua reflexão..."
               value={message}
               onChange={handleInputChange}
