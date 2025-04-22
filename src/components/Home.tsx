@@ -21,6 +21,8 @@ function Home() {
         </div>
       </div>
 
+      {/* Frase "A calma não está no mundo..." REMOVIDA */}
+
       {/* Navegação Centralizada */}
       <div className="flex justify-center gap-8 md:gap-12 mb-10">
         <button onClick={() => console.log('Hoje clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
@@ -78,7 +80,7 @@ function Home() {
           }}
         >
           <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
-            {/* Frase "O céu não se importa..." removida anteriormente */}
+            {/* Frase removida anteriormente */}
           </div>
         </div>
         <div className="bg-white p-4 flex justify-end group-hover:bg-white/95 transition-colors">
