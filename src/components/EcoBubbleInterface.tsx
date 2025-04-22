@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
+
+// Defina as cores azul Serylda e rosa quartzo diretamente no componente
+const seryldaBlue = '#6495ED';
+const quartzPink = '#F7CAC9';
 
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
@@ -113,7 +116,9 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6495ED] to-[#F7CAC9] flex flex-col items-center p-4">
+    <div className="min-h-screen flex flex-col items-center p-4" style={{
+      background: `linear-gradient(to bottom right, ${seryldaBlue}, ${quartzPink})`
+    }}>
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
         Voltar
@@ -153,8 +158,9 @@ function EcoBubbleInterface() {
           <p
             key={index}
             className={`text-sm my-1 ${
-              msg.startsWith('Você:') ? 'text-right text-[#6495ED]' : 'text-left text-[#F7CAC9]'
+              msg.startsWith('Você:') ? 'text-right' : 'text-left'
             }`}
+            style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
           >
             {msg}
           </p>
