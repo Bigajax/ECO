@@ -34,9 +34,19 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x">
       <div className="w-full max-w-md">
-        {/* <div className="flex justify-center mb-16 scale-in-center">
-          <Logo />
-        </div> */}
+        <div className="flex justify-center mb-16 scale-in-center">
+          <div className="flex items-center text-4xl md:text-6xl font-light">
+            <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
+            <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto flex items-center justify-center ml-2">
+              <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+                <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-3xl p-8 shadow-lg fade-in-bottom">
           <form onSubmit={handleSubmit} className="space-y-6">
