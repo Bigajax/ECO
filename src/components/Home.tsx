@@ -57,9 +57,7 @@ function Home() {
 
           <div>
             <h2 className="text-xl md:text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
-            <p className="text-gray-600 text-sm md:text-lg">
-              Estou aqui se precisar de uma conversa para começar seu dia.
-            </p>
+            {/* Frase "Estou aqui se precisar de uma conversa para começar seu dia." removida */}
           </div>
         </div>
 
@@ -80,7 +78,7 @@ function Home() {
           }}
         >
           <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
-            {/* Frase removida */}
+            {/* Frase "O céu não se importa..." removida anteriormente */}
           </div>
         </div>
         <div className="bg-white p-4 flex justify-end group-hover:bg-white/95 transition-colors">
