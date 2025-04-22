@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import * as Lucide from 'lucide-react'; // IMPORTAÇÃO MODIFICADA
+import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
@@ -208,12 +208,13 @@ function EcoBubbleInterface() {
             className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
             disabled={isSending || isListening}
           />
+          {/* ÍCONE DE ENVIAR MENSAGEM SUBSTITUINDO O DE IMAGEM */}
           <button
             onClick={handleSendMessage}
             className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
             disabled={isSending || isListening || !message.trim()}
           >
-            <Lucide.Image className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+            <Lucide.Send className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
           </button>
           <button
             onClick={handleMicClick}
