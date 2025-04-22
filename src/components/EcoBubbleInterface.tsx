@@ -262,7 +262,7 @@ function EcoBubbleInterface() {
           </div>
         ) : (
           // Interface normal de digitação
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" style={{ minHeight: '50px' }}> {/* AUMENTANDO A ALTURA MÍNIMA */}
             <input
               type="text"
               placeholder="Sua reflexão..."
@@ -270,7 +270,7 @@ function EcoBubbleInterface() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
-              style={{ padding: '8px 0' }}
+              style={{ padding: '12px 0' }} {/* AUMENTANDO O PADDING VERTICAL */}
               disabled={isSending || isListening}
             />
             <button
