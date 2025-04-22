@@ -134,7 +134,10 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6495ED] via-[#F7CAC9] to-[#FFFFFF] flex flex-col items-center p-4">
+    <div
+      className="min-h-screen flex flex-col items-center p-4"
+      style={{ background: 'linear-gradient(to bottom right, #6495ED, #F7CAC9, #FFFFFF)' }}
+    >
       {/* Botão Voltar */}
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
