@@ -65,4 +65,16 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
     //  try {
     //    // ... código para chamar a API do ElevenLabs ...
     //  } catch (error) {
-    //    console.error("Erro ao processar a resposta do ElevenLabs
+    //    console.error("Erro ao processar a resposta do ElevenLabs", error);
+    //  }
+    // }
+
+    return { text: reply, audio: null }; // Retornando null para audio já que ElevenLabs está desativado
+  } catch (error: any) {
+    console.error('Erro ao enviar mensagem para OpenAI:', error);
+    return {
+      text: 'Houve um erro ao processar sua mensagem. Tente novamente mais tarde.',
+      audio: null,
+    };
+  }
+}
