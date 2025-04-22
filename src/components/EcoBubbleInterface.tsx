@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, Mic, ArrowLeft, Pause, Play, Bubble } from 'lucide-react';
+import { Image, Mic, ArrowLeft, Pause, Play } from 'lucide-react';
+import { Bubble } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
