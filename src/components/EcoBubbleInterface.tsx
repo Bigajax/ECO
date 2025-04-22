@@ -113,7 +113,7 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#5B9BD5] to-[#F7CAC9] flex flex-col items-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-userBlue to-ecoPink flex flex-col items-center p-4">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
         Voltar
@@ -152,7 +152,9 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
+            className={`text-sm my-1 ${
+              msg.startsWith('Você:') ? 'text-right text-userBlue' : 'text-left text-ecoPink'
+            }`}
           >
             {msg}
           </p>
