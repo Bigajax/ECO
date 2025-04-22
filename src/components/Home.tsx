@@ -6,6 +6,9 @@ function Home() {
   const navigate = useNavigate();
   const [greeting, setGreeting] = useState('');
   const loggedInUserName = 'Rafael'; // Substitua pela lógica real para obter o nome do usuário logado
+  const reflectionDate = '22 de abril';
+  const reflectionText = `"Estas são as características da alma racional: consciência de si mesmo, autoavaliação e autodeterminação. Ela ceifa a própria colheita. [...] Triunfa em seu próprio objetivo [...]"
+MARCO AURÉLIO, MEDITAÇÕES, 11.1-2`;
 
   useEffect(() => {
     const now = new Date();
@@ -88,11 +91,11 @@ function Home() {
           className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-3 md:py-4 px-4 md:px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           onClick={() => navigate('/eco-bubble')}
         >
-          Conversar com a ECO {/* Texto do botão alterado */}
+          Conversar com a ECO
         </button>
       </div>
 
-      {/* Reflection Card */}
+      {/* Reflection Card with Date and Text */}
       <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100 max-w-6xl w-full">
         <div
           className="h-48 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
@@ -100,12 +103,17 @@ function Home() {
             backgroundImage: `url('https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg')`
           }}
         >
-          <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
-            {/* Frase removida anteriormente */}
+          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
+            <p className="text-white text-sm mb-2">{reflectionDate}</p>
+            <p className="text-white text-lg font-light text-center">
+              {reflectionText}
+            </p>
           </div>
         </div>
         <div className="bg-white p-4 flex justify-end group-hover:bg-white/95 transition-colors">
-          {/* Removi o botão "Ver detalhes" conforme solicitado */}
+          <button className="text-purple-500 hover:text-purple-700 transition-colors font-medium focus:outline-none">
+            Ver detalhes
+          </button>
         </div>
       </div>
     </div>
