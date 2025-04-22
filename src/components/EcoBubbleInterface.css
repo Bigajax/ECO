@@ -23,8 +23,8 @@
   font-size: 1rem;
   padding: 8px;
   border-radius: 8px;
-  background-color: #e0f0ff; /* azul claro */
-  color: #2563eb; /* azul forte */
+  background-color: #e0f0ff; /* azul claro - você pode mudar isso ou remover */
+  color: inherit; /* Herda a cor definida no componente */
   margin-bottom: 6px;
   align-self: flex-end;
   max-width: 80%;
@@ -36,8 +36,8 @@
   font-size: 1rem;
   padding: 8px;
   border-radius: 8px;
-  background-color: #fce8eb; /* rosa claro */
-  color: #c71585; /* rosa forte */
+  background-color: #fce8eb; /* rosa claro - você pode mudar isso ou remover */
+  color: inherit; /* Herda a cor definida no componente */
   margin-bottom: 6px;
   align-self: flex-start;
   max-width: 80%;
