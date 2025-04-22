@@ -7,7 +7,7 @@ function Home() {
   const loggedInUserName = 'Rafael'; // Substitua pela lógica real
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6 flex flex-col items-center">
       {/* Logo ECO com bolha animada */}
       <div className="flex items-center text-4xl md:text-6xl font-light mb-8 mt-8">
         <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
