@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Moon, Compass, Music } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const navigate = useNavigate();
-  const loggedInUserName = 'Rafael'; // Substitua pela lógica real
+  const [greeting, setGreeting] = useState('');
+  const loggedInUserName = 'Rafael'; // Substitua pela lógica real para obter o nome do usuário logado
+
+  useEffect(() => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (hour >= 0 && hour < 12) {
+      setGreeting('Bom dia');
+    } else if (hour >= 12 && hour < 18) {
+      setGreeting('Boa tarde');
+    } else {
+      setGreeting('Boa noite');
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6 flex flex-col items-center">
@@ -21,35 +35,35 @@ function Home() {
         </div>
       </div>
 
-      {/* Frase "A calma não está no mundo..." ADICIONADA */}
+      {/* Frase "A calma não está no mundo..." */}
       <p className="text-lg text-gray-700 mb-8 text-center">
         A calma não está no mundo, <br />
         está dentro de você.
       </p>
 
-      {/* Navegação Centralizada com ícones menores */}
+      {/* Navegação Centralizada */}
       <div className="flex justify-center gap-6 md:gap-10 mb-10">
         <button onClick={() => console.log('Hoje clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Moon size={32} md:size={36} /> {/* Ícones menores */}
+            <Moon size={32} md:size={36} />
           </div>
           <span className="mt-2 text-sm md:text-base">Hoje</span>
         </button>
         <button onClick={() => console.log('Explorar clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Compass size={32} md:size={36} /> {/* Ícones menores */}
+            <Compass size={32} md:size={36} />
           </div>
           <span className="mt-2 text-sm md:text-base">Explorar</span>
         </button>
         <button onClick={() => console.log('Músicas clicado')} className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
           <div className="p-2 md:p-3">
-            <Music size={32} md:size={36} /> {/* Ícones menores */}
+            <Music size={32} md:size={36} />
           </div>
           <span className="mt-2 text-sm md:text-base">Músicas</span>
         </button>
       </div>
 
-      {/* Card com bolha estilizada */}
+      {/* Card com bolha estilizada e saudação dinâmica */}
       <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_0_50px_rgba(0,0,0,0.05)] max-w-md w-full mb-8">
         <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
           <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto flex items-center justify-center">
@@ -62,8 +76,11 @@ function Home() {
           </div>
 
           <div>
-            <h2 className="text-xl md:text-2xl text-gray-900 font-medium mb-1">Olá, {loggedInUserName}.</h2>
-            {/* Frase "Estou aqui se precisar de uma conversa para começar seu dia." removida */}
+            <h2 className="text-xl md:text-2xl text-gray-900 font-medium mb-1">{greeting}, {loggedInUserName}.</h2>
+            <p className="text-gray-700 text-sm md:text-base">
+              Estou aqui se precisar de uma conversa <br />
+              para começar seu dia.
+            </p>
           </div>
         </div>
 
@@ -71,7 +88,7 @@ function Home() {
           className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-3 md:py-4 px-4 md:px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           onClick={() => navigate('/eco-bubble')}
         >
-          Receber orientação
+          Conversar com a ECO {/* Texto do botão alterado */}
         </button>
       </div>
 
