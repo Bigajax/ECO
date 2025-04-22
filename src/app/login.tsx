@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Logo from '../components/Logo';
+// import Logo from '../components/Logo'; // REMOVA ESTA LINHA
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Divider from '../components/Divider';
@@ -38,9 +38,9 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x">
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-16 scale-in-center">
+        {/* <div className="flex justify-center mb-16 scale-in-center">
           <Logo />
-        </div>
+        </div> */} {/* REMOVA ESTE BLOCO */}
 
         <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-3xl p-8 shadow-lg fade-in-bottom">
           <form onSubmit={handleSubmit} className="space-y-6">
