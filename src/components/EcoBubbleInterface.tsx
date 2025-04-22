@@ -270,7 +270,7 @@ function EcoBubbleInterface() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-white outline-none placeholder-gray-500 text-black"
-              style={{ padding: '12px 0' }} {/* AUMENTANDO O PADDING VERTICAL */}
+              style={{ padding: '12px 0' }} /* AUMENTANDO O PADDING VERTICAL */
               disabled={isSending || isListening}
             />
             <button
