@@ -156,8 +156,10 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={`text-sm my-1 ${
-              msg.startsWith('Você:') ? 'text-right' : 'text-left'
+            className={`text-sm my-1 rounded-md p-1 ${
+              msg.startsWith('Você:')
+                ? 'text-right bg-blue-100 text-blue-600 opacity-90'
+                : 'text-left text-pink-600 opacity-80'
             }`}
             style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
           >
@@ -165,7 +167,7 @@ function EcoBubbleInterface() {
           </p>
         ))}
         {ecoResponseText && (
-          <p className="text-left text-sm my-1" style={{ color: quartzPink }}>
+          <p className="text-left text-sm my-1 rounded-md p-1 bg-pink-100 text-pink-600 opacity-80">
             ECO: {ecoResponseText}
           </p>
         )}
@@ -188,11 +190,18 @@ function EcoBubbleInterface() {
             className="flex-1 bg-transparent outline-none placeholder-gray-500 text-gray-800"
             disabled={isSending}
           />
-          <button onClick={handleSendMessage} className="p-2 hover:bg-white/30 rounded-full transition-colors" disabled={isSending}>
-            <Image className="w-6 h-6 text-gray-600" />
+          <button
+            onClick={handleSendMessage}
+            className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
+            disabled={isSending}
+          >
+            <Image className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
           </button>
-          <button className="p-2 hover:bg-white/30 rounded-full transition-colors" disabled>
-            <Mic className="w-6 h-6 text-gray-600" />
+          <button
+            className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
+            disabled
+          >
+            <Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
           </button>
         </div>
         <p className="text-gray-500 text-sm mt-2">Compartilhe sua reflexão e deixe a ECO te espelhar.</p>
