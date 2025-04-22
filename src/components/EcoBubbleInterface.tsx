@@ -62,12 +62,9 @@ function EcoBubbleInterface() {
         const aiResponse = await sendMessageToOpenAI(userMessage);
         const ecoText = aiResponse?.text || '...';
         console.log("handleSendMessage: Resposta da API:", ecoText);
-        setConversation((prev) => {
-          const newState = [...prev, `ECO: ${ecoText}`];
-          console.log("handleSendMessage: Estado conversation após resposta da ECO:", newState);
-          return newState;
-        });
-        setAudioPlayer(aiResponse?.audio || null);
+        console.log("handleSendMessage: Audio da API:", aiResponse?.audio); // VERIFICAR ESTE LOG
+        const audioUrl = aiResponse?.audio;
+        setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
         console.error("handleSendMessage: Erro da API:", error);
@@ -86,10 +83,15 @@ function EcoBubbleInterface() {
     if (audioPlayer) {
       if (isPlaying) {
         audioPlayer.pause();
+        console.log("togglePlayPause: Pausado"); // VERIFICAR ESTE LOG
       } else {
-        audioPlayer.play();
+        audioPlayer.play().catch(error => {
+          console.error("Erro ao tentar reproduzir áudio:", error); // VERIFICAR ESTE LOG
+        });
+        console.log("togglePlayPause: Tocando"); // VERIFICAR ESTE LOG
       }
       setIsPlaying(!isPlaying);
+      console.log("togglePlayPause: isPlaying agora:", !isPlaying); // VERIFICAR ESTE LOG
     }
   }, [audioPlayer, isPlaying]);
 
