@@ -34,46 +34,25 @@ function EcoBubbleInterface() {
   }, []);
 
   const handleSendMessage = useCallback(async () => {
-    console.log('handleSendMessage foi chamada com a mensagem:', message);
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current) {
       setIsSending(true);
       const userMessage = message;
       setMessage('');
       latestUserMessage.current = userMessage;
 
-      console.log('Enviando mensagem:', userMessage);
-      setConversation((prev) => {
-        const updated = [...prev, `Você: ${userMessage}`];
-        console.log('Estado conversation após mensagem do usuário:', updated);
-        console.log('CONVERSATION AGORA:', updated);
-        return updated;
-      });
-
+      setConversation((prev) => [...prev, `Você: ${userMessage}`]);
       setEcoResponseText('');
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
         const aiResponse = await sendMessageToOpenAI(userMessage);
-        console.log('Resposta da API recebida:', aiResponse);
-        console.log('AI RESPONSE COMPLETA:', aiResponse); // ADICIONEI ESTE LOG
         const ecoText = aiResponse?.text || '...';
-        setConversation((prev) => {
-          const updated = [...prev, `ECO: ${ecoText}`];
-          console.log('Estado conversation após resposta da ECO:', updated);
-          console.log('CONVERSATION AGORA:', updated);
-          return updated;
-        });
+        setConversation((prev) => [...prev, `ECO: ${ecoText}`]);
         setAudioPlayer(aiResponse?.audio || null);
         setIsPlaying(false);
       } catch (error: any) {
-        console.error('Erro ao obter resposta da API:', error);
-        setConversation((prev) => {
-          const updated = [...prev, `ECO: Erro ao obter resposta: ${error.message}`];
-          console.log('Estado conversation após erro da ECO:', updated);
-          console.log('CONVERSATION AGORA:', updated);
-          return updated;
-        });
+        setConversation((prev) => [...prev, `ECO: Erro ao obter resposta: ${error.message}`]);
       } finally {
         setIsSending(false);
       }
@@ -134,14 +113,12 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6495ED] to-[#F7CAC9] flex flex-col items-center p-4">
-      {/* Botão Voltar */}
+    <div className="min-h-screen bg-gradient-to-br from-[#5B9BD5] to-[#F7CAC9] flex flex-col items-center p-4">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
         Voltar
       </button>
 
-      {/* Bolha ECO com Menu */}
       <div className="relative mb-8">
         <div
           className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${
@@ -151,48 +128,44 @@ function EcoBubbleInterface() {
         >
           <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
           <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
-          {/* Pode adicionar um ícone central aqui para indicar o menu */}
         </div>
 
         {isMenuOpen && (
-          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/80 backdrop-blur-lg rounded-lg shadow-md p-4 grid grid-cols-2 gap-4">
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/90 backdrop-blur-lg rounded-lg shadow-md p-4 grid grid-cols-2 gap-4">
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiMoon className="w-6 h-6 text-gray-500" />
+              <FiMoon className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiHeart className="w-6 h-6 text-gray-500" />
+              <FiHeart className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiBook className="w-6 h-6 text-gray-500" />
+              <FiBook className="w-6 h-6 text-gray-600" />
             </button>
             <button className="p-2 hover:opacity-75 transition-opacity">
-              <FiSettings className="w-6 h-6 text-gray-500" />
+              <FiSettings className="w-6 h-6 text-gray-600" />
             </button>
           </div>
         )}
       </div>
 
-      {/* Caixa de conversa */}
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container">
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto">
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
+            className={msg.startsWith('Você:') ? 'user-message text-right text-[#5B9BD5]' : 'eco-message text-left text-[#F7CAC9]'}
           >
             {msg}
           </p>
         ))}
       </div>
 
-      {/* Botão de áudio */}
       {audioPlayer && (
-        <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
-          {isPlaying ? <Pause className="w-6 h-6 text-gray-600" /> : <Play className="w-6 h-6 text-gray-600" />}
+        <button onClick={togglePlayPause} className="mb-4 p-2 hover:bg-white/30 rounded-full transition-colors">
+          {isPlaying ? <Pause className="w-6 h-6 text-gray-700" /> : <Play className="w-6 h-6 text-gray-700" />}
         </button>
       )}
 
-      {/* Campo de entrada de mensagem */}
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-4">
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4">
         <div className="flex items-center gap-3">
           <input
             type="text"
@@ -200,13 +173,13 @@ function EcoBubbleInterface() {
             value={message}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent outline-none placeholder-gray-500 text-gray-700"
+            className="flex-1 bg-transparent outline-none placeholder-gray-500 text-gray-800"
             disabled={isSending}
           />
-          <button onClick={handleSendMessage} className="p-2 hover:bg-gray-100 rounded-full transition-colors" disabled={isSending}>
+          <button onClick={handleSendMessage} className="p-2 hover:bg-white/30 rounded-full transition-colors" disabled={isSending}>
             <Image className="w-6 h-6 text-gray-600" />
           </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors" disabled>
+          <button className="p-2 hover:bg-white/30 rounded-full transition-colors" disabled>
             <Mic className="w-6 h-6 text-gray-600" />
           </button>
         </div>
