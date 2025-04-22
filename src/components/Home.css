@@ -1,1 +1,10 @@
+/* Exemplo de estilos para o menu lateral */
+.menu-open {
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
 
+.menu-closed {
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
