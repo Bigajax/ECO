@@ -219,7 +219,7 @@ function EcoBubbleInterface() {
             className={`flex flex-col w-fit max-w-[98%] rounded-lg p-3 my-2 text-black mr-auto`}
             style={{ marginLeft: '10px' }}
           >
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}> {/* Largura máxima para o texto */}
               {!msg.isUser && <BubbleIcon />}
               <p className="text-sm break-words">
                 {!msg.isUser && <span className="font-semibold">ECO: </span>}
@@ -279,7 +279,7 @@ function EcoBubbleInterface() {
           </div>
         ) : (
           // Interface normal de digitação
-          <div className="flex items-center gap-3" style={{ minHeight: '50px' }}> {/* AUMENTANDO A ALTURA MÍNIMA */}
+          <div className="flex items-center gap-3" style={{ minHeight: '70px' }}> {/* AUMENTANDO A ALTURA MÍNIMA */}
             <textarea
               ref={inputRef} // Adicionando a referência à textarea
               placeholder="Sua reflexão..."
@@ -287,7 +287,7 @@ function EcoBubbleInterface() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-white outline-none placeholder-gray-500 text-black expanded-input resize-none" /* Usando textarea e adicionando resize-none */
-              style={{ padding: '12px', minHeight: '50px', maxHeight: '200px', overflowY: 'auto' }} /* Ajustando o padding e adicionando altura mínima e máxima com scroll */
+              style={{ padding: '12px', minHeight: '70px', maxHeight: '250px', overflowY: 'auto' }} /* Ajustando o padding e adicionando altura mínima e máxima com scroll */
               disabled={isSending || isListening}
             />
             <button
@@ -295,14 +295,14 @@ function EcoBubbleInterface() {
               className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
               disabled={isSending || isListening || !message.trim()}
             >
-              <Lucide.Send className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+              <Lucide.Send size={24} className="text-gray-600 hover:scale-105 transition-transform" /> {/* Aumentando o tamanho do ícone */}
             </button>
             <button
               onClick={handleMicClick}
               className="p-2 hover:bg-white/20 focus:bg-white/20 rounded-full transition-colors focus:outline-none"
               disabled={isSending}
             >
-              <Lucide.Mic className="w-6 h-6 text-gray-600 hover:scale-105 transition-transform" />
+              <Lucide.Mic size={24} className="text-gray-600 hover:scale-105 transition-transform" /> {/* Aumentando o tamanho do ícone */}
             </button>
           </div>
         )}
