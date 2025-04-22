@@ -89,15 +89,15 @@ function EcoBubbleInterface() {
   }, [audioPlayer, isPlaying]);
 
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(e.target.value);
     },
     [],
   );
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !isSending) {
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && !isSending && !e.shiftKey) {
         e.preventDefault();
         handleSendMessage();
       }
@@ -263,14 +263,13 @@ function EcoBubbleInterface() {
         ) : (
           // Interface normal de digitação
           <div className="flex items-center gap-3" style={{ minHeight: '50px' }}> {/* AUMENTANDO A ALTURA MÍNIMA */}
-            <input
-              type="text"
+            <textarea
               placeholder="Sua reflexão..."
               value={message}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-white outline-none placeholder-gray-500 text-black expanded-input" /* Adicionando a classe expanded-input */
-              style={{ padding: '16px 0' }} /* Aumentando o padding vertical */
+              className="flex-1 bg-white outline-none placeholder-gray-500 text-black expanded-input resize-none" /* Usando textarea e adicionando resize-none */
+              style={{ padding: '12px', minHeight: '50px', maxHeight: '200px', overflowY: 'auto' }} /* Ajustando o padding e adicionando altura mínima e máxima com scroll */
               disabled={isSending || isListening}
             />
             <button
