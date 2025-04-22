@@ -1,4 +1,3 @@
-// src/components/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +22,8 @@ function EcoBubbleInterface() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  // DECLARE typingIntervalRef HERE using useRef
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleGoBack = useCallback(() => {
     navigate('/home');
