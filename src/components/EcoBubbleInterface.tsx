@@ -5,10 +5,6 @@ import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 import './EcoBubbleInterface.css';
 import { FiMoon, FiHeart, FiBook, FiSettings } from 'react-icons/fi';
 
-// Defina as cores azul Serylda e rosa quartzo como variáveis CSS
-const seryldaBlue = '#6495ED';
-const quartzPink = '#F7CAC9';
-
 function EcoBubbleInterface() {
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState<string[]>([]);
@@ -117,9 +113,7 @@ function EcoBubbleInterface() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4" style={{
-      background: `linear-gradient(to bottom right, ${seryldaBlue}, ${quartzPink})`
-    }}>
+    <div className="min-h-screen bg-gradient-to-br from-[#6495ED] to-[#F7CAC9] flex flex-col items-center p-4">
       <button onClick={handleGoBack} className="absolute top-4 left-4 text-white/70 hover:text-white flex items-center gap-2">
         <ArrowLeft size={20} />
         Voltar
@@ -159,9 +153,8 @@ function EcoBubbleInterface() {
           <p
             key={index}
             className={`text-sm my-1 ${
-              msg.startsWith('Você:') ? 'text-right' : 'text-left'
+              msg.startsWith('Você:') ? 'text-right text-[#6495ED]' : 'text-left text-[#F7CAC9]'
             }`}
-            style={{ color: msg.startsWith('Você:') ? seryldaBlue : quartzPink }}
           >
             {msg}
           </p>
