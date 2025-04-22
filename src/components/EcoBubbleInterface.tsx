@@ -152,7 +152,7 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={msg.startsWith('Você:') ? 'user-message text-right text-[#5B9BD5]' : 'eco-message text-left text-[#F7CAC9]'}
+            className={msg.startsWith('Você:') ? 'user-message' : 'eco-message'}
           >
             {msg}
           </p>
