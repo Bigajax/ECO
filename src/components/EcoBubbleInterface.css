@@ -1,72 +1,188 @@
-/* EcoBubbleInterface.css */
-@keyframes vibrate-waves-simple {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.02);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoBubble Chat</title>
+  <style>
+    @keyframes vibrate-waves-simple {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.02);
+        opacity: 0.9;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
 
-.eco-bubble-vibrate {
-  animation: vibrate-waves-simple 0.25s ease-in-out infinite alternate;
-}
+    .eco-bubble-vibrate {
+      animation: vibrate-waves-simple 0.25s ease-in-out infinite alternate;
+    }
 
-.user-message {
-  font-size: 1rem;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: rgba(173, 216, 230, 0.3);
-  color: #333;
-  margin-bottom: 6px;
-  align-self: flex-end;
-  max-width: 80%;
-  word-break: break-word;
-}
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-.eco-message {
-  font-size: 1rem;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: rgba(144, 238, 144, 0.3);
-  color: #333;
-  margin-bottom: 6px;
-  align-self: flex-start;
-  max-width: 80%;
-  word-break: break-word;
-}
+    .conversation-container {
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      overflow-y: auto;
+      height: 300px;
+      background-color: white;
+      border-bottom: 1px solid #ccc;
+    }
 
-.conversation-container {
-  display: flex;
-  flex-direction: column;
-  padding: 8px;
-  overflow-y: auto;
-  height: 300px;
-}
+    .user-message {
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 8px;
+      background-color: rgba(173, 216, 230, 0.3);
+      color: #333;
+      margin-bottom: 6px;
+      align-self: flex-end;
+      max-width: 80%;
+      word-break: break-word;
+    }
 
-/* Estilos para o menu flutuante */
-.relative {
-  position: relative;
-}
+    .eco-message {
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 8px;
+      background-color: rgba(144, 238, 144, 0.3);
+      color: #333;
+      margin-bottom: 6px;
+      align-self: flex-start;
+      max-width: 80%;
+      word-break: break-word;
+    }
 
-.absolute {
-  position: absolute;
-}
+    .input-container {
+      display: flex;
+      padding: 8px;
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+    }
 
-.bottom-full {
-  bottom: 100%;
-}
+    .input-container input {
+      flex: 1;
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
 
-.left-1\/2 {
-  left: 50%;
-}
+    .input-container button {
+      margin-left: 8px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-.transform {
-  transform: translateX(-50%);
-}
+    .relative {
+      position: relative;
+    }
+
+    .absolute {
+      position: absolute;
+    }
+
+    .bottom-full {
+      bottom: 100%;
+    }
+
+    .left-1\/2 {
+      left: 50%;
+    }
+
+    .transform {
+      transform: translateX(-50%);
+    }
+
+    .floating-menu {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    .menu-btn {
+      margin: 8px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .menu-btn.eco-bubble-vibrate {
+      animation: vibrate-waves-simple 0.25s ease-in-out infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <div class="conversation-container" id="chat"></div>
+
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+  <div class="relative">
+    <button class="menu-btn eco-bubble-vibrate" onclick="toggleMenu()">Menu</button>
+    <div class="floating-menu absolute bottom-full left-1/2 transform" id="floatingMenu">
+      <p>Opção 1</p>
+      <p>Opção 2</p>
+      <p>Opção 3</p>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (message === "") return;
+
+      addMessage("user", message);
+      input.value = "";
+
+      setTimeout(() => {
+        addMessage("eco", "Você disse: " + message);
+      }, 500);
+    }
+
+    function addMessage(sender, text) {
+      const chat = document.getElementById("chat");
+      const msg = document.createElement("div");
+      msg.className = sender === "user" ? "user-message" : "eco-message";
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById("floatingMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
