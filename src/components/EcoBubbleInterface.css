@@ -27,7 +27,7 @@
   margin-bottom: 6px;
   align-self: flex-end;
   max-width: 80%;
-  word-break: break-word; /* Adicionado para quebrar palavras longas */
+  word-break: break-word;
 }
 
 .eco-message {
@@ -39,7 +39,7 @@
   margin-bottom: 6px;
   align-self: flex-start;
   max-width: 80%;
-  word-break: break-word; /* Adicionado para quebrar palavras longas */
+  word-break: break-word;
 }
 
 .conversation-container {
@@ -47,11 +47,11 @@
   flex-direction: column;
   padding: 8px;
   overflow-y: auto;
-  height: 300px; /* Ajuste a altura conforme necessário para não sobrepor o menu */
+  height: 300px;
 }
 
 /* Estilos para o menu flutuante */
-.relative { /* Adicionado para garantir que a bolha seja o ponto de referência do menu */
+.relative {
   position: relative;
 }
 
@@ -68,8 +68,5 @@
 }
 
 .transform {
-  transform: translateX(-50%); /* Correção para centralizar corretamente */
+  transform: translateX(-50%);
 }
-
-.mb-4 {
-  margin-bottom: 1
