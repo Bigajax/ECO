@@ -157,14 +157,14 @@ function EcoBubbleInterface() {
           <div
             key={index}
             className={`flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 ${
-              msg.startsWith('Você:') ? 'bg-blue-200 text-blue-800 ml-auto' : 'bg-pink-200 text-pink-800 mr-auto'
+              msg.startsWith('Você:') ? 'bg-blue-200 text-black ml-auto' : 'bg-pink-200 text-black mr-auto'
             }`}
           >
             <p className="text-sm">{msg}</p>
           </div>
         ))}
         {ecoResponseText && (
-          <div className="flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 bg-pink-200 text-pink-800 mr-auto">
+          <div className="flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 bg-pink-200 text-black mr-auto">
             <p className="text-sm">ECO: {ecoResponseText}</p>
           </div>
         )}
