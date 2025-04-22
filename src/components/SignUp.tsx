@@ -35,11 +35,11 @@ function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-100 to-blue-300 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
         <div className="flex justify-center mb-8">
-          <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent flex items-center">
-            EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 ml-1"></div>
+          <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-[#6495ED] to-[#4682B4] bg-clip-text text-transparent flex items-center">
+            EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#6495ED] to-[#4682B4] ml-1"></div>
           </div>
         </div>
 
@@ -54,7 +54,7 @@ function SignUp() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
                 placeholder="seu@email.com"
                 required
               />
@@ -71,7 +71,7 @@ function SignUp() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
                 placeholder="••••••••"
                 required
               />
@@ -81,7 +81,7 @@ function SignUp() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition-colors font-medium"
+            className="w-full bg-[#6495ED] text-white py-3 rounded-xl hover:bg-[#4682B4] transition-colors font-medium"
             disabled={loading}
           >
             {loading ? 'Criando perfil...' : 'Criar meu perfil'}
@@ -91,7 +91,7 @@ function SignUp() {
         <div className="mt-8 text-center">
           <p className="text-gray-600">
             Já tem um perfil?{' '}
-            <button onClick={() => navigate('/login')} className="text-purple-600 hover:text-purple-700">
+            <button onClick={() => navigate('/login')} className="text-[#6495ED] hover:text-[#4682B4]">
               Entrar
             </button>
           </p>
