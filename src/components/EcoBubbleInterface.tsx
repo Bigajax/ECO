@@ -216,12 +216,12 @@ function EcoBubbleInterface() {
         {conversation.map((msg, index) => (
           <div
             key={index}
-            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-3 my-2 text-black mr-auto`}
+            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 text-black mr-auto`}
             style={{ marginLeft: '10px' }}
           >
-            <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}> {/* Largura máxima para o texto */}
+            <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
               {!msg.isUser && <BubbleIcon />}
-              <p className="text-sm break-words">
+              <p className="text-sm break-words" style={{ fontSize: '1.1rem' }}>
                 {!msg.isUser && <span className="font-semibold">ECO: </span>}
                 {msg.text}
               </p>
