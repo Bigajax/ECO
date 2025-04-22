@@ -59,8 +59,12 @@ function EcoBubbleInterface() {
       setMessage('');
       latestUserMessage.current = userMessage;
 
-      console.log('handleSendMessage: Mensagem do usuário:', userMessage);
-      setConversation((prev) => [...prev, { text: userMessage, isUser: true }]);
+      console.log('handleSendMessage: Mensagem do usuário (antes do setState):', userMessage);
+      setConversation((prev) => {
+        const newUserMessage = { text: userMessage, isUser: true };
+        console.log('handleSendMessage: Nova mensagem do usuário:', newUserMessage);
+        return [...prev, newUserMessage];
+      });
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
@@ -70,7 +74,11 @@ function EcoBubbleInterface() {
         const audioUrl = aiResponse?.audio;
         console.log('handleSendMessage: Resposta da API:', ecoText);
         console.log('handleSendMessage: Audio da API:', audioUrl);
-        setConversation((prev) => [...prev, { text: ecoText, isUser: false }]);
+        setConversation((prev) => {
+          const newEcoMessage = { text: ecoText, isUser: false };
+          console.log('handleSendMessage: Nova mensagem da ECO:', newEcoMessage);
+          return [...prev, newEcoMessage];
+        });
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
       } catch (error: any) {
