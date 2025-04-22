@@ -95,17 +95,17 @@ MARCO AURÉLIO, MEDITAÇÕES, 11.1-2`;
         </button>
       </div>
 
-      {/* Reflection Card with Date and Text */}
+      {/* Reflection Card with Date and Text - ALTERAÇÕES AQUI */}
       <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100 max-w-6xl w-full">
         <div
-          className="h-48 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
+          className="h-auto min-h-[150px] bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105" /* Aumentando a altura mínima e removendo altura fixa */
           style={{
             backgroundImage: `url('https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg')`
           }}
         >
-          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
+          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-6 group-hover:bg-black/50 transition-colors"> {/* Aumentando a opacidade do fundo */}
             <p className="text-white text-sm mb-2">{reflectionDate}</p>
-            <p className="text-white text-lg font-light text-center">
+            <p className="text-white text-lg font-light text-center" style={{ fontSize: '1.2em', lineHeight: '1.7' }}> {/* Aumentando o tamanho da fonte e a altura da linha */}
               {reflectionText}
             </p>
           </div>
