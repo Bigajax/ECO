@@ -63,32 +63,33 @@ function EcoBubbleInterface() {
     }
   }, [message, isSending]);
 
-  useEffect(() => {
-    if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
-      const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
-      setEcoResponseText('');
-      ecoResponseIndex.current = 0;
-      stopVibration();
+  // REMOVENDO O EFEITO DE "DIGITAÇÃO"
+  // useEffect(() => {
+  //   if (conversation.length > 0 && conversation[conversation.length - 1]?.startsWith('ECO:')) {
+  //     const latestEcoResponse = conversation[conversation.length - 1].substring(5).trim();
+  //     setEcoResponseText('');
+  //     ecoResponseIndex.current = 0;
+  //     stopVibration();
 
-      if (latestEcoResponse) {
-        startVibration();
-        if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-        typingIntervalRef.current = setInterval(() => {
-          if (ecoResponseIndex.current < latestEcoResponse.length) {
-            setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
-            ecoResponseIndex.current++;
-          } else {
-            clearInterval(typingIntervalRef.current!);
-            stopVibration();
-          }
-        }, 50);
-      }
-    } else {
-      setEcoResponseText('');
-      stopVibration();
-      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-    }
-  }, [conversation, startVibration, stopVibration]);
+  //     if (latestEcoResponse) {
+  //       startVibration();
+  //       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+  //       typingIntervalRef.current = setInterval(() => {
+  //         if (ecoResponseIndex.current < latestEcoResponse.length) {
+  //           setEcoResponseText((prev) => prev + latestEcoResponse[ecoResponseIndex.current]);
+  //           ecoResponseIndex.current++;
+  //         } else {
+  //           clearInterval(typingIntervalRef.current!);
+  //           stopVibration();
+  //         }
+  //       }, 50);
+  //     }
+  //   } else {
+  //     setEcoResponseText('');
+  //     stopVibration();
+  //     if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+  //   }
+  // }, [conversation, startVibration, stopVibration]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
@@ -163,11 +164,12 @@ function EcoBubbleInterface() {
             <p className="text-sm">{msg}</p>
           </div>
         ))}
-        {ecoResponseText && (
+        {/* REMOVENDO A EXIBIÇÃO SEPARADA DO ecoResponseText */}
+        {/* {ecoResponseText && (
           <div className="flex flex-col w-fit max-w-[80%] rounded-lg p-2 my-1 bg-pink-200 text-black mr-auto">
             <p className="text-sm">ECO: {ecoResponseText}</p>
           </div>
-        )}
+        )} */}
       </div>
 
       {audioPlayer && (
