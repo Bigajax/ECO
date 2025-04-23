@@ -17,6 +17,7 @@ const LoginPage: React.FC = () => {
     // Por exemplo, verificar se o usuário já está logado e redirecionar
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('Session no useEffect:', session); // ADICIONE ESTE LOG
       if (session?.user) {
         console.log('Usuário já logado, redirecionando para /home');
         navigate('/home');
