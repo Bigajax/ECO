@@ -216,3 +216,30 @@ function EcoBubbleInterface() {
           style={{ maxHeight: '100px', overflowY: 'auto' }}
         />
         <button
+          onClick={handleSendMessage}
+          className="ml-2 p-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+          disabled={isSending || !userId}
+        >
+          <Lucide.Send size={20} />
+        </button>
+        <button
+          onClick={handleMicClick}
+          className={`ml-2 p-2 rounded-full ${
+            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:bg-gray-400 transition-colors'
+          } focus:outline-none focus:ring-2 focus:ring-gray-300`}
+        >
+          <Lucide.Mic size={20} />
+        </button>
+      </div>
+      {audioPlayer && (
+        <div className="absolute bottom-16 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+          <button onClick={togglePlayPause} className="focus:outline-none">
+            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default EcoBubbleInterface;
