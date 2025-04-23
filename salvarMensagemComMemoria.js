@@ -1,3 +1,4 @@
+// src/salvarMensagemComMemoria.ts
 import { supabase } from './supabaseClient';
 
 export async function salvarMensagemComMemoria({
