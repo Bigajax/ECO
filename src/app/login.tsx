@@ -34,8 +34,8 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    console.log('Supabase Client:', supabase); // LINHA DE DIAGNÓSTICO IMPORTANTE
-    console.log('Tentando login com:', { email, password }); // LOG ADICIONADO
+    console.log('Supabase Client:', supabase);
+    console.log('Tentando login com:', { email, password });
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -74,7 +74,7 @@ const LoginPage: React.FC = () => {
         <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-3xl p-8 shadow-lg fade-in-bottom">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <input // Substituindo Input
+              <input
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -84,7 +84,7 @@ const LoginPage: React.FC = () => {
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
             <div>
-              <input // Substituindo Input
+              <input
                 type="password"
                 placeholder="Senha"
                 value={password}
@@ -98,7 +98,7 @@ const LoginPage: React.FC = () => {
               </a>
             </div>
             <div className="pt-2">
-              <button // Substituindo Button
+              <button
                 type="submit"
                 disabled={loading}
                 className={`w-full py-3 rounded-md text-white font-semibold focus:outline-none ${
@@ -110,12 +110,12 @@ const LoginPage: React.FC = () => {
             </div>
           </form>
 
-          <div className="mt-6 border-t pt-6 text-center"> {/* Substituindo Divider */}
+          <div className="mt-6 border-t pt-6 text-center">
             <span className="bg-white px-3 -mt-3 inline-block text-gray-500">ou</span>
           </div>
 
           <div className="space-y-4 mt-6">
-            <button // Substituindo Button
+            <button
               className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
               onClick={() => console.log('Google login')}
             >
@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
               Entrar com o Google
             </button>
 
-            <button // Substituindo Button
+            <button
               className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
               onClick={() => console.log('Apple login')}
             >
