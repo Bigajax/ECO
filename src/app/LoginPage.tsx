@@ -1,7 +1,7 @@
 // Arquivo: src/app/LoginPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../supabaseClient'; // IMPORTAÇÃO CORRIGIDA!
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
