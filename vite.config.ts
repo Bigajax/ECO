@@ -13,4 +13,9 @@ export default defineConfig({
       '../../salvarMensagemComMemoria': '/src/salvarMensagemComMemoria.js',
     },
   },
+  define: {
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(process.env.VITE_SUPABASE_ANON_KEY),
+    // Adicione aqui outras variáveis de ambiente que você possa estar usando com o prefixo VITE_
+  },
 });
