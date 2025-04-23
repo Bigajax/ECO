@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
-import { sendMessageToOpenAI } from '../../sendMessageToOpenAI.ts';
+import { sendMessageToOpenAI } from '../.././sendMessageToOpenAI.ts';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
 
