@@ -1,7 +1,7 @@
 // Arquivo: src/app/LoginPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../../supabaseClient'; // IMPORTAÇÃO CORRIGIDA
+import { supabase } from '../../../supabaseClient';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,14 +12,11 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await supabase.auth.getSession();
-      const { data: { session } } = response;
-
-      if (session && session.user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
         navigate('/home');
       }
     };
-
     checkAuth();
   }, [navigate]);
 
@@ -35,8 +32,12 @@ const LoginPage: React.FC = () => {
       } else {
         navigate('/home');
       }
-    } catch (err: any) {
-      setError(err?.message || 'Erro inesperado. Tente novamente.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro inesperado. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }
@@ -81,9 +82,9 @@ const LoginPage: React.FC = () => {
               />
             </div>
             <div className="pt-2 text-right">
-              <a href="#" className="text-sm text-blue-600 hover:underline">
+              <button type="button" className="text-sm text-blue-600 hover:underline">
                 Esqueceu a senha?
-              </a>
+              </button>
             </div>
             <div className="pt-2">
               <button
@@ -104,8 +105,9 @@ const LoginPage: React.FC = () => {
 
           <div className="space-y-4 mt-6">
             <button
+              type="button"
               className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
-              onClick={() => console.log('Google login')}
+              onClick={async () => console.log('Google login')}
             >
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -116,11 +118,12 @@ const LoginPage: React.FC = () => {
             </button>
 
             <button
+              type="button"
               className="w-full py-3 rounded-md text-gray-700 font-semibold border border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center"
-              onClick={() => console.log('Apple login')}
+              onClick={async () => console.log('Apple login')}
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5 mr-2" fill="currentColor">
-                <path d="M14.94,5.19A4.38,4.38,0,0,0,16,2.5a4.38,4.38,0,0,0-3,.19,4.38,4.38,0,0,0-1.06,2.69A4.38,4.38,0,0,0,14.94,5.19Zm3.85,9.06a4.83,4.83,0,0,0,2.33-3.06,4.83,4.83,0,0,0-3,.19,4.83,4.83,0,0,0-2.33,3.06A4.83,4.83,0,0,0,18.79,14.25ZM17.5,8.19a6.9,6.9,0,0,0-2.94-2.94,6.9,6.9,0,0,0-3.81,0A6.9,6.9,0,0,0,7.81,8.19a6.9,6.9,0,0,0,0,3.81,6.9,6.9,0,0,0,2.94,2.94,6.9,6.9,0,0,0,3.81,0,6.9,6.9,0,0,0,2.94-2.94A6.9,6.9,0,0,0,17.5,8.19Zm-5.75,9.56a4.38,4.38,0,0,0,2.69-1.06,4.38,4.38,0,0,0,.19-3,4.38,4.38,0,0,0-2.69,1.06A4.38,4.38,0,0,0,11.75,17.75Zm-6.31-3.5a4.83,4.83,0,0,0,3.06,2.33,4.83,4.83,0,0,0-.19-3,4.83,4.83,0,0,0-3.06-2.33A4.83,4.83,0,0,0,5.44,14.25ZM8.19,6.5a4.38,4.38,0,0,0,1.06,2.69,4.38,4.38,0,0,0,3,.19A4.38,4.38,0,0,0,11.19,6.5,4.38,4.38,0,0,0,8.19,6.5Z" />
+                <path d="M14.94,5.19A4.38,4.38,0,0,0,16,2.5a4.38,4.38,0,0,0-3,.19,4.38,4.38,0,0,0-1.06,2.69A4.38,4.38,0,0,0,14.94,5.19Z..." />
               </svg>
               Entrar com a Apple
             </button>
@@ -130,6 +133,7 @@ const LoginPage: React.FC = () => {
             <p className="text-gray-600">
               Você ainda não tem um perfil?{' '}
               <button
+                type="button"
                 onClick={() => navigate('/signup')}
                 className="text-purple-600 hover:text-purple-700"
               >
