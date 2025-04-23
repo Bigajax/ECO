@@ -14,6 +14,8 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    console.log('Supabase Client:', supabase); // Linha adicionada para diagnóstico
+
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
