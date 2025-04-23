@@ -7,4 +7,10 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  resolve: {
+    alias: {
+      '../../sendMessageToOpenAI': '/src/sendMessageToOpenAI.ts',
+      '../../salvarMensagemComMemoria': '/src/salvarMensagemComMemoria.js',
+    },
+  },
 });
