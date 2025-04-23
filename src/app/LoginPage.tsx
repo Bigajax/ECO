@@ -138,6 +138,14 @@ const LoginPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="mt-8 text-center">
+<div className="mt-8 text-center">
             <p className="text-gray-600">
-              Você ainda não
+              Você ainda não tem um perfil?{' '}
+              <button
+                onClick={() => navigate('/signup')}
+                className="text-purple-600 hover:text-purple-700"
+              >
+                Criar meu perfil
+              </button>
+            </p>
+          </div>
