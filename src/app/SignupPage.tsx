@@ -1,9 +1,8 @@
-
 // Arquivo: src/app/SignupPage.tsx
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../components/supabaseClient'; // Importe o cliente Supabase com o caminho correto
+import { supabase } from '../../supabaseClient'; // Importe o cliente Supabase com o caminho correto
 
 function SignupPage() {
   const [email, setEmail] = useState('');
