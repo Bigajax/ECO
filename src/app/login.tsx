@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../../components/supabaseClient'; // IMPORTAÇÃO CORRIGIDA
 
 const LoginPage: React.FC = () => {
   console.log('LoginPage component rendered'); // LOG ADICIONADO
@@ -13,12 +13,12 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     console.log('LoginPage useEffect triggered'); // LOG ADICIONADO
-    // Adicione qualquer lógica que você tenha no seu useEffect aqui
-    // Por exemplo, verificar se o usuário já está logado e redirecionar
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('Session no useEffect:', session); // ADICIONE ESTE LOG
-      if (session && session.user) { // VERIFICAÇÃO ATUALIZADA
+      const response = await supabase.auth.getSession();
+      console.log('Response do getSession:', response); // ADICIONE ESTE LOG
+      const { data: { session } } = response;
+      console.log('Session no useEffect:', session);
+      if (session && session.user) {
         console.log('Usuário já logado, redirecionando para /home');
         navigate('/home');
       }
@@ -26,10 +26,7 @@ const LoginPage: React.FC = () => {
 
     checkAuth();
 
-    // Limpeza do useEffect (se necessário)
-    return () => {
-      // console.log('LoginPage useEffect cleanup');
-    };
+    return () => {};
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
