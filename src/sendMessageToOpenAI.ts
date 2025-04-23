@@ -1,7 +1,6 @@
-// src/sendMessageToOpenAI.ts
 export async function sendMessageToOpenAI(
   message: string,
-): Promise<{ text: string | null; audio: string | null }> {
+): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
   console.log('API Key (OpenAI):', import.meta.env.VITE_OPENAI_API_KEY);
 
   try {
@@ -26,7 +25,9 @@ Observe atentamente, responda com suavidade e traga questionamentos introspectiv
 
 Você compreende aspectos filosóficos e comportamentais para espelhar com cuidado, priorizando a reflexão sobre a explicação. Responda sempre com empatia e escuta ativa, devolvendo ao usuário o que ele pode não perceber, em uma linguagem leve e profunda.
 
-Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, imagens simbólicas e reflexões suaves, adaptando-se ao estado emocional da pessoa. **Mantenha suas respostas concisas e diretas ao ponto.**`,
+Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, imagens simbólicas e reflexões suaves, adaptando-se ao estado emocional da pessoa. **Mantenha suas respostas concisas e diretas ao ponto.**
+
+**Além da sua resposta principal, analise o sentimento geral da mensagem do usuário, a emoção principal expressa (se houver), e estime a intensidade dessa emoção em uma escala de 0 a 10. Forneça um breve resumo da mensagem do usuário. Formate sua resposta como um objeto JSON com as chaves: "resposta", "sentimento", "emocao", "intensidade", "resumo".**`,
             },
             {
               role: 'user',
@@ -46,9 +47,9 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
       );
     }
 
-    const reply = openAiData.choices?.[0]?.message?.content;
+    const rawReply = openAiData.choices?.[0]?.message?.content;
 
-    if (!reply) {
+    if (!rawReply) {
       console.error('Resposta vazia ou mal formatada da IA:', openAiData);
       return {
         text: 'Desculpe, não consegui entender sua reflexão. Tente novamente.',
@@ -56,20 +57,21 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
       };
     }
 
-    // --- DESATIVANDO INTEGRAÇÃO COM ELEVENLABS PARA TESTE ---
-    // const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
-    // const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // ID da voz da Rachel
-    // let audioElement: HTMLAudioElement | null = null;
+    let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
+    try {
+      parsedReply = JSON.parse(rawReply);
+    } catch (e) {
+      console.warn("Resposta da IA não está em formato JSON:", rawReply);
+      // Se não for JSON, use a resposta bruta como texto principal
+    }
 
-    // if (ELEVENLABS_API_KEY) {
-    //  try {
-    //    // ... código para chamar a API do ElevenLabs ...
-    //  } catch (error) {
-    //    console.error("Erro ao processar a resposta do ElevenLabs", error);
-    //  }
-    // }
-
-    return { text: reply, audio: null }; // Retornando null para audio já que ElevenLabs está desativado
+    return {
+      text: parsedReply.resposta,
+      audio: null, // ElevenLabs desativado
+      resumo: parsedReply.resumo,
+      emocao: parsedReply.emocao,
+      intensidade: parsedReply.intensidade,
+    };
   } catch (error: any) {
     console.error('Erro ao enviar mensagem para OpenAI:', error);
     return {
