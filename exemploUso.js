@@ -1,18 +1,15 @@
-import { salvarMensagemComMemoria } from './salvarMensagemComMemoria.js';
+// exemploUso.js
+import { supabase } from './supabaseClient.js'; // certifique-se de que o caminho está correto
 
-(async () => {
-  const resultado = await salvarMensagemComMemoria({
-    usuario_id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', // Substitua por um ID real da tabela 'usuarios'
-    conteudo: 'Hoje senti um pouco de ansiedade sobre o futuro.',
-    sentimento: 'ansiedade',
-    resumo_eco: 'Expressou ansiedade ao falar do futuro.',
-    emocao_principal: 'ansiedade',
-    intensidade: 7,
-    contexto: 'reflexão pessoal',
-    categoria: 'emocional',
-    salvar_memoria: true
-  });
+async function testarConexao() {
+  const { data, error } = await supabase.from('mensagens').select('*');
 
-  console.log('Resultado:', resultado);
-})();
+  if (error) {
+    console.error('Erro ao conectar ao Supabase:', error.message);
+  } else {
+    console.log('Conexão bem-sucedida! Dados recebidos:');
+    console.log(data);
+  }
+}
 
+testarConexao();
