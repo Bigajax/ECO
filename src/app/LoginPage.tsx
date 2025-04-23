@@ -46,6 +46,7 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x">
       <div className="w-full max-w-md">
+        {/* Logo e nome */}
         <div className="flex justify-center mb-16 scale-in-center">
           <div className="flex items-center text-4xl md:text-6xl font-light">
             <span className="bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-transparent bg-clip-text">EC</span>
@@ -60,6 +61,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Formulário */}
         <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-3xl p-8 shadow-lg fade-in-bottom">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -69,6 +71,7 @@ const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                required
               />
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
@@ -79,6 +82,7 @@ const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                required
               />
             </div>
             <div className="pt-2 text-right">
@@ -99,10 +103,12 @@ const LoginPage: React.FC = () => {
             </div>
           </form>
 
+          {/* Divisor */}
           <div className="mt-6 border-t pt-6 text-center">
             <span className="bg-white px-3 -mt-3 inline-block text-gray-500">ou</span>
           </div>
 
+          {/* Botões sociais */}
           <div className="space-y-4 mt-6">
             <button
               type="button"
@@ -123,12 +129,13 @@ const LoginPage: React.FC = () => {
               onClick={async () => console.log('Apple login')}
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5 mr-2" fill="currentColor">
-                <path d="M14.94,5.19A4.38,4.38,0,0,0,16,2.5a4.38,4.38,0,0,0-3,.19,4.38,4.38,0,0,0-1.06,2.69A4.38,4.38,0,0,0,14.94,5.19Z..." />
+                <path d="M16.365 1.43c.07.423-.065.88-.413 1.393-.345.51-.844.903-1.5 1.177-.11-.434-.064-.884.14-1.35.21-.467.528-.86.96-1.17.437-.316.81-.48 1.13-.5.07.116.132.256.183.42zM19 15.34c-.235.54-.49 1.028-.763 1.465-.4.623-.747 1.06-1.04 1.305-.413.365-.86.547-1.34.547-.35 0-.77-.103-1.26-.306-.48-.2-.92-.3-1.313-.3-.42 0-.88.1-1.377.3-.51.203-.96.31-1.35.32-.48.01-.937-.168-1.37-.532-.29-.26-.645-.7-1.06-1.324-.46-.66-.88-1.456-1.26-2.387-.38-.94-.57-1.843-.57-2.707 0-1.25.29-2.338.88-3.26.586-.92 1.36-1.42 2.32-1.49.47-.02 1.07.12 1.8.42.52.2.86.31 1.02.32.11 0 .52-.13 1.25-.39.67-.24 1.24-.34 1.71-.3 1.26.1 2.2.65 2.81 1.65-1.12.67-1.68 1.61-1.67 2.81 0 .95.34 1.74 1.01 2.36.3.27.65.49 1.06.66-.09.27-.18.52-.27.76z" />
               </svg>
               Entrar com a Apple
             </button>
           </div>
 
+          {/* Link para cadastro */}
           <div className="mt-8 text-center">
             <p className="text-gray-600">
               Você ainda não tem um perfil?{' '}
