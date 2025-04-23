@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './app/LoginPage';
 import HomePage from './app/home';
-import SignupPage from './app/signup';
+import SignupPage from './app/SignupPage'; // Importação corrigida para SignupPage
 import ProfilePage from './app/profile';
 import { AuthContextProvider } from './AuthContext'; // Importe o AuthContextProvider
 
