@@ -140,4 +140,4 @@ const LoginPage: React.FC = () => {
 
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Você ainda não
+             
