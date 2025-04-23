@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../../components/supabaseClient'; // IMPORTAÇÃO CORRIGIDA
 
 const LoginPage: React.FC = () => {
   console.log('LoginPage component rendered'); // LOG ADICIONADO
