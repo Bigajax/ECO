@@ -1,4 +1,3 @@
-// src/sendMessageToOpenAI.ts
 export async function sendMessageToOpenAI(
   message: string,
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
