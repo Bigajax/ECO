@@ -8,3 +8,8 @@ async function testarSupabase() {
 }
 
 testarSupabase();
+console.log("Rodando exemploUso.js");
+
+import { supabase } from './src/supabaseClient.js';
+
+console.log("Cliente Supabase carregado:", !!supabase); // só pra confirmar que existe
