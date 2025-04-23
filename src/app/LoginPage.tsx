@@ -68,7 +68,6 @@ const LoginPage: React.FC = () => {
                   <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
                 </div>
               </div>
-            </div>
           </div>
         </div>
 
@@ -141,3 +140,4 @@ const LoginPage: React.FC = () => {
 
           <div className="mt-8 text-center">
             <p className="text-gray-600">
+              Você ainda não
