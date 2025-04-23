@@ -1,4 +1,3 @@
-// src/salvarMensagemComMemoria.ts
 import { supabase } from './supabaseClient';
 
 export async function salvarMensagemComMemoria({
@@ -11,17 +10,7 @@ export async function salvarMensagemComMemoria({
   contexto = 'interação', // Valor padrão
   categoria = 'reflexão', // Valor padrão
   salvar_memoria = true
-}: {
-  usuario_id: string;
-  conteudo: string;
-  sentimento?: string | null;
-  resumo_eco?: string | null;
-  emocao_principal?: string | null;
-  intensidade?: number | null;
-  contexto?: string | null;
-  categoria?: string | null;
-  salvar_memoria?: boolean;
-}) {
+}) { // <-- REMOVA OS DOIS PONTOS DA LINHA ANTERIOR
   try {
     const { data: mensagem, error: erroMensagem } = await supabase
       .from('mensagens')
