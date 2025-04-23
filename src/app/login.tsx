@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       console.log('Session no useEffect:', session); // ADICIONE ESTE LOG
-      if (session?.user) {
+      if (session && session.user) { // VERIFICAÇÃO ATUALIZADA
         console.log('Usuário já logado, redirecionando para /home');
         navigate('/home');
       }
