@@ -1,5 +1,5 @@
 // exemploUso.js
-import { supabase } from './supabaseClient.js'; // certifique-se de que o caminho está correto
+import { supabase } from './supabaseClient.js';
 
 async function testarConexao() {
   const { data, error } = await supabase.from('mensagens').select('*');
