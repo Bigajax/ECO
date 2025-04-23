@@ -1,15 +1,14 @@
 // exemploUso.js
-import { supabase } from './supabaseClient.js';
+import { supabase } from './src/supabaseClient.js';
 
-async function testarConexao() {
+async function testarSupabase() {
   const { data, error } = await supabase.from('mensagens').select('*');
 
   if (error) {
-    console.error('Erro ao conectar ao Supabase:', error.message);
+    console.error('Erro ao buscar dados:', error.message);
   } else {
-    console.log('Conexão bem-sucedida! Dados recebidos:');
-    console.log(data);
+    console.log('Dados retornados:', data);
   }
 }
 
-testarConexao();
+testarSupabase();
