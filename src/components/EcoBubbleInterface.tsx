@@ -73,7 +73,11 @@ function EcoBubbleInterface() {
   }, [userName]);
 
   useEffect(() => {
-    if (inputRef.current) inputRef.current.scrollTop = inputRef.current.scrollHeight;
+    if (inputRef.current) {
+      inputRef.current.scrollTop = inputRef.current.scrollHeight;
+      inputRef.current.selectionStart = inputRef.current.value.length;
+      inputRef.current.selectionEnd = inputRef.current.value.length;
+    }
   }, [message]);
 
   useEffect(() => {
