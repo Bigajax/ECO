@@ -12,9 +12,14 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      console.log('LoginPage - Sessão:', session);
+      console.log('LoginPage - Erro ao obter sessão:', error);
       if (session?.user) {
+        console.log('LoginPage - Usuário autenticado, navegando para /home');
         navigate('/home');
+      } else {
+        console.log('LoginPage - Usuário não autenticado, permanecendo na tela de login.');
       }
     };
     checkAuth();
