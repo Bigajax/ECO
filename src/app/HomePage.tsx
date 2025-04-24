@@ -1,7 +1,7 @@
 // src/app/HomePage.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient'; // IMPORTAÇÃO CORRIGIDA!
+import { supabase } from '../supabaseClient';
 import { Moon, Compass, Music, Eye } from 'lucide-react';
 
 const HomePage: React.FC = () => {
