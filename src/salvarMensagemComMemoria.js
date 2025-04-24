@@ -1,4 +1,3 @@
-// src/salvarMensagemComMemoria.js
 import { supabase } from './supabaseClient';
 
 export async function salvarMensagemComMemoria({
@@ -50,7 +49,7 @@ export async function salvarMensagemComMemoria({
     if (erroMemoria) throw erroMemoria;
 
     return { sucesso: true, mensagem, memoria };
-  } catch (error: any) {
+  } catch (error) { // REMOVIDOS OS DOIS PONTOS E O TIPO
     console.error('Erro ao salvar:', error.message);
     return { sucesso: false, error: error.message };
   }
