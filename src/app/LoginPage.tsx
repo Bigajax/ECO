@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) console.error('Erro ao buscar sessão:', error);
       if (data?.session?.user) {
-        navigate('/homepage');
+        navigate('/home'); // Alterei para '/home' para consistência com App.tsx
       }
     };
 
@@ -32,10 +32,10 @@ const LoginPage: React.FC = () => {
 
     if (error) {
       setError(error.message || 'Erro ao fazer login');
-    } else if (data.session) {
+    } else if (data?.session?.user) { // Verifique se há um usuário na sessão após o login
       setEmail('');
       setPassword('');
-      navigate('/homepage');
+      navigate('/home'); // Alterei para '/home' para consistência com App.tsx
     }
 
     setLoading(false);
