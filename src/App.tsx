@@ -4,11 +4,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './app/LoginPage';
 import HomePage from './app/HomePage'; // IMPORTANTE: HomePage com "H" maiúsculo
 // import SignupPage from './app/SignupPage'; // Remova a importação do SignupPage
-import { AuthContextProvider } from './AuthContext'; // Importe o AuthContextProvider
+// import { AuthContextProvider } from './AuthContext'; // Comente ou remova se não estiver usando
 
 function App() {
   return (
-    <AuthContextProvider> {/* Envolva SUA APLICAÇÃO INTEIRA com o AuthContextProvider */}
+    // <AuthContextProvider> {/* Envolva SUA APLICAÇÃO INTEIRA com o AuthContextProvider */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} /> {/* Rota principal agora é LoginPage */}
@@ -20,7 +20,7 @@ function App() {
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
-    </AuthContextProvider>
+    // </AuthContextProvider>
   );
 }
 
