@@ -13,7 +13,6 @@ const HomePage: React.FC = () => {
     console.log('HomePage useEffect triggered');
 
     // Descomente este bloco para a lógica normal de verificação da sessão
-    /*
     const verifySession = async () => {
       const { data: { session } } = await supabase.auth.getSession(); // Obtém a sessão do usuário
       console.log('Session in HomePage:', session);
@@ -30,13 +29,14 @@ const HomePage: React.FC = () => {
     };
 
     verifySession(); // Chamada da função de verificação
-    */
 
     // Comente o bloco acima e descomente o bloco abaixo para o teste temporário
+    /*
     setTimeout(() => {
       setLoading(false);
       console.log('Loading set to false after timeout');
     }, 1000);
+    */
 
   }, [navigate]);
 
