@@ -24,13 +24,10 @@ function EcoBubbleInterface() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [showMessage, setShowMessage] = useState(false);
-  const messageToDisplay = "Esta é uma mensagem de exemplo!";
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
-  const toggleMessage = useCallback(() => setShowMessage((prev) => !prev), []);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -195,14 +192,6 @@ function EcoBubbleInterface() {
             <button className="p-2 hover:opacity-75 transition-opacity">
               <Lucide.Settings className="w-6 h-6 text-gray-600" />
             </button>
-          </div>
-        )}
-        <button onClick={toggleMessage} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Mostrar Mensagem
-        </button>
-        {showMessage && (
-          <div className="mt-2 p-3 bg-gray-100 rounded-md shadow-sm">
-            {messageToDisplay}
           </div>
         )}
       </div>
