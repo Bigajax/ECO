@@ -82,7 +82,10 @@ function EcoBubbleInterface() {
 
   useEffect(() => {
     if (conversationContainerRef.current) {
+      console.log('scrollHeight:', conversationContainerRef.current.scrollHeight);
+      console.log('scrollTop antes:', conversationContainerRef.current.scrollTop);
       conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
+      console.log('scrollTop depois:', conversationContainerRef.current.scrollTop);
     }
   }, [conversation]);
 
