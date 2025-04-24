@@ -24,8 +24,8 @@ const LoginPage: React.FC = () => {
         const { data: { session } } = response;
         console.log('Session no useEffect:', session);
         if (session && session.user) {
-          console.log('Usuário já logado, redirecionando para /home');
-          navigate('/home');
+          console.log('Usuário já logado, redirecionando para /homepage'); // ALTERADO PARA /homepage
+          navigate('/homepage'); // ALTERADO PARA /homepage
         }
       }
     };
@@ -54,10 +54,10 @@ const LoginPage: React.FC = () => {
         setError(error.message || 'Erro ao fazer login. Verifique seus dados.');
       } else {
         console.log('Login realizado com sucesso!');
-        navigate('/home'); // DESCOMENTADO!
+        navigate('/homepage'); // DESCOMENTADO E ALTERADO PARA /homepage!
         setEmail(''); // RESETAR O EMAIL
         setPassword(''); // RESETAR A SENHA
-        console.log('Navegação para /home realizada e estados resetados.'); // LOG ADICIONADO
+        console.log('Navegação para /homepage realizada e estados resetados.'); // LOG ADICIONADO
       }
     } catch (err: any) {
       console.error('Erro inesperado:', err);
