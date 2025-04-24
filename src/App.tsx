@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './app/LoginPage';
 import HomePage from './app/HomePage';
-// Importe outros componentes de página aqui
+import SignupPage from './app/SignupPage'; // ✅ importação adicionada
 
 function App() {
   return (
@@ -11,9 +11,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
-        {/* Adicione outras rotas da sua aplicação aqui */}
-        {/* Por exemplo: */}
-        {/* <Route path="/signup" element={<SignupPage />} /> */}
+        <Route path="/signup" element={<SignupPage />} /> {/* ✅ rota adicionada */}
       </Routes>
     </Router>
   );
