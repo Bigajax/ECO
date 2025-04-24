@@ -48,7 +48,9 @@ const LoginPage: React.FC = () => {
       } else {
         console.log('Login realizado com sucesso!');
         navigate('/home'); // DESCOMENTADO!
-        // console.log('Navegação para /home impedida para teste.'); // PODE REMOVER OU COMENTAR
+        setEmail(''); // RESETAR O EMAIL
+        setPassword(''); // RESETAR A SENHA
+        console.log('Navegação para /home realizada e estados resetados.'); // LOG ADICIONADO
       }
     } catch (err: any) {
       console.error('Erro inesperado:', err);
