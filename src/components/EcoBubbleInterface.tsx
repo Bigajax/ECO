@@ -7,7 +7,6 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from '../MemoryButton'; // Importe o componente MemoryButton
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -262,7 +261,9 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+          <button onClick={handleMemoryButtonClick} className="ml-2">
+            <Lucide.Archive size={20} /> Registro de Memória
+          </button>
           <div className="flex-1">
             <textarea
               ref={inputRef}
