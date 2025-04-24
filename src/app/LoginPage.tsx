@@ -14,14 +14,19 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     console.log('LoginPage useEffect triggered'); // LOG ADICIONADO
+    let isAuthChecked = false;
+
     const checkAuth = async () => {
-      const response = await supabase.auth.getSession();
-      console.log('Response do getSession:', response); // ADICIONE ESTE LOG
-      const { data: { session } } = response;
-      console.log('Session no useEffect:', session);
-      if (session && session.user) {
-        console.log('Usuário já logado, redirecionando para /home');
-        navigate('/home');
+      if (!isAuthChecked) {
+        isAuthChecked = true;
+        const response = await supabase.auth.getSession();
+        console.log('Response do getSession:', response); // ADICIONE ESTE LOG
+        const { data: { session } } = response;
+        console.log('Session no useEffect:', session);
+        if (session && session.user) {
+          console.log('Usuário já logado, redirecionando para /home');
+          navigate('/home');
+        }
       }
     };
 
