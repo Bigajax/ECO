@@ -187,7 +187,6 @@ function EcoBubbleInterface() {
   const handleStopRecording = useCallback(() => {
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
-      setIsListening(false);
     }
   }, [isListening]);
 
@@ -263,9 +262,7 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          <div style={{ position: 'absolute', left: '10px', bottom: '50%', transform: 'translateY(50%)' }}>
-            <MemoryButton onClick={handleMemoryButtonClick} size="md" />
-          </div>
+          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
           <div className="flex-1">
             <textarea
               ref={inputRef}
@@ -308,4 +305,21 @@ function EcoBubbleInterface() {
           </button>
 
           <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
-            <Luc
+            <Lucide.MessageSquare size={14} />
+            <span>Sugestões</span>
+          </button>
+        </div>
+      </div>
+
+      {audioPlayer && (
+        <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+          <button onClick={togglePlayPause} className="focus:outline-none">
+            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default EcoBubbleInterface;
