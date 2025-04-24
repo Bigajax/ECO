@@ -31,7 +31,7 @@
   /* Mantenha outros estilos que você possa ter */
 }
 
-textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
+.message-input-container .message-input-wrapper textarea { /* Estilizando a textarea dentro do novo componente */
   border-radius: 8px; /* Adicione uma borda arredondada se o input tinha */
   font-size: inherit; /* Herda o tamanho da fonte do pai, se necessário */
   line-height: inherit; /* Herda a altura da linha, se necessário */
@@ -41,6 +41,62 @@ textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
+  width: 100%; /* Garante que a textarea ocupe a largura disponível */
+  border: 1px solid #e0e0e0; /* Adiciona uma borda sutil */
+  outline: none; /* Remove a borda de foco padrão */
+  box-sizing: border-box; /* Garante que padding e border não aumentem o tamanho total */
+}
+
+.message-input-container .message-input-wrapper {
+  display: flex; /* Use flexbox para alinhar os elementos */
+  flex-direction: column; /* Coloca os elementos em coluna */
+  gap: 8px; /* Espaçamento entre a textarea e os botões */
+}
+
+.message-input-container .message-input-wrapper .flex {
+  display: flex; /* Garante que os botões fiquem em linha */
+  align-items: center; /* Alinha verticalmente os itens */
+  gap: 8px; /* Espaçamento entre os botões */
+}
+
+.message-input-container .message-input-wrapper .flex-1 {
+  flex-grow: 1; /* Permite que a textarea cresça para ocupar o espaço */
+}
+
+.message-input-container .message-input-wrapper button.mic-button,
+.message-input-container .message-input-wrapper button.send-button {
+  padding: 8px; /* Ajuste o padding dos botões */
+  border: none; /* Remove a borda padrão dos botões */
+  cursor: pointer;
+  outline: none; /* Remove a borda de foco */
+}
+
+.message-input-container .message-input-wrapper .mic-button {
+  /* Estilos específicos para o botão do microfone já definidos no componente */
+}
+
+.message-input-container .message-input-wrapper .send-button {
+  /* Estilos específicos para o botão de enviar já definidos no componente */
+}
+
+.message-input-container .message-input-wrapper .feedback-section {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.message-input-container .message-input-wrapper .feedback-button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .audio-visualizer {
