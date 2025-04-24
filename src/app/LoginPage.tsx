@@ -1,7 +1,7 @@
 // Arquivo: src/app/LoginPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient'; // IMPORTAÇÃO CORRIGIDA!
+import { supabase } from '../supabaseClient';
 
 const LoginPage: React.FC = () => {
   console.log('LoginPage component rendered START'); // LOG ADICIONADO
