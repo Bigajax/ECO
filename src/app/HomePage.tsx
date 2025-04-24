@@ -12,6 +12,8 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     console.log('HomePage useEffect triggered');
 
+    // Descomente este bloco para a lógica normal de verificação da sessão
+    /*
     const verifySession = async () => {
       const { data: { session } } = await supabase.auth.getSession(); // Obtém a sessão do usuário
       console.log('Session in HomePage:', session);
@@ -28,6 +30,14 @@ const HomePage: React.FC = () => {
     };
 
     verifySession(); // Chamada da função de verificação
+    */
+
+    // Comente o bloco acima e descomente o bloco abaixo para o teste temporário
+    setTimeout(() => {
+      setLoading(false);
+      console.log('Loading set to false after timeout');
+    }, 1000);
+
   }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
@@ -35,7 +45,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 p-6">
-      
       {/* Logo do app */}
       <div className="flex justify-center mb-12 pt-8">
         <h1 className="text-4xl font-light text-purple-600">ECO</h1>
@@ -70,7 +79,6 @@ const HomePage: React.FC = () => {
 
       {/* Cartões principais da tela inicial */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-
         {/* Cartão de orientação diária */}
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
           <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors">
@@ -105,7 +113,6 @@ const HomePage: React.FC = () => {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

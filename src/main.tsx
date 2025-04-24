@@ -14,3 +14,4 @@ try {
 } catch (error) {
   console.error('Erro na renderização em main.tsx:', error);
 }
+

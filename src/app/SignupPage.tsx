@@ -39,7 +39,7 @@ function SignupPage() {
         setError(error.message);
       } else {
         setSuccess(true);
-        setTimeout(() => navigate('/home'), 2000); // Redireciona após sucesso
+        setTimeout(() => navigate('/home'), 2000); // Redireciona para '/home'
       }
     } catch (err: any) {
       setError(err.message || 'Erro inesperado.');
