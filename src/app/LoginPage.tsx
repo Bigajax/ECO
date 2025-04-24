@@ -47,8 +47,8 @@ const LoginPage: React.FC = () => {
         setError(error.message || 'Erro ao fazer login. Verifique seus dados.');
       } else {
         console.log('Login realizado com sucesso!');
-        // navigate('/home'); // COMENTADO PARA TESTE
-        console.log('Navegação para /home impedida para teste.'); // LOG PARA TESTE
+        navigate('/home'); // DESCOMENTADO!
+        // console.log('Navegação para /home impedida para teste.'); // PODE REMOVER OU COMENTAR
       }
     } catch (err: any) {
       console.error('Erro inesperado:', err);
