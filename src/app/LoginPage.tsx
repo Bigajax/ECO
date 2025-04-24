@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient'; // IMPORTAÇÃO CORRIGIDA!
 
 const LoginPage: React.FC = () => {
-  console.log('LoginPage component rendered'); // LOG ADICIONADO
+  console.log('LoginPage component rendered START'); // LOG ADICIONADO
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +27,9 @@ const LoginPage: React.FC = () => {
 
     checkAuth();
 
-    return () => {};
+    return () => {
+      console.log('LoginPage useEffect cleanup'); // Adicione este log para verificar se está sendo executado
+    };
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
