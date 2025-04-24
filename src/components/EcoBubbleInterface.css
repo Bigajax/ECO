@@ -13,6 +13,14 @@
   }
 }
 
+.conversation-container {
+  display: flex; /* Adiciona um display flex para controlar o layout dos itens */
+  flex-direction: column; /* Garante que as mensagens fiquem em coluna */
+  overflow-y: auto; /* Mantém a rolagem vertical */
+  padding: 0.5rem; /* Reduzindo um pouco o padding do container */
+  /* Mantenha outras propriedades que você já tinha */
+}
+
 .conversation-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -25,6 +33,53 @@
 .conversation-container::-webkit-scrollbar-track {
   background-color: #edf2f7;
   border-radius: 4px;
+}
+
+.conversation-container > div { /* Aplica estilos diretamente aos divs de mensagem */
+  width: fit-content; /* Faz a largura se ajustar ao conteúdo */
+  max-width: 90%; /* Impede que as mensagens fiquem muito largas */
+  border-radius: 0.75rem; /* Equivalente a rounded-lg */
+  padding: 0.75rem; /* Equivalente a p-4 */
+  margin-bottom: 0.5rem; /* Reduzindo um pouco a margem inferior */
+  color: black; /* Equivalente a text-black */
+  word-break: break-word; /* Permite que palavras longas quebrem para evitar overflow horizontal */
+}
+
+.conversation-container > div.ml-auto { /* Estilos para mensagens do usuário */
+  margin-left: auto; /* Equivalente a ml-auto */
+  background-color: #6495ED; /* Cor azul para o usuário (seryldaBlue) */
+  color: white;
+}
+
+.conversation-container > div.mr-auto { /* Estilos para mensagens da ECO */
+  margin-right: auto; /* Equivalente a mr-auto */
+  background-color: #F7CAC9; /* Cor rosa para a ECO (quartzPink) */
+}
+
+.conversation-container p {
+  font-size: 1rem; /* Reduzindo o tamanho da fonte para um valor mais confortável */
+  line-height: 1.4; /* Melhora a legibilidade do texto */
+  margin: 0; /* Remove margens desnecessárias do parágrafo */
+}
+
+.conversation-container .font-semibold {
+  font-weight: 600; /* Mantém o estilo de negrito para o "ECO:" */
+}
+
+.conversation-container .flex {
+  align-items: flex-start; /* Alinha os itens verticalmente no início */
+  gap: 0.5rem; /* Reduzindo o espaçamento entre o ícone e o texto */
+}
+
+/* Ajuste para o ícone da ECO */
+.conversation-container .flex .relative {
+  width: 1.5rem; /* Reduzindo o tamanho do ícone */
+  height: 1.5rem;
+}
+
+.conversation-container .flex .relative > div {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .expanded-input {
