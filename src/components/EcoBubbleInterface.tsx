@@ -1,4 +1,3 @@
-// src/components/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -25,10 +24,13 @@ function EcoBubbleInterface() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [showMessage, setShowMessage] = useState(false);
+  const messageToDisplay = "Esta é uma mensagem de exemplo!";
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
+  const toggleMessage = useCallback(() => setShowMessage((prev) => !prev), []);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -145,6 +147,16 @@ function EcoBubbleInterface() {
     }
   }, [isListening]);
 
+  const handleFeedbackClick = useCallback(() => {
+    alert('Obrigado pelo seu feedback!');
+    // Aqui você pode adicionar a lógica real para enviar o feedback
+  }, []);
+
+  const handleSuggestionsClick = useCallback(() => {
+    alert('Obrigado pelas suas sugestões!');
+    // Aqui você pode adicionar a lógica real para lidar com as sugestões
+  }, []);
+
   const BubbleIcon = () => (
     <div className="relative w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
       <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
@@ -163,7 +175,7 @@ function EcoBubbleInterface() {
         Voltar
       </button>
 
-      <div className="relative mb-8">
+      <div className="relative mb-8 flex flex-col items-center">
         <div onClick={toggleMenu} className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}>
           <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
           <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
@@ -183,6 +195,14 @@ function EcoBubbleInterface() {
             <button className="p-2 hover:opacity-75 transition-opacity">
               <Lucide.Settings className="w-6 h-6 text-gray-600" />
             </button>
+          </div>
+        )}
+        <button onClick={toggleMessage} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          Mostrar Mensagem
+        </button>
+        {showMessage && (
+          <div className="mt-2 p-3 bg-gray-100 rounded-md shadow-sm">
+            {messageToDisplay}
           </div>
         )}
       </div>
@@ -205,34 +225,58 @@ function EcoBubbleInterface() {
         ))}
       </div>
 
-      <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-4 w-full max-w-lg flex items-center rounded-b-2xl shadow-lg">
-        <textarea
-          ref={inputRef}
-          value={message}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Sua reflexão..."
-          className="flex-grow p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-          style={{ maxHeight: '100px', overflowY: 'auto' }}
-        />
-        <button
-          onClick={handleSendMessage}
-          className="ml-2 p-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
-          disabled={isSending || !userId}
-        >
-          <Lucide.Send size={20} />
-        </button>
-        <button
-          onClick={handleMicClick}
-          className={`ml-2 p-2 rounded-full ${
-            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:bg-gray-400 transition-colors'
-          } focus:outline-none focus:ring-2 focus:ring-gray-300`}
-        >
-          <Lucide.Mic size={20} />
-        </button>
+      <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
+        <div className="flex items-end gap-2 w-full">
+          <div className="flex-1">
+            <textarea
+              ref={inputRef}
+              value={message}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Sua reflexão..."
+              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
+              style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
+            />
+          </div>
+
+          <button
+            className={`mic-button p-2 rounded-full transition-all duration-200 ${
+              isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+            }`}
+            onClick={handleMicClick}
+            aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
+          >
+            <Lucide.Mic size={20} />
+          </button>
+
+          <button
+            className={`send-button p-2 rounded-full transition-all duration-300 ${
+              message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            } ${isSending ? 'scale-90' : 'scale-100'}`}
+            onClick={handleSendMessage}
+            disabled={!message.trim() || isSending || !userId}
+            aria-label="Enviar mensagem"
+          >
+            <Lucide.Send size={20} />
+          </button>
+        </div>
+
+        {/* Feedback section */}
+        <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
+          <button onClick={handleFeedbackClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+            <Lucide.ThumbsUp size={14} />
+            <span>Feedback</span>
+          </button>
+
+          <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+            <Lucide.MessageSquare size={14} />
+            <span>Sugestões</span>
+          </button>
+        </div>
       </div>
+
       {audioPlayer && (
-        <div className="absolute bottom-16 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+        <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
           <button onClick={togglePlayPause} className="focus:outline-none">
             {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
           </button>
@@ -243,60 +287,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-// src/salvarMensagemComMemoria.js
-import { supabase } from '../supabaseClient';
-
-export async function salvarMensagemComMemoria({
-  usuario_id,
-  conteudo,
-  sentimento,
-  resumo_eco,
-  emocao_principal,
-  intensidade,
-  contexto = 'interação', // Valor padrão
-  categoria = 'reflexão', // Valor padrão
-  salvar_memoria = true
-}) {
-  try {
-    const { data: mensagem, error: erroMensagem } = await supabase
-      .from('mensagens')
-      .insert([
-        {
-          usuario_id,
-          conteudo,
-          data_hora: new Date().toISOString(),
-          sentimento,
-          salvar_memoria
-        }
-      ])
-      .select()
-      .single();
-
-    if (erroMensagem) throw erroMensagem;
-
-    const { data: memoria, error: erroMemoria } = await supabase
-      .from('memorias')
-      .insert([
-        {
-          usuario_id,
-          mensagem_id: mensagem.id,
-          resumo_eco,
-          data_registro: new Date().toISOString(),
-          emocao_principal,
-          intensidade,
-          contexto,
-          categoria,
-          salvar_memoria
-        }
-      ])
-      .select()
-      .single();
-
-    if (erroMemoria) throw erroMemoria;
-
-    return { sucesso: true, mensagem, memoria };
-  } catch (error: any) {
-    console.error('Erro ao salvar:', error.message);
-    return { sucesso: false, error: error.message };
-  }
-}
