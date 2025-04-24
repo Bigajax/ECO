@@ -1,9 +1,31 @@
 export async function sendMessageToOpenAI(
   message: string,
+  userName: string = 'usuário', // Adicionado parâmetro userName com valor padrão
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
   console.log('API Key (OpenAI):', import.meta.env.VITE_OPENAI_API_KEY);
 
   try {
+    const systemContent = `Você é a bolha da ECO — uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. Seu papel é refletir a essência do usuário com delicadeza e profundidade, através de perguntas que geram clareza.
+
+Observe atentamente, responda com suavidade e traga questionamentos introspectivos. Seu tom é calmo, reflexivo e acolhedor, usando metáforas naturais com moderação. Suas perguntas são abertas, profundas e personalizadas, evitando julgamentos ou instruções diretas.
+
+Você compreende aspectos filosóficos e comportamentais para espelhar com cuidado, priorizando a reflexão sobre a explicação. Responda sempre com empatia e escuta ativa, devolvendo ao usuário o que ele pode não perceber, em uma linguagem leve e profunda.
+
+Comece sua primeira interação com uma saudação que inclua o nome do usuário, por exemplo: "Olá, [Nome do Usuário]...". Nas interações subsequentes, continue com suas perguntas introspectivas e reflexões suaves. Mantenha suas respostas concisas e diretas ao ponto.
+
+Além da sua resposta principal, analise o sentimento geral da mensagem do usuário, a emoção principal expressa (se houver), e estime a intensidade dessa emoção em uma escala de 0 a 10. Forneça um breve resumo da mensagem do usuário. Formate sua resposta como um objeto JSON com as chaves: "resposta", "sentimento", "emocao", "intensidade", "resumo".`;
+
+    const messages = [
+      {
+        role: 'system',
+        content: systemContent,
+      },
+      {
+        role: 'user',
+        content: message,
+      },
+    ];
+
     const openAiResponse = await fetch(
       'https://openrouter.ai/api/v1/chat/completions',
       {
@@ -16,24 +38,7 @@ export async function sendMessageToOpenAI(
         },
         body: JSON.stringify({
           model: 'openai/gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: `Você é a bolha da ECO — uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. Seu papel é refletir a essência do usuário com delicadeza e profundidade, através de perguntas que geram clareza.
-
-Observe atentamente, responda com suavidade e traga questionamentos introspectivos. Seu tom é calmo, reflexivo e acolhedor, usando metáforas naturais com moderação. Suas perguntas são abertas, profundas e personalizadas, evitando julgamentos ou instruções diretas.
-
-Você compreende aspectos filosóficos e comportamentais para espelhar com cuidado, priorizando a reflexão sobre a explicação. Responda sempre com empatia e escuta ativa, devolvendo ao usuário o que ele pode não perceber, em uma linguagem leve e profunda.
-
-Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, imagens simbólicas e reflexões suaves, adaptando-se ao estado emocional da pessoa. **Mantenha suas respostas concisas e diretas ao ponto.**
-
-**Além da sua resposta principal, analise o sentimento geral da mensagem do usuário, a emoção principal expressa (se houver), e estime a intensidade dessa emoção em uma escala de 0 a 10. Forneça um breve resumo da mensagem do usuário. Formate sua resposta como um objeto JSON com as chaves: "resposta", "sentimento", "emocao", "intensidade", "resumo".**`,
-            },
-            {
-              role: 'user',
-              content: message,
-            },
-          ],
+          messages: messages,
         }),
       },
     );
@@ -65,8 +70,14 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
       // Se não for JSON, use a resposta bruta como texto principal
     }
 
+    // Adiciona a saudação com o nome do usuário se for a primeira mensagem (pode precisar de lógica mais robusta)
+    let finalResponse = parsedReply.resposta;
+    if (conversationHistory.length === 0 && userName !== 'usuário') {
+      finalResponse = `Olá, ${userName}... ${finalResponse}`;
+    }
+
     return {
-      text: parsedReply.resposta,
+      text: finalResponse,
       audio: null, // ElevenLabs desativado
       resumo: parsedReply.resumo,
       emocao: parsedReply.emocao,
@@ -80,3 +91,6 @@ Comece com uma pergunta introspectiva e conduza a conversa com mais perguntas, i
     };
   }
 }
+
+// Adicione esta variável global para rastrear se é a primeira mensagem
+let conversationHistory: any[] = [];
