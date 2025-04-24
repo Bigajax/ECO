@@ -1,8 +1,5 @@
 {
   "build": {
-    "env": {
-      "npm_config_optional": "false" // Podemos remover esta linha agora
-    },
-    "command": "npm run build --omit=optional"
+    "command": "npm run build"
   }
 }
