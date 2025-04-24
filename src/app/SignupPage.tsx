@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, UserCheck, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from 'supabaseClient';
 
 function SignupPage() {
   const [email, setEmail] = useState('');
