@@ -1,14 +1,18 @@
-// Arquivo: src/app/SignupPage.tsx
+// src/app/SignupPage.tsx
 import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, UserCheck, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null); // Use 'any' ou um tipo mais específico para o erro
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -16,20 +20,29 @@ function SignupPage() {
     setLoading(true);
     setError(null);
 
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+        email,
+        password,
+        options: {
+          data: { full_name: name }
+        }
       });
 
       if (error) {
-        setError(error);
+        setError(error.message);
       } else {
-        console.log('Cadastro realizado com sucesso!');
-        navigate('/home'); // Redirecionar para a tela Home após o cadastro
+        setSuccess(true);
+        setTimeout(() => navigate('/home'), 2000); // Redireciona após sucesso
       }
     } catch (err: any) {
-      setError(err);
+      setError(err.message || 'Erro inesperado.');
     } finally {
       setLoading(false);
     }
@@ -38,17 +51,36 @@ function SignupPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+        {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-[#6495ED] to-[#4682B4] bg-clip-text text-transparent flex items-center">
             EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#6495ED] to-[#4682B4] ml-1"></div>
           </div>
         </div>
 
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Criar meu perfil</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Criar minha conta</h1>
 
-        <form onSubmit={handleSignUp} className="space-y-4">
-          <div className="relative">
-            <label htmlFor="email" className="block text-sm text-gray-600 mb-1">E-mail</label>
+        <form onSubmit={handleSignUp} className="space-y-5">
+          {/* Nome */}
+          <div>
+            <label htmlFor="name" className="text-sm text-gray-600 mb-1 block">Nome</label>
+            <div className="relative">
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
+                placeholder="Seu nome completo"
+                required
+              />
+              <UserCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="text-sm text-gray-600 mb-1 block">E-mail</label>
             <div className="relative">
               <input
                 type="email"
@@ -61,11 +93,11 @@ function SignupPage() {
               />
               <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
-            {error && <p className="text-red-500 text-xs italic mt-1">{error.message}</p>}
           </div>
 
-          <div className="relative">
-            <label htmlFor="password" className="block text-sm text-gray-600 mb-1">Senha</label>
+          {/* Senha */}
+          <div>
+            <label htmlFor="password" className="text-sm text-gray-600 mb-1 block">Senha</label>
             <div className="relative">
               <input
                 type="password"
@@ -80,22 +112,53 @@ function SignupPage() {
             </div>
           </div>
 
+          {/* Confirmar Senha */}
+          <div>
+            <label htmlFor="confirmPassword" className="text-sm text-gray-600 mb-1 block">Confirmar Senha</label>
+            <div className="relative">
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
+                placeholder="••••••••"
+                required
+              />
+              <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            </div>
+          </div>
+
+          {/* Erro ou sucesso */}
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+          {success && (
+            <div className="text-green-600 flex items-center gap-2 text-sm">
+              <CheckCircle size={20} /> Cadastro realizado! Redirecionando...
+            </div>
+          )}
+
+          {/* Botão */}
           <button
             type="submit"
-            className="w-full bg-[#6495ED] text-white py-3 rounded-xl hover:bg-[#4682B4] transition-colors font-medium"
             disabled={loading}
+            className={`w-full text-white py-3 rounded-xl font-medium transition-all ${
+              loading
+                ? 'bg-[#6495ED]/70 cursor-not-allowed'
+                : 'bg-[#6495ED] hover:bg-[#4682B4]'
+            }`}
           >
-            {loading ? 'Criando perfil...' : 'Criar meu perfil'}
+            {loading ? 'Criando...' : 'Criar conta'}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <p className="text-gray-600">
-            Já tem um perfil?{' '}
-            <button onClick={() => navigate('/login')} className="text-[#6495ED] hover:text-[#4682B4]">
-              Entrar
-            </button>
-          </p>
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Já tem uma conta?{' '}
+          <button
+            onClick={() => navigate('/login')}
+            className="text-[#6495ED] hover:text-[#4682B4] font-medium"
+          >
+            Entrar
+          </button>
         </div>
       </div>
     </div>
