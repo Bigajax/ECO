@@ -88,7 +88,7 @@ function EcoBubbleInterface() {
       console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
 
       try {
-        // Passa o nome do usuário para a função sendMessageToOpenAI
+        // Passa o nome do usuário e o estado de primeira mensagem
         const aiResponse = await sendMessageToOpenAI(userMessage, userName);
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
@@ -101,6 +101,7 @@ function EcoBubbleInterface() {
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
 
+        // Atualiza o estado de primeira mensagem após a primeira resposta da ECO
         if (isFirstMessage.current && conversation.length > 0 && !conversation[conversation.length - 1].isUser) {
           isFirstMessage.current = false;
         }
@@ -121,7 +122,7 @@ function EcoBubbleInterface() {
         setIsSending(false);
       }
     }
-  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying, userId, salvarMensagemComMemoria, userName]);
+  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
