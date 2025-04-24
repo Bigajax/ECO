@@ -7,90 +7,6 @@ import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
 
-// ✅ Componente MessageInput incorporado
-interface MessageInputProps {
-  message: string;
-  setMessage: (newMessage: string) => void;
-  handleSendMessage: () => void;
-  isSending: boolean;
-  isRecording: boolean;
-  toggleRecording: () => void;
-}
-
-const InternalMessageInput: React.FC<MessageInputProps> = ({
-  message,
-  setMessage,
-  handleSendMessage,
-  isSending,
-  isRecording,
-  toggleRecording,
-}) => {
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  return (
-    <div className="message-input-container w-full max-w-4xl mx-auto">
-      <div className="message-input-wrapper bg-white rounded-2xl shadow-sm border border-gray-100 p-3 transition-all duration-200">
-        <div className="flex items-end gap-2">
-          <div className="flex-1">
-            <textarea
-              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-              placeholder="Message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyPress}
-              rows={1}
-              style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
-            />
-          </div>
-
-          <button
-            className={`mic-button p-2 rounded-full transition-all duration-200 ${
-              isRecording
-                ? 'bg-red-500 text-white animate-pulse'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-            }`}
-            onClick={toggleRecording}
-            aria-label={isRecording ? "Stop recording" : "Start recording"}
-          >
-            <Lucide.Mic size={20} />
-          </button>
-
-          <button
-            className={`send-button p-2 rounded-full transition-all duration-300 ${
-              message.trim()
-                ? 'bg-blue-500 text-white hover:bg-blue-600'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            } ${isSending ? 'scale-90' : 'scale-100'}`}
-            onClick={handleSendMessage}
-            disabled={!message.trim() || isSending}
-            aria-label="Send message"
-          >
-            <Lucide.Send size={20} />
-          </button>
-        </div>
-
-        {/* Feedback section */}
-        <div className="mt-2 flex justify-between items-center text-xs text-gray-500">
-          <button className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
-            <Lucide.ThumbsUp size={14} />
-            <span>Feedback</span>
-          </button>
-
-          <button className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
-            <Lucide.MessageSquare size={14} />
-            <span>Suggestions</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
 
@@ -104,10 +20,10 @@ function EcoBubbleInterface() {
   const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
   const latestUserMessage = useRef<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isListening, setIsListening] = useState(false); // Usaremos isso para isRecording no InternalMessageInput
+  const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const inputRef = useRef<HTMLTextAreaElement | null>(null); // Não precisaremos mais usar diretamente
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
@@ -134,11 +50,8 @@ function EcoBubbleInterface() {
   }, [navigate]);
 
   useEffect(() => {
-    const conversationContainer = document.querySelector('.conversation-container');
-    if (conversationContainer) {
-      conversationContainer.scrollTop = conversationContainer.scrollHeight;
-    }
-  }, [conversation]);
+    if (inputRef.current) inputRef.current.scrollTop = inputRef.current.scrollHeight;
+  }, [message]);
 
   const handleSendMessage = useCallback(async () => {
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current && userId) {
@@ -192,6 +105,16 @@ function EcoBubbleInterface() {
     }
   }, [audioPlayer, isPlaying]);
 
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value), []);
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !isSending && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  }, [isSending, handleSendMessage]);
+
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+
   const handleMicClick = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) return alert('Reconhecimento de voz não é suportado no seu navegador.');
@@ -213,6 +136,13 @@ function EcoBubbleInterface() {
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
+  }, [isListening]);
+
+  const handleStopRecording = useCallback(() => {
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
   }, [isListening]);
 
   const BubbleIcon = () => (
@@ -275,18 +205,34 @@ function EcoBubbleInterface() {
         ))}
       </div>
 
-      {/* ✅ Instancia o componente InternalMessageInput */}
-      <InternalMessageInput
-        message={message}
-        setMessage={setMessage}
-        handleSendMessage={handleSendMessage}
-        isSending={isSending}
-        isRecording={isListening}
-        toggleRecording={handleMicClick}
-      />
-
+      <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-4 w-full max-w-lg flex items-center rounded-b-2xl shadow-lg">
+        <textarea
+          ref={inputRef}
+          value={message}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Sua reflexão..."
+          className="flex-grow p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+          style={{ maxHeight: '100px', overflowY: 'auto' }}
+        />
+        <button
+          onClick={handleSendMessage}
+          className="ml-2 p-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+          disabled={isSending || !userId}
+        >
+          <Lucide.Send size={20} />
+        </button>
+        <button
+          onClick={handleMicClick}
+          className={`ml-2 p-2 rounded-full ${
+            isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-300 text-gray-600 hover:bg-gray-400 transition-colors'
+          } focus:outline-none focus:ring-2 focus:ring-gray-300`}
+        >
+          <Lucide.Mic size={20} />
+        </button>
+      </div>
       {audioPlayer && (
-        <div className="absolute bottom-24 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+        <div className="absolute bottom-16 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
           <button onClick={togglePlayPause} className="focus:outline-none">
             {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
           </button>
@@ -297,3 +243,60 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+// src/salvarMensagemComMemoria.js
+import { supabase } from '../supabaseClient';
+
+export async function salvarMensagemComMemoria({
+  usuario_id,
+  conteudo,
+  sentimento,
+  resumo_eco,
+  emocao_principal,
+  intensidade,
+  contexto = 'interação', // Valor padrão
+  categoria = 'reflexão', // Valor padrão
+  salvar_memoria = true
+}) {
+  try {
+    const { data: mensagem, error: erroMensagem } = await supabase
+      .from('mensagens')
+      .insert([
+        {
+          usuario_id,
+          conteudo,
+          data_hora: new Date().toISOString(),
+          sentimento,
+          salvar_memoria
+        }
+      ])
+      .select()
+      .single();
+
+    if (erroMensagem) throw erroMensagem;
+
+    const { data: memoria, error: erroMemoria } = await supabase
+      .from('memorias')
+      .insert([
+        {
+          usuario_id,
+          mensagem_id: mensagem.id,
+          resumo_eco,
+          data_registro: new Date().toISOString(),
+          emocao_principal,
+          intensidade,
+          contexto,
+          categoria,
+          salvar_memoria
+        }
+      ])
+      .select()
+      .single();
+
+    if (erroMemoria) throw erroMemoria;
+
+    return { sucesso: true, mensagem, memoria };
+  } catch (error: any) {
+    console.error('Erro ao salvar:', error.message);
+    return { sucesso: false, error: error.message };
+  }
+}
