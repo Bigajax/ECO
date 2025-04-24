@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App'; // Caminho ajustado (assumindo que App.tsx está na mesma pasta)
+import App from './App';
 
 console.log('Iniciando a aplicação a partir de main.tsx...');
 
