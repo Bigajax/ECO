@@ -58,6 +58,17 @@
   /* Você pode ajustar esse valor percentual conforme preferir */
 }
 
+.conversation-container > div.mr-auto .flex { /* Aplica ao flex container da mensagem da ECO */
+  display: flex;
+  align-items: flex-start; /* Alinha o ícone e o texto no topo */
+}
+
+.conversation-container > div.ml-auto .flex { /* Aplica ao flex container da mensagem do usuário (se houver ícone futuro) */
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row-reverse; /* Se adicionar um ícone do usuário, ele ficará à direita */
+}
+
 .conversation-container p {
   font-size: 1rem; /* Reduzindo o tamanho da fonte para um valor mais confortável */
   line-height: 1.4; /* Melhora a legibilidade do texto */
