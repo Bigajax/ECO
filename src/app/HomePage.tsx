@@ -9,11 +9,16 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('HomePage useEffect triggered'); // ADICIONE ESTE LOG
     const verifySession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('Session in HomePage:', session); // ADICIONE ESTE LOG
+      console.log('session?.user in HomePage:', session?.user); // ADICIONE ESTE LOG
       if (!session?.user) {
+        console.log('No user session, navigating to /login from HomePage'); // ADICIONE ESTE LOG
         navigate('/login');
       } else {
+        console.log('User session found in HomePage, setting loading to false'); // ADICIONE ESTE LOG
         setLoading(false);
       }
     };
