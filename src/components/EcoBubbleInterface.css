@@ -91,3 +91,23 @@ textarea.flex-1 { /* Estilizando a textarea com a classe flex-1 */
 }
 
 .audio-visualizer span:nth-child(7) {
+  --i: 7;
+  --color: #ba55d3;
+}
+
+.audio-visualizer span:nth-child(8) {
+  --i: 8;
+  --color: #f08080;
+}
+
+@keyframes visualizer {
+  0% {
+    transform: scaleY(0.7); /* Ajustando a escala inicial */
+    background-color: var(--color);
+  }
+
+  100% {
+    transform: scaleY(1.4); /* Ajustando a escala final */
+    background-color: var(--color);
+  }
+}
