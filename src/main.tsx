@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './App'; // Caminho ajustado (assumindo que App.tsx está na mesma pasta)
 
-console.log('Iniciando a aplicação a partir de main.tsx...'); // Linha adicionada
+console.log('Iniciando a aplicação a partir de main.tsx...');
 
 try {
   ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -12,5 +12,5 @@ try {
     </React.StrictMode>
   );
 } catch (error) {
-  console.error('Erro na renderização em main.tsx:', error); // Linha adicionada
+  console.error('Erro na renderização em main.tsx:', error);
 }
