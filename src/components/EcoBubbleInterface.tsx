@@ -314,9 +314,7 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          <div style={{ position: 'absolute', left: '10px', bottom: '50%', transform: 'translateY(50%)' }}>
-            <MemoryButton onClick={handleMemoryButtonClick} size="md" />
-          </div>
+          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
           <div className="flex-1">
             <textarea
               ref={inputRef}
@@ -340,4 +338,6 @@ function EcoBubbleInterface() {
           </button>
 
           <button
-            className={`send-button p-2 rounded-full transition-all duration-3
+            className={`send-button p-2 rounded-full transition-all duration-300 ${
+              message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            } ${isSending ? '
