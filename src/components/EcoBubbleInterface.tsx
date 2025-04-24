@@ -82,10 +82,14 @@ function EcoBubbleInterface() {
 
   useEffect(() => {
     if (conversationContainerRef.current) {
-      console.log('scrollHeight:', conversationContainerRef.current.scrollHeight);
-      console.log('scrollTop antes:', conversationContainerRef.current.scrollTop);
-      conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
-      console.log('scrollTop depois:', conversationContainerRef.current.scrollTop);
+      // Garante que a ref está definida
+      const container = conversationContainerRef.current;
+      setTimeout(() => {
+        console.log('scrollHeight (timeout):', container.scrollHeight);
+        console.log('scrollTop antes (timeout):', container.scrollTop);
+        container.scrollTop = container.scrollHeight;
+        console.log('scrollTop depois (timeout):', container.scrollTop);
+      }, 100); // Adiciona um pequeno atraso de 100ms
     }
   }, [conversation]);
 
@@ -302,22 +306,4 @@ function EcoBubbleInterface() {
             <span>Feedback</span>
           </button>
 
-          <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
-            <Lucide.MessageSquare size={14} />
-            <span>Sugestões</span>
-          </button>
-        </div>
-      </div>
-
-      {audioPlayer && (
-        <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-          <button onClick={togglePlayPause} className="focus:outline-none">
-            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default EcoBubbleInterface;
+          <button onClick={handleSuggestionsClick} className="feedback-button flex items
