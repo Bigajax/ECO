@@ -28,6 +28,7 @@ function EcoBubbleInterface() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
   const isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
+  const conversationContainerRef = useRef<HTMLDivElement | null>(null); // Ref para o container de mensagens
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
@@ -74,6 +75,12 @@ function EcoBubbleInterface() {
   useEffect(() => {
     if (inputRef.current) inputRef.current.scrollTop = inputRef.current.scrollHeight;
   }, [message]);
+
+  useEffect(() => {
+    if (conversationContainerRef.current) {
+      conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
+    }
+  }, [conversation]);
 
   const handleSendMessage = useCallback(async () => {
     if (message.trim() && !isSending && message.trim() !== latestUserMessage.current && userId) {
@@ -227,7 +234,7 @@ function EcoBubbleInterface() {
         )}
       </div>
 
-      <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto">
+      <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto" ref={conversationContainerRef}>
         {conversation.map((msg, index) => (
           <div
             key={index}
