@@ -1,3 +1,5 @@
+// Arquivo: src/components/EcoBubbleInterface/EcoBubbleInterface.tsx
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -24,22 +26,40 @@ function EcoBubbleInterface() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
 
   useEffect(() => {
-    const getUserId = async () => {
+    const getUserIdAndName = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserId(user.id);
+        // Supondo que você tenha uma tabela 'profiles' com 'user_id' e 'full_name'
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('user_id', user.id)
+          .single();
+
+        if (profile) {
+          setUserName(profile.full_name);
+        } else if (profileError) {
+          console.error("Erro ao buscar perfil:", profileError);
+          // Defina um nome padrão caso não encontre
+          setUserName("usuário");
+        } else {
+          // Defina um nome padrão caso não haja perfil
+          setUserName("usuário");
+        }
       } else {
         navigate('/login');
       }
     };
 
-    getUserId();
+    getUserIdAndName();
 
     return () => {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
@@ -63,7 +83,8 @@ function EcoBubbleInterface() {
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
       try {
-        const aiResponse = await sendMessageToOpenAI(userMessage);
+        // Passa o nome do usuário para a função sendMessageToOpenAI
+        const aiResponse = await sendMessageToOpenAI(userMessage, userName);
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
         setConversation((prev) => {
@@ -91,7 +112,7 @@ function EcoBubbleInterface() {
         setIsSending(false);
       }
     }
-  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying, userId, salvarMensagemComMemoria]);
+  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying, userId, salvarMensagemComMemoria, userName]); // Adicionado userName como dependência
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
