@@ -1,21 +1,22 @@
-// Arquivo: src/App.tsx
+// src/App.tsx
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './app/LoginPage';
-import HomePage from './app/HomePage'; // IMPORTANTE: HomePage com "H" maiúsculo
-import SignupPage from './app/SignupPage';
+import HomePage from './app/HomePage';
+// Importe outros componentes de página aqui
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        {/* Adicione outras rotas da sua aplicação aqui */}
+        {/* Por exemplo: */}
+        {/* <Route path="/signup" element={<SignupPage />} /> */}
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
