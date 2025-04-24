@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from 'supabaseClient';
 import { Moon, Compass, Music, Eye } from 'lucide-react';
@@ -8,11 +8,14 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate(); // Hook para navegação entre rotas
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
 
+  const navigateToEcoBubble = useCallback(() => {
+    navigate('/eco-bubble'); // ✅ Navegação para a rota da EcoBubbleInterface
+  }, [navigate]);
+
   // useEffect para verificar se o usuário está autenticado
   useEffect(() => {
     console.log('HomePage useEffect triggered');
 
-    // Descomente este bloco para a lógica normal de verificação da sessão
     const verifySession = async () => {
       const { data: { session } } = await supabase.auth.getSession(); // Obtém a sessão do usuário
       console.log('Session in HomePage:', session);
@@ -87,7 +90,10 @@ const HomePage: React.FC = () => {
           <p className="text-gray-600 text-lg mb-6">
             Estou aqui se precisar de uma conversa para começar seu dia.
           </p>
-          <button className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+          <button
+            onClick={navigateToEcoBubble} // ✅ Adicionamos o onClick para navegar
+            className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+          >
             Receber orientação
           </button>
         </div>
