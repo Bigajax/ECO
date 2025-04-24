@@ -54,6 +54,8 @@
 .conversation-container > div.mr-auto { /* Estilos para mensagens da ECO */
   margin-right: auto; /* Equivalente a mr-auto */
   background-color: #F7CAC9; /* Cor rosa para a ECO (quartzPink) */
+  min-width: 50%; /* Adiciona uma largura mínima para as mensagens da ECO */
+  /* Você pode ajustar esse valor percentual conforme preferir */
 }
 
 .conversation-container p {
