@@ -144,7 +144,8 @@ const LoginPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="mt-8 text-center">
+          {/* COMENTADO PARA TESTE */}
+          {/* <div className="mt-8 text-center">
             <p className="text-gray-600">
               Você ainda não tem um perfil?{' '}
               <button
@@ -154,7 +155,7 @@ const LoginPage: React.FC = () => {
                 Criar meu perfil
               </button>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
