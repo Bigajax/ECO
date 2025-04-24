@@ -1,1 +1,7 @@
-
+{
+  "build": {
+    "env": {
+      "npm_config_optional": "false"
+    }
+  }
+}
