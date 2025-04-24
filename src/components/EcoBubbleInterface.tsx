@@ -7,53 +7,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-
-interface MemoryButtonProps {
-  onClick?: () => void;
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-const MemoryButton: React.FC<MemoryButtonProps> = ({
-  onClick,
-  size = 'md',
-  className = '',
-}) => {
-  const sizeClasses = {
-    sm: 'w-12 h-12',
-    md: 'w-16 h-16',
-    lg: 'w-20 h-20',
-  };
-
-  const iconSizes = {
-    sm: 20,
-    md: 24,
-    lg: 32,
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        relative rounded-full flex items-center justify-center
-        bg-white/10 backdrop-blur-xl
-        transition-all duration-300
-        hover:scale-105 active:scale-95
-        ${sizeClasses[size]} ${className}
-        before:absolute before:inset-0 before:rounded-full
-        before:bg-gradient-to-br before:from-white/30 before:to-white/5
-        before:opacity-80 before:z-0
-      `}
-      aria-label="Register memory"
-    >
-      <Lucide.BookOpen
-        size={iconSizes[size]}
-        className="text-white/90 relative z-10"
-        strokeWidth={1.25}
-      />
-    </button>
-  );
-};
+import MemoryButton from '../MemoryButton/MemoryButton'; // Importe o componente MemoryButton
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -340,4 +294,38 @@ function EcoBubbleInterface() {
           <button
             className={`send-button p-2 rounded-full transition-all duration-300 ${
               message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            } ${isSending ? '
+            } ${isSending ? 'scale-90' : 'scale-100'}`}
+            onClick={handleSendMessage}
+            disabled={!message.trim() || isSending || !userId}
+            aria-label="Enviar mensagem"
+          >
+            <Lucide.Send size={20} />
+          </button>
+        </div>
+
+        {/* Feedback section */}
+        <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
+          <button onClick={handleFeedbackClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+            <Lucide.ThumbsUp size={14} />
+            <span>Feedback</span>
+          </button>
+
+          <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+            <Lucide.MessageSquare size={14} />
+            <span>Sugestões</span>
+          </button>
+        </div>
+      </div>
+
+      {audioPlayer && (
+        <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+          <button onClick={togglePlayPause} className="focus:outline-none">
+            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default EcoBubbleInterface;
