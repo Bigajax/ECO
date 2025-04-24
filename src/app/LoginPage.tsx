@@ -39,13 +39,16 @@ const LoginPage: React.FC = () => {
     console.log('Tentando login com:', { email, password });
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const response = await supabase.auth.signInWithPassword({ email, password });
+      console.log('Resposta do signInWithPassword:', response); // LOG DA RESPOSTA COMPLETA
+      const { error } = response;
       if (error) {
         console.error('Erro ao fazer login:', error);
         setError(error.message || 'Erro ao fazer login. Verifique seus dados.');
       } else {
         console.log('Login realizado com sucesso!');
-        navigate('/home');
+        // navigate('/home'); // COMENTADO PARA TESTE
+        console.log('Navegação para /home impedida para teste.'); // LOG PARA TESTE
       }
     } catch (err: any) {
       console.error('Erro inesperado:', err);
