@@ -7,6 +7,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
+import MemoryButton from '../MemoryButton'; // Importe o componente MemoryButton
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -29,10 +30,12 @@ function EcoBubbleInterface() {
   const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
   const isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
   const conversationContainerRef = useRef<HTMLDivElement | null>(null); // Ref para o container de mensagens
+  const conversationLengthRef = useRef(conversation.length);
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
+  const handleMemoryButtonClick = useCallback(() => navigate('/memories'), [navigate]);
 
   useEffect(() => {
     const getUserIdAndName = async () => {
@@ -81,15 +84,10 @@ function EcoBubbleInterface() {
   }, [message]);
 
   useEffect(() => {
-    if (conversationContainerRef.current) {
-      // Garante que a ref está definida
-      const container = conversationContainerRef.current;
-      setTimeout(() => {
-        console.log('scrollHeight (timeout):', container.scrollHeight);
-        console.log('scrollTop antes (timeout):', container.scrollTop);
-        container.scrollTop = container.scrollHeight;
-        console.log('scrollTop depois (timeout):', container.scrollTop);
-      }, 100); // Adiciona um pequeno atraso de 100ms
+    // Verifica se o número de mensagens mudou desde a última renderização
+    if (conversationContainerRef.current && conversation.length > conversationLengthRef.current) {
+      conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
+      conversationLengthRef.current = conversation.length;
     }
   }, [conversation]);
 
@@ -264,7 +262,10 @@ function EcoBubbleInterface() {
       </div>
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
-        <div className="flex items-end gap-2 w-full">
+        <div className="relative flex items-end gap-2 w-full">
+          <div style={{ position: 'absolute', left: '10px', bottom: '50%', transform: 'translateY(50%)' }}>
+            <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+          </div>
           <div className="flex-1">
             <textarea
               ref={inputRef}
@@ -306,4 +307,5 @@ function EcoBubbleInterface() {
             <span>Feedback</span>
           </button>
 
-          <button onClick={handleSuggestionsClick} className="feedback-button flex items
+          <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+            <Luc
