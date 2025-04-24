@@ -27,6 +27,7 @@ function EcoBubbleInterface() {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
+  const isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
@@ -35,24 +36,22 @@ function EcoBubbleInterface() {
   useEffect(() => {
     const getUserIdAndName = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      console.log("User:", user);
       if (user) {
         setUserId(user.id);
-        // Supondo que você tenha uma tabela 'profiles' com 'user_id' e 'full_name'
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('full_name')
           .eq('user_id', user.id)
           .single();
 
+        console.log("Profile:", profile);
+        console.log("Profile Error:", profileError);
+
         if (profile) {
           setUserName(profile.full_name);
-        } else if (profileError) {
-          console.error("Erro ao buscar perfil:", profileError);
-          // Defina um nome padrão caso não encontre
-          setUserName("usuário");
         } else {
-          // Defina um nome padrão caso não haja perfil
-          setUserName("usuário");
+          setUserName("usuário"); // Garante um valor padrão
         }
       } else {
         navigate('/login');
@@ -69,6 +68,10 @@ function EcoBubbleInterface() {
   }, [navigate]);
 
   useEffect(() => {
+    console.log("Current userName:", userName);
+  }, [userName]);
+
+  useEffect(() => {
     if (inputRef.current) inputRef.current.scrollTop = inputRef.current.scrollHeight;
   }, [message]);
 
@@ -81,6 +84,8 @@ function EcoBubbleInterface() {
       setConversation((prev) => [...prev, { text: userMessage, isUser: true }]);
       stopVibration();
       if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+
+      console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
 
       try {
         // Passa o nome do usuário para a função sendMessageToOpenAI
@@ -95,6 +100,10 @@ function EcoBubbleInterface() {
         });
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
+
+        if (isFirstMessage.current && conversation.length > 0 && !conversation[conversation.length - 1].isUser) {
+          isFirstMessage.current = false;
+        }
 
         if (aiResponse?.text && userId) {
           await salvarMensagemComMemoria({
@@ -112,7 +121,7 @@ function EcoBubbleInterface() {
         setIsSending(false);
       }
     }
-  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying, userId, salvarMensagemComMemoria, userName]); // Adicionado userName como dependência
+  }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, setIsPlaying, userId, salvarMensagemComMemoria, userName]);
 
   const togglePlayPause = useCallback(() => {
     if (audioPlayer) {
