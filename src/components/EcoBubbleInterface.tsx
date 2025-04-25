@@ -17,7 +17,7 @@ function EcoBubbleInterface() {
     const navigate = useNavigate();
     const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isEcoSpeaking, setIsSpeaking] = useState(false);
+    const [isEcoSpeaking, setIsSpeaking] = useState<boolean>(false);
     const latestUserMessage = useRef<string | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isListening, setIsListening] = useState(false);
@@ -47,7 +47,7 @@ function EcoBubbleInterface() {
 
     const startVibration = useCallback(() => {
         console.log("startVibration chamado");
-        setIsSpeaking(true)
+        setIsSpeaking(true);
     }, []);
     const stopVibration = useCallback(() => {
         console.log("stopVibration chamado");
@@ -69,7 +69,7 @@ function EcoBubbleInterface() {
 
     const toggleMemoryButtonVisibility = useCallback(() => {
         console.log("toggleMemoryButtonVisibility chamado");
-        setIsMemoryButtonVisible(prev => !prev)
+        setIsMemoryButtonVisible((prev) => !prev);
     }, []);
 
 
@@ -77,7 +77,9 @@ function EcoBubbleInterface() {
         const getUserIdAndName = async () => {
             console.log("useEffect [getUserIdAndName] chamado");
             try {
-                const { data: { user } } = await supabase.auth.getUser();
+                const {
+                    data: { user },
+                } = await supabase.auth.getUser();
                 console.log("supabase.auth.getUser() resultado:", user);
                 if (user) {
                     setUserId(user.id);
@@ -105,7 +107,6 @@ function EcoBubbleInterface() {
             } catch (error) {
                 console.error("Erro ao obter usuário", error);
             }
-
         };
 
         getUserIdAndName();
@@ -151,17 +152,13 @@ function EcoBubbleInterface() {
             console.log("handleSendMessage chamado com mensagem:", message);
 
             let messageToSendToAI = userMessage;
-            let conversationToSend = conversation.map(msg => ({
+            let conversationToSend = conversation.map((msg) => ({
                 role: msg.isUser ? 'user' : 'assistant',
                 content: msg.text,
             }));
 
             try {
-                const aiResponse = await sendMessageToOpenAI(
-                    messageToSendToAI,
-                    userName,
-                    conversationToSend
-                );
+                const aiResponse = await sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend);
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
@@ -214,12 +211,15 @@ function EcoBubbleInterface() {
     }, [audioPlayer, isPlaying]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value), []);
-    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !isSending && !e.shiftKey) {
-            e.preventDefault();
-            handleSendMessage();
-        }
-    }, [isSending, handleSendMessage]);
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            if (e.key === 'Enter' && !isSending && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        },
+        [isSending, handleSendMessage]
+    );
 
     const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -279,7 +279,10 @@ function EcoBubbleInterface() {
             </button>
 
             <div className="relative mb-8 flex flex-col items-center">
-                <div onClick={toggleMenu} className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}>
+                <div
+                    onClick={toggleMenu}
+                    className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}
+                >
                     <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
                     <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
                 </div>
@@ -302,7 +305,10 @@ function EcoBubbleInterface() {
                 )}
             </div>
 
-            <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[500px] overflow-y-auto" ref={conversationContainerRef}>
+            <div
+                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[450px] overflow-y-auto"
+                ref={conversationContainerRef}
+            >
                 {conversation.map((msg, index) => (
                     <div
                         key={index}
@@ -311,7 +317,10 @@ function EcoBubbleInterface() {
                     >
                         <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                             {!msg.isUser && <BubbleIcon />}
-                            <p className="text-sm break-words text-black" style={{ wordBreak: 'break-word', fontSize: '0.95rem' }}>
+                            <p
+                                className="text-sm break-words text-black"
+                                style={{ wordBreak: 'break-word', fontSize: '0.95rem' }}
+                            >
                                 {!msg.isUser && <span className="font-semibold">ECO: </span>}
                                 {msg.text}
                             </p>
@@ -344,18 +353,20 @@ function EcoBubbleInterface() {
                         style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
                     />
                     <button
-                        className={`mic-button p-2 rounded-full transition-all duration-200 ${
-                            isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                        }`}
+                        className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
+                            ? 'bg-red-500 text-white animate-pulse'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                            }`}
                         onClick={handleMicClick}
                         aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
                     >
                         <Lucide.Mic size={20} />
                     </button>
                     <button
-                        className={`send-button p-2 rounded-full transition-all duration-300 ${
-                            message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
+                            ? 'bg-blue-500 text-white hover:bg-blue-600'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            }`}
                         onClick={handleSendMessage}
                         disabled={!message.trim() || isSending || !userId}
                         aria-label="Enviar mensagem"
@@ -365,12 +376,18 @@ function EcoBubbleInterface() {
                 </div>
 
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
-                    <button onClick={handleFeedbackClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+                    <button
+                        onClick={handleFeedbackClick}
+                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
+                    >
                         <Lucide.ThumbsUp size={14} />
                         <span>Feedback</span>
                     </button>
 
-                    <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+                    <button
+                        onClick={handleSuggestionsClick}
+                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
+                    >
                         <Lucide.MessageSquare size={14} />
                         <span>Sugestões</span>
                     </button>
@@ -379,16 +396,19 @@ function EcoBubbleInterface() {
 
             {audioPlayer && (
                 <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-                    <button onClick={() => {
-                        if (audioPlayer) {
-                            if (isPlaying) {
-                                audioPlayer.pause();
-                            } else {
-                                audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
+                    <button
+                        onClick={() => {
+                            if (audioPlayer) {
+                                if (isPlaying) {
+                                    audioPlayer.pause();
+                                } else {
+                                    audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
+                                }
+                                setIsPlaying(!isPlaying);
                             }
-                            setIsPlaying(!isPlaying);
-                        }
-                    }} className="focus:outline-none">
+                        }}
+                        className="focus:outline-none"
+                    >
                         {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
                     </button>
                 </div>
