@@ -8,6 +8,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate(); // Hook para navegação entre rotas
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
   const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
+  const [userFirstName, setUserFirstName] = useState<string>('');
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -61,12 +62,15 @@ const HomePage: React.FC = () => {
         if (profileError) {
           console.error("Erro ao buscar perfil:", profileError);
           setUserName('Usuário'); // Define um nome padrão
+          setUserFirstName('Usuário')
         } else if (profile) {
           // Pega o primeiro nome
           const firstName = profile.full_name.split(' ')[0];
-          setUserName(firstName);
+          setUserName(profile.full_name);
+          setUserFirstName(firstName);
         } else {
           setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
+          setUserFirstName('Usuário')
         }
         setLoading(false);
       }
@@ -91,7 +95,7 @@ const HomePage: React.FC = () => {
       {/* Saudação personalizada */}
       <div className="text-center mb-8">
         <h2 className="text-4xl text-gray-700">
-          {greeting}, {userName}
+          {greeting}, {userFirstName}
         </h2>
       </div>
 
@@ -123,7 +127,7 @@ const HomePage: React.FC = () => {
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
           <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors flex items-center gap-2">
             <BubbleIcon />
-            Olá, {userName}.
+            Olá, {userFirstName}.
           </h3>
           <button
             onClick={navigateToEcoBubble}
