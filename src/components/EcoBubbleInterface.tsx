@@ -108,30 +108,28 @@ function EcoBubbleInterface() {
 
       console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
 
-      try {
-        // Envie o histórico da conversa para a função sendMessageToOpenAI
-        const messagesToSend = conversation.map(msg => ({
-          role: msg.isUser ? 'user' : 'assistant',
-          content: msg.text,
-        }));
+      let messageToSendToAI = userMessage;
+      let conversationToSend = conversation.map(msg => ({
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.text,
+      }));
 
+      try {
         const aiResponse = await sendMessageToOpenAI(
-          userMessage,
+          messageToSendToAI,
           userName,
-          messagesToSend // Passa o histórico formatado
+          conversationToSend // Passa o histórico formatado
         );
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
         setConversation((prev) => {
-          if (!prev.length || prev[prev.length - 1].text !== ecoText) {
-            return [...prev, { text: ecoText, isUser: false }];
-          }
-          return prev;
+          const ecoMessage = isFirstMessage.current ? { text: `ECO: Olá, ${userName}! ${ecoText}`, isUser: false } : { text: `ECO: ${ecoText}`, isUser: false };
+          return [...prev, ecoMessage];
         });
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
 
-        if (isFirstMessage.current && conversation.length > 0 && !conversation[conversation.length - 1].isUser) {
+        if (isFirstMessage.current && conversation.length > 0) {
           isFirstMessage.current = false;
         }
 
