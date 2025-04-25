@@ -17,7 +17,7 @@ function EcoBubbleInterface() {
     const navigate = useNavigate();
     const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isEcoSpeaking, setIsEcoSpeaking] = useState(false);
+    const [isEcoSpeaking, setIsSpeaking] = useState(false);
     const latestUserMessage = useRef<string | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isListening, setIsListening] = useState(false);
@@ -47,11 +47,11 @@ function EcoBubbleInterface() {
 
     const startVibration = useCallback(() => {
         console.log("startVibration chamado");
-        setIsEcoSpeaking(true)
+        setIsSpeaking(true)
     }, []);
     const stopVibration = useCallback(() => {
         console.log("stopVibration chamado");
-        setIsEcoSpeaking(false);
+        setIsSpeaking(false);
     }, []);
 
     const handleMemoryButtonClick = useCallback(async () => {
@@ -311,7 +311,7 @@ function EcoBubbleInterface() {
                     >
                         <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                             {!msg.isUser && <BubbleIcon />}
-                            <p className="text-sm break-words" style={{ fontSize: '1rem' }}>
+                            <p className="text-sm break-words" style={{ fontSize: '0.95rem' }}>
                                 {!msg.isUser && <span className="font-semibold">ECO: </span>}
                                 {msg.text}
                             </p>
@@ -398,4 +398,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
