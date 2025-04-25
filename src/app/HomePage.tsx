@@ -47,7 +47,7 @@ const HomePage: React.FC = () => {
   if (loading) return <div>Carregando...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6">
       {/* Logo do app */}
       <div className="flex justify-center mb-12 pt-8">
         <h1 className="text-4xl font-light text-purple-600">ECO</h1>
@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
           >
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
               <p className="text-white text-xl text-center group-hover:scale-[1.02] transition-transform">
-                O céu não se importa com a altura em que a pipa voa - ele apenas dá espaço para que ela dance.
+                O céu não se importa com a altura em que a pipa voa - ele só dá espaço para que ela dance.
               </p>
             </div>
           </div>
