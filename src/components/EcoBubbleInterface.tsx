@@ -261,7 +261,7 @@ function EcoBubbleInterface() {
     }, []);
 
     const BubbleIcon = () => (
-        <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center"> {/* Alterado para 7 */}
+        <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center">
             <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
                 <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -334,16 +334,17 @@ function EcoBubbleInterface() {
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
                 <div className="relative flex items-center gap-2 w-full input-controls-container">
-                    <div className="flex items-center gap-2 w-full"> {/* Agrupar os elementos */}
+                    <div className="flex items-center gap-2 w-full">
                         <button
                             className="plus-button"
                             onClick={toggleMemoryButtonVisibility}
                             aria-label="Mostrar opções de memória"
+                            style={{ order: 0 }} // Adiciona esta linha
                         >
                             <Lucide.Plus size={20} />
                         </button>
                         {isMemoryButtonVisible && (
-                            <div className="memory-button-wrapper visible">
+                            <div className="memory-button-wrapper visible" style={{ order: 1 }}>
                                 <MemoryButton onMemoryButtonClick={handleMemoryButtonClick} size="md" />
                             </div>
                         )}
@@ -354,7 +355,7 @@ function EcoBubbleInterface() {
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
                             className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                            style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)' }}
+                            style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)', order: 2 }} // E esta linha
                         />
                         <button
                             className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
@@ -363,6 +364,7 @@ function EcoBubbleInterface() {
                             }`}
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
+                            style={{ order: 3 }} // E esta linha
                         >
                             <Lucide.Mic size={20} />
                         </button>
@@ -374,6 +376,7 @@ function EcoBubbleInterface() {
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
+                            style={{ order: 4 }} // E esta linha
                         >
                             <Lucide.Send size={20} />
                         </button>
