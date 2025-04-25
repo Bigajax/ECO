@@ -7,8 +7,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-// REMOVI A IMPORTAÇÃO DO MemoryButton PARA EVITAR CONFLITOS
-// import MemoryButton from '../MemoryButton';
+import MemoryButton from '../MemoryButton'; // IMPORTAÇÃO DO MemoryButton DE VOLTA
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -264,10 +263,7 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          {/* BOTÃO SIMPLES ADICIONADO AQUI */}
-          <button onClick={handleMemoryButtonClick} className="bg-blue-500 text-white rounded-md px-4 py-2">
-            Memórias
-          </button>
+          <MemoryButton onClick={handleMemoryButtonClick} size="md" /> {/* O COMPONENTE MemoryButton DE VOLTA AQUI */}
           <div className="flex-1">
             <textarea
               ref={inputRef}
