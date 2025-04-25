@@ -57,7 +57,7 @@ function EcoBubbleInterface() {
 
     const handleMemoryButtonClick = useCallback(async () => {
         console.log("handleMemoryButtonClick chamado", { memoryToSave, userId });
-        navigate('/memories');
+        //navigate('/memories'); // Removendo a navegação para outra página
         if (memoryToSave && userId) {
             try {
                 const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
@@ -71,7 +71,7 @@ function EcoBubbleInterface() {
             }
 
         }
-    }, [navigate, memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
+    }, [memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]); // Removendo navigate
 
     const toggleMemoryButtonVisibility = useCallback(() => {
         console.log("toggleMemoryButtonVisibility chamado");
