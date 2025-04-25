@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
   const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
   const [userFirstName, setUserFirstName] = useState<string>('');
-  const [bubbleText, setBubbleText] = useState<string>(''); // Texto acima do botão
+  const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Texto acima do botão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
 
   const navigateToEcoBubble = useCallback(() => {
@@ -66,7 +66,6 @@ const HomePage: React.FC = () => {
             console.error("Erro ao buscar perfil:", profileError);
             setUserName('Usuário'); // Define um nome padrão
             setUserFirstName('Usuário');
-            setBubbleText("Dê o primeiro passo para um novo mundo!");
           } else if (profile) {
             // Pega o primeiro nome
             const firstName = profile.full_name.split(' ')[0];
@@ -74,17 +73,14 @@ const HomePage: React.FC = () => {
             console.log("Primeiro nome do usuário:", firstName);
             setUserName(profile.full_name);
             setUserFirstName(firstName);
-            setBubbleText("Dê o primeiro passo para um novo mundo!");
           } else {
             setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
             setUserFirstName('Usuário');
-            setBubbleText("Dê o primeiro passo para um novo mundo!");
           }
         } catch (error) {
           console.error("Erro ao buscar perfil:", error);
           setUserName('Usuário');
           setUserFirstName('Usuário');
-          setBubbleText("Dê o primeiro passo para um novo mundo!");
         }
         setLoading(false);
       }
