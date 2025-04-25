@@ -1,4 +1,3 @@
-// Arquivo: src/components/EcoBubbleInterface/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from './MemoryButton'; // Certifique-se que o arquivo se chama MemoryButton.tsx
+import MemoryButton from './MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -30,27 +29,22 @@ function EcoBubbleInterface() {
     const isFirstMessage = useRef(true);
     const conversationContainerRef = useRef<HTMLDivElement | null>(null);
     const conversationLengthRef = useRef(conversation.length);
-    const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false); // Novo estado para visibilidade do botão de memória
-    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false); // Novo estado para a mensagem de memória salva
+    const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
+    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false);
 
     const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
     const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
     const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
-    const handleMemoryButtonClick = useCallback(() => {
-        navigate('/memories');
-    }, [navigate]);
-    const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []); // Função para alternar a visibilidade
+    const handleMemoryButtonClick = useCallback(() => navigate('/memories'), [navigate]);
+    const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []);
     const showMemorySavedMessage = useCallback(() => {
         setMemorySavedMessageVisible(true);
-        setTimeout(() => {
-            setMemorySavedMessageVisible(false);
-        }, 3000); // Exibe a mensagem por 3 segundos
+        setTimeout(() => setMemorySavedMessageVisible(false), 3000);
     }, [setMemorySavedMessageVisible]);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
             const { data: { user } } = await supabase.auth.getUser();
-            console.log("User:", user);
             if (user) {
                 setUserId(user.id);
                 const { data: profile, error: profileError } = await supabase
@@ -58,9 +52,6 @@ function EcoBubbleInterface() {
                     .select('full_name')
                     .eq('user_id', user.id)
                     .single();
-
-                console.log("Profile:", profile);
-                console.log("Profile Error:", profileError);
 
                 if (profileError) {
                     console.error("Erro ao buscar perfil:", profileError);
@@ -128,7 +119,7 @@ function EcoBubbleInterface() {
                 const aiResponse = await sendMessageToOpenAI(
                     messageToSendToAI,
                     userName,
-                    conversationToSend // Passa o histórico formatado
+                    conversationToSend
                 );
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
@@ -138,7 +129,7 @@ function EcoBubbleInterface() {
                         ecoFinalText = `ECO: ${ecoText}`;
                     }
                     const ecoMessage = isFirstMessage.current
-                        ? { text: `ECO: Olá, ${userName}! ${ecoFinalText.substring(5).trimStart()}`, isUser: false } // Remove "ECO:" duplicado se presente e trim
+                        ? { text: `ECO: Olá, ${userName}! ${ecoFinalText.substring(5).trimStart()}`, isUser: false }
                         : { text: ecoFinalText, isUser: false };
                     return [...prev, ecoMessage];
                 });
@@ -167,7 +158,10 @@ function EcoBubbleInterface() {
             } finally {
                 setIsSending(false);
             }
-      }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
+        }
+    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
+
+    useEffect(() => {
         if (audioPlayer) {
             if (isPlaying) {
                 audioPlayer.pause();
@@ -176,7 +170,7 @@ function EcoBubbleInterface() {
             }
             setIsPlaying(!isPlaying);
         }
-    }, [audioPlayer, isPlaying]);
+    }, [audioPlayer]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value), []);
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -292,12 +286,12 @@ function EcoBubbleInterface() {
             </div>
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
-                <div className="relative flex items-center gap-2 w-full input-controls-container"> {/* Adicionada a classe input-controls-container */}
+                <div className="relative flex items-center gap-2 w-full input-controls-container">
                     <button
                         className="plus-button"
                         onClick={toggleMemoryButtonVisibility}
                         aria-label="Mostrar opções de memória"
-                        >
+                    >
                         <Lucide.Plus size={20} />
                     </button>
                     {isMemoryButtonVisible && (
@@ -335,7 +329,6 @@ function EcoBubbleInterface() {
                     </button>
                 </div>
 
-                {/* Feedback section */}
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
                     <button onClick={handleFeedbackClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
                         <Lucide.ThumbsUp size={14} />
@@ -349,9 +342,18 @@ function EcoBubbleInterface() {
                 </div>
             </div>
 
-           {audioPlayer && (
+            {audioPlayer && (
                 <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-                    <button onClick={togglePlayPause} className="focus:outline-none">
+                    <button onClick={() => {
+                        if (audioPlayer) {
+                            if (isPlaying) {
+                                audioPlayer.pause();
+                            } else {
+                                audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
+                            }
+                            setIsPlaying(!isPlaying);
+                        }
+                    }} className="focus:outline-none">
                         {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
                     </button>
                 </div>
