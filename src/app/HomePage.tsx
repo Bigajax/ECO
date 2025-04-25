@@ -22,9 +22,6 @@ const HomePage: React.FC = () => {
           <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
         </div>
       </div>
-        <span className="absolute bottom-full mb-2 text-xs text-gray-600 text-center w-48">
-          Sua companhia para todos os momentos.
-        </span>
     </div>
   );
 
@@ -129,7 +126,7 @@ const HomePage: React.FC = () => {
             Olá, {userName}.
           </h3>
           <p className="text-gray-600 text-lg mb-6">
-            Estou aqui se precisar de uma conversa para começar seu dia.
+            Sua companhia para todos os momentos. Estou aqui se precisar de uma conversa para começar seu dia.
           </p>
           <button
             onClick={navigateToEcoBubble}
