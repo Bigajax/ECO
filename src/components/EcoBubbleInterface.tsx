@@ -339,13 +339,19 @@ function EcoBubbleInterface() {
                             className="plus-button"
                             onClick={toggleMemoryButtonVisibility}
                             aria-label="Mostrar opções de memória"
-                            style={{ order: 0 }} // Adiciona esta linha
+                            style={{ order: 0 }}
                         >
                             <Lucide.Plus size={20} />
                         </button>
                         {isMemoryButtonVisible && (
-                            <div className="memory-button-wrapper visible" style={{ order: 1 }}>
-                                <MemoryButton onMemoryButtonClick={handleMemoryButtonClick} size="md" />
+                            <div
+                                className="memory-button-wrapper visible"
+                                style={{ order: 1, position: 'relative' }} // Adicionado position relative
+                            >
+                                <MemoryButton
+                                    onMemoryButtonClick={handleMemoryButtonClick}
+                                    size="md"
+                                />
                             </div>
                         )}
                         <textarea
@@ -355,7 +361,11 @@ function EcoBubbleInterface() {
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
                             className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                            style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)', order: 2 }} // E esta linha
+                            style={{
+                                height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
+                                width: 'calc(100% - 100px)',
+                                order: 2,
+                            }}
                         />
                         <button
                             className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
@@ -364,7 +374,7 @@ function EcoBubbleInterface() {
                             }`}
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                            style={{ order: 3 }} // E esta linha
+                            style={{ order: 3 }}
                         >
                             <Lucide.Mic size={20} />
                         </button>
@@ -376,7 +386,7 @@ function EcoBubbleInterface() {
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
-                            style={{ order: 4 }} // E esta linha
+                            style={{ order: 4 }}
                         >
                             <Lucide.Send size={20} />
                         </button>
