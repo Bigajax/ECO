@@ -70,6 +70,30 @@ Seu tom é calmo, reflexivo e acolhedor. Use metáforas naturais com moderação
 
         let finalResponse = parsedReply.resposta;
 
+        // Remover saudações iniciais (case-insensitive)
+        if (finalResponse) {
+            const lowerCaseResponse = finalResponse.toLowerCase();
+            const nameLower = userName.toLowerCase();
+            const greetingsToRemove = [
+                'olá, tudo bem!',
+                'olá, tudo bem,',
+                'olá, tudo bem',
+                'olá!',
+                'olá,',
+                'olá',
+                `olá ${nameLower}!`,
+                `olá ${nameLower},`,
+                `olá ${nameLower}`,
+            ];
+
+            for (const greeting of greetingsToRemove) {
+                if (lowerCaseResponse.startsWith(greeting)) {
+                    finalResponse = finalResponse.substring(greeting.length).trimStart();
+                    break; // Remove a primeira saudação encontrada e sai do loop
+                }
+            }
+        }
+
         return {
             text: finalResponse,
             audio: null, // ElevenLabs desativado
