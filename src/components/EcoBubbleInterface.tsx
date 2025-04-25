@@ -28,7 +28,7 @@ function EcoBubbleInterface() {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
-  const isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
+  const [isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
   const conversationContainerRef = useRef<HTMLDivElement | null>(null); // Ref para o container de mensagens
   const conversationLengthRef = useRef(conversation.length);
 
@@ -268,7 +268,7 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          {/* REMOVI O COMPONENTE MemoryButton DAQUI */}
+          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
           <div className="flex-1">
             <textarea
               ref={inputRef}
