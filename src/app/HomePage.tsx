@@ -12,6 +12,7 @@ const HomePage: React.FC = () => {
   const [bubbleTitle, setBubbleTitle] = useState<string>("Olá!"); // Título do cartão
   const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Subtítulo do cartão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
+  const [logo, setLogo] = useState<string>(''); // Estado para armazenar a URL da logo
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -40,6 +41,20 @@ const HomePage: React.FC = () => {
       return 'Boa noite';
     }
   };
+
+    // useEffect para carregar a logo
+    useEffect(() => {
+        // Importar a imagem como um módulo
+        import('uploaded:WhatsApp_Image_2025-04-14_at_10.36.06-removebg-preview (1).png-087243eb-8f53-4b32-8852-ab2dcdd6de29')
+            .then(logo => {
+                setLogo(logo.default); // Define o estado com a URL da imagem
+            })
+            .catch(error => {
+                console.error("Erro ao carregar a logo:", error);
+                setLogo('/placeholder_logo.png'); // Define um valor padrão em caso de erro
+            });
+    }, []);
+
 
   // useEffect para verificar se o usuário está autenticado e obter o nome
   useEffect(() => {
@@ -100,7 +115,11 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6">
       {/* Logo do app */}
       <div className="flex justify-center mb-12 pt-8">
-        <h1 className="text-4xl font-light text-purple-600">ECO</h1>
+        {logo ? (
+          <img src={logo} alt="Logo ECO" className="h-12" /> // Exibe a logo se estiver carregada
+        ) : (
+          <h1 className="text-4xl font-light text-purple-600">ECO</h1> // Exibe o texto "ECO" enquanto a logo carrega
+        )}
       </div>
 
       {/* Saudação personalizada */}
