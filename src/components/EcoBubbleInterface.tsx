@@ -261,8 +261,8 @@ function EcoBubbleInterface() {
     }, []);
 
     const BubbleIcon = () => (
-        <div className="relative w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
-            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+        <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center"> {/* Alterado para 7 */}
+            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
                 <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
@@ -281,10 +281,10 @@ function EcoBubbleInterface() {
             <div className="relative mb-8 flex flex-col items-center">
                 <div
                     onClick={toggleMenu}
-                    className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}
+                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`} // Alterado para 44
                 >
                     <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
-                    <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-white/60 blur-sm"></div>
+                    <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-white/60 blur-sm"></div> {/* Alterado para 3 */}
                 </div>
 
                 {isMenuOpen && (
