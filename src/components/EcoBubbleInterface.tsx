@@ -350,7 +350,7 @@ function EcoBubbleInterface() {
                         onKeyDown={handleKeyDown}
                         placeholder="Sua reflexão..."
                         className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                        style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
+                        style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)' }} // Ajuste na largura
                     />
                     <button
                         className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
