@@ -6,7 +6,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from '../MemoryButton/MemoryButton'; // Importe o MemoryButton corretamente
+import MemoryButton from '../MemoryButton; // Importe o MemoryButton corretamente
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
