@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './EcoBubbleInterface.css'; // Certifique-se de que este caminho está correto
-import { sendMessageToOpenAI } from '../../sendMessageToOpenAI'; // Certifique-se de que este caminho está correto
-import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Certifique-se de que este caminho está correto
-import { supabase } from '../../supabaseClient'; // Certifique-se de que este caminho está correto
-import MemoryButton from './MemoryButton'; // Certifique-se de que este caminho está correto
+import './EcoBubbleInterface.css';
+import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
+import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
+import { supabase } from '../../supabaseClient';
+import MemoryButton from './MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -30,7 +30,6 @@ function EcoBubbleInterface() {
     const conversationContainerRef = useRef<HTMLDivElement | null>(null);
     const conversationLengthRef = useRef(conversation.length);
     const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
-    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false);
     const [memoryToSave, setMemoryToSave] = useState<{
         usuario_id: string;
         conteudo: string;
@@ -61,27 +60,18 @@ function EcoBubbleInterface() {
             try {
                 const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
                 console.log("salvarMensagemComMemoria resultado:", sucessoAoSalvar);
-                if (sucessoAoSalvar) {
-                    showMemorySavedMessage();
-                    setMemoryToSave(null); // Limpa a memória a ser salva.
-                }
             } catch (error) {
                 console.error("Erro ao salvar memória", error);
             }
 
         }
-    }, [memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
+    }, [memoryToSave, salvarMensagemComMemoria, userId]);
 
     const toggleMemoryButtonVisibility = useCallback(() => {
         console.log("toggleMemoryButtonVisibility chamado");
         setIsMemoryButtonVisible(prev => !prev)
     }, []);
 
-    const showMemorySavedMessage = useCallback(() => {
-        console.log("showMemorySavedMessage chamado");
-        setMemorySavedMessageVisible(true);
-        setTimeout(() => setMemorySavedMessageVisible(false), 3000);
-    }, []);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
@@ -287,12 +277,6 @@ function EcoBubbleInterface() {
                 <Lucide.ArrowLeft size={20} />
                 Voltar
             </button>
-
-            {memorySavedMessageVisible && (
-                <div className="absolute top-12 left-1/2 transform -translate-x-1/2 memory-saved-message text-center">
-                    Memória registrada com sucesso!
-                </div>
-            )}
 
             <div className="relative mb-8 flex flex-col items-center">
                 <div onClick={toggleMenu} className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}>
