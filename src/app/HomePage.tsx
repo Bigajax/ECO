@@ -22,6 +22,9 @@ const HomePage: React.FC = () => {
           <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
         </div>
       </div>
+        <span className="absolute bottom-full mb-2 text-xs text-gray-600 text-center w-48">
+          Sua companhia para todos os momentos.
+        </span>
     </div>
   );
 
@@ -130,9 +133,9 @@ const HomePage: React.FC = () => {
           </p>
           <button
             onClick={navigateToEcoBubble}
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+            className="w-full bg-gradient-to-r from-[#6495ED] to-[#F7CAC9] text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           >
-            Receber orientação
+            Conversar com a Echo
           </button>
         </div>
 
@@ -163,3 +166,4 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
