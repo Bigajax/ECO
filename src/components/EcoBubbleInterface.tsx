@@ -1,3 +1,4 @@
+// Arquivo: src/components/EcoBubbleInterface/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -5,7 +6,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from './MemoryButton';
+import MemoryButton from '../MemoryButton/MemoryButton'; // Importe o MemoryButton corretamente
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -34,7 +35,9 @@ function EcoBubbleInterface() {
     const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
     const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
     const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
-    const handleMemoryButtonClick = useCallback(() => navigate('/memories'), [navigate]);
+    const handleMemoryButtonClick = useCallback(() => {
+        navigate('/memories');
+    }, [navigate]);
     const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []); // Função para alternar a visibilidade
 
     useEffect(() => {
@@ -286,7 +289,7 @@ function EcoBubbleInterface() {
                     </button>
                     {isMemoryButtonVisible && (
                         <div className="memory-button-wrapper visible">
-                            <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+                            <MemoryButton onMemoryButtonClick={handleMemoryButtonClick} size="md" />
                         </div>
                     )}
                     <textarea
@@ -326,7 +329,7 @@ function EcoBubbleInterface() {
                         <span>Feedback</span>
                     </button>
 
-                    <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
+                    <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colorstransition-colors duration-200">
                         <Lucide.MessageSquare size={14} />
                         <span>Sugestões</span>
                     </button>
