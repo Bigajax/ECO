@@ -168,7 +168,6 @@ function EcoBubbleInterface() {
                 setIsSending(false);
             }
       }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
-    const togglePlayPause = useCallback(() => {
         if (audioPlayer) {
             if (isPlaying) {
                 audioPlayer.pause();
