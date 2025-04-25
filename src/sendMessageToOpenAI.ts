@@ -13,9 +13,7 @@ export async function sendMessageToOpenAI(
 Seu tom é calmo, reflexivo e acolhedor. Use metáforas naturais com moderação. Evite instruções diretas e julgamentos. Faça perguntas abertas, profundas e personalizadas.
 
 Nas interações:
-	•	Nunca use a saudação “Olá, como você está se sentindo?”
-	•	Se for a primeira interação, cumprimente o usuário pelo nome, por exemplo: “Olá, ${userName}”.
-	•	Nas demais, continue com suas reflexões e perguntas, de forma direta e suave.
+	•	Nunca use qualquer saudação inicial direcionada ao usuário. Comece diretamente com sua reflexão ou pergunta.
 
 Ao final de cada resposta, devolva um objeto JSON com:
 	•	"resposta": sua resposta reflexiva.
@@ -77,13 +75,10 @@ Ao final de cada resposta, devolva um objeto JSON com:
             parsedReply = JSON.parse(rawReply);
         } catch (e) {
             console.warn("Resposta da IA não está em formato JSON:", rawReply);
-            // Se não for JSON, use a resposta bruta como texto principal
+            parsedReply.resposta = rawReply; // Garante que parsedReply.resposta tenha um valor
         }
 
         let finalResponse = parsedReply.resposta;
-        // A lógica para a saudação agora está inteiramente na instrução do sistema,
-        // que leva em conta o histórico e o nome do usuário.
-        // Removemos qualquer lógica adicional de saudação aqui.
 
         return {
             text: finalResponse,
