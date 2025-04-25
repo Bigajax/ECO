@@ -7,7 +7,8 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from '../MemoryButton';
+// REMOVI A IMPORTAÇÃO DO MemoryButton PARA EVITAR CONFLITOS
+// import MemoryButton from '../MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -27,9 +28,9 @@ function EcoBubbleInterface() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null); // Novo estado para o nome do usuário
-  const [isFirstMessage = useRef(true); // Ref para controlar a primeira mensagem
-  const conversationContainerRef = useRef<HTMLDivElement | null>(null); // Ref para o container de mensagens
+  const [userName, setUserName] = useState<string | null>(null);
+  const isFirstMessage = useRef(true);
+  const conversationContainerRef = useRef<HTMLDivElement | null>(null);
   const conversationLengthRef = useRef(conversation.length);
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
@@ -54,14 +55,14 @@ function EcoBubbleInterface() {
 
         if (profileError) {
           console.error("Erro ao buscar perfil:", profileError);
-          setUserName("usuário"); // Define um valor padrão mesmo em caso de erro
-          return; // Importante retornar para evitar erros subsequentes
+          setUserName("usuário");
+          return;
         }
 
         if (profile) {
           setUserName(profile.full_name);
         } else {
-          setUserName("usuário"); // Garante um valor padrão se o perfil não for encontrado
+          setUserName("usuário");
         }
       } else {
         navigate('/login');
@@ -90,7 +91,6 @@ function EcoBubbleInterface() {
   }, [message]);
 
   useEffect(() => {
-    // Verifica se o número de mensagens mudou desde a última renderização
     if (conversationContainerRef.current && conversation.length > conversationLengthRef.current) {
       conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
       conversationLengthRef.current = conversation.length;
@@ -110,7 +110,6 @@ function EcoBubbleInterface() {
       console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
 
       try {
-        // Passa o nome do usuário e o estado de primeira mensagem
         const aiResponse = await sendMessageToOpenAI(userMessage, userName);
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
@@ -123,7 +122,6 @@ function EcoBubbleInterface() {
         setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
         setIsPlaying(false);
 
-        // Atualiza o estado de primeira mensagem após a primeira resposta da ECO
         if (isFirstMessage.current && conversation.length > 0 && !conversation[conversation.length - 1].isUser) {
           isFirstMessage.current = false;
         }
@@ -198,12 +196,10 @@ function EcoBubbleInterface() {
 
   const handleFeedbackClick = useCallback(() => {
     alert('Obrigado pelo seu feedback!');
-    // Aqui você pode adicionar a lógica real para enviar o feedback
   }, []);
 
   const handleSuggestionsClick = useCallback(() => {
     alert('Obrigado pelas suas sugestões!');
-    // Aqui você pode adicionar a lógica real para lidar com as sugestões
   }, []);
 
   const BubbleIcon = () => (
@@ -268,7 +264,10 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+          {/* BOTÃO SIMPLES ADICIONADO AQUI */}
+          <button onClick={handleMemoryButtonClick} className="bg-blue-500 text-white rounded-md px-4 py-2">
+            Memórias
+          </button>
           <div className="flex-1">
             <textarea
               ref={inputRef}
