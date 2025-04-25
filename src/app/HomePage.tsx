@@ -38,43 +38,43 @@ const HomePage: React.FC = () => {
   };
 
   // useEffect para verificar se o usuário está autenticado e obter o nome
-    useEffect(() => {
-        console.log('HomePage useEffect triggered');
+  useEffect(() => {
+    console.log('HomePage useEffect triggered');
 
-        const verifySession = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            console.log('Session in HomePage:', user);
-            console.log('session?.user in HomePage:', user);
+    const verifySession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('Session in HomePage:', user);
+      console.log('session?.user in HomePage:', user);
 
-            if (!user) {
-                console.log('No user session, navigating to /login from HomePage');
-                navigate('/login');
-            } else {
-                console.log('User session found in HomePage');
-                // Busca o nome do usuário no banco de dados
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('full_name')
-                    .eq('user_id', user.id)
-                    .single();
+      if (!user) {
+        console.log('No user session, navigating to /login from HomePage');
+        navigate('/login');
+      } else {
+        console.log('User session found in HomePage');
+        // Busca o nome do usuário no banco de dados
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('user_id', user.id)
+          .single();
 
-                if (profileError) {
-                    console.error("Erro ao buscar perfil:", profileError);
-                    setUserName('Usuário'); // Define um nome padrão
-                } else if (profile) {
-                    // Pega o primeiro nome
-                    const firstName = profile.full_name.split(' ')[0];
-                    setUserName(firstName);
-                } else {
-                    setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
-                }
-                setLoading(false);
-            }
-        };
+        if (profileError) {
+          console.error("Erro ao buscar perfil:", profileError);
+          setUserName('Usuário'); // Define um nome padrão
+        } else if (profile) {
+          // Pega o primeiro nome
+          const firstName = profile.full_name.split(' ')[0];
+          setUserName(firstName);
+        } else {
+          setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
+        }
+        setLoading(false);
+      }
+    };
 
-        verifySession();
+    verifySession();
 
-    }, [navigate]);
+  }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
   if (loading) return <div>Carregando...</div>;
@@ -90,8 +90,7 @@ const HomePage: React.FC = () => {
 
       {/* Saudação personalizada */}
       <div className="text-center mb-8">
-        <h2 className="text-4xl text-gray-700 flex items-center justify-center gap-2">
-          <BubbleIcon />
+        <h2 className="text-4xl text-gray-700">
           {greeting}, {userName}
         </h2>
       </div>
@@ -122,7 +121,8 @@ const HomePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Cartão de orientação diária */}
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
-          <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors">
+          <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors flex items-center gap-2">
+            <BubbleIcon />
             Olá, {userName}.
           </h3>
           <p className="text-gray-600 text-lg mb-6">
