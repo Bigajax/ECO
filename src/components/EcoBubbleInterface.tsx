@@ -321,7 +321,7 @@ function EcoBubbleInterface() {
                                 {!msg.isUser && <BubbleIcon />}
                                 <p
                                     className="text-sm break-words text-black"
-                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem' }}
+                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }} // Adicionado whiteSpace: 'pre-wrap'
                                 >
                                     {!msg.isUser && <span className="font-semibold">ECO: </span>}
                                     <span dangerouslySetInnerHTML={{ __html: messageText }} />
