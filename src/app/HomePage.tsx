@@ -7,44 +7,79 @@ import { Moon, Compass, Music, Eye } from 'lucide-react';
 const HomePage: React.FC = () => {
   const navigate = useNavigate(); // Hook para navegação entre rotas
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
+  const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
 
   const navigateToEcoBubble = useCallback(() => {
-    navigate('/eco-bubble'); // ✅ Navegação para a rota da EcoBubbleInterface
+    navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
   }, [navigate]);
 
-  // useEffect para verificar se o usuário está autenticado
-  useEffect(() => {
-    console.log('HomePage useEffect triggered');
+  // Função para exibir o ícone da bolha
+  const BubbleIcon = () => (
+    <div className="relative w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+        <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
+        </div>
+      </div>
+    </div>
+  );
 
-    const verifySession = async () => {
-      const { data: { session } } = await supabase.auth.getSession(); // Obtém a sessão do usuário
-      console.log('Session in HomePage:', session);
-      console.log('session?.user in HomePage:', session?.user);
+  // Função para obter a saudação com base no horário
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) {
+      return 'Bom dia';
+    } else if (hour >= 12 && hour < 18) {
+      return 'Boa tarde';
+    } else {
+      return 'Boa noite';
+    }
+  };
 
-      // Se não houver usuário autenticado, redireciona para login
-      if (!session?.user) {
-        console.log('No user session, navigating to /login from HomePage');
-        navigate('/login');
-      } else {
-        console.log('User session found in HomePage, setting loading to false');
-        setLoading(false); // Se houver, exibe a página
-      }
-    };
+  // useEffect para verificar se o usuário está autenticado e obter o nome
+    useEffect(() => {
+        console.log('HomePage useEffect triggered');
 
-    verifySession(); // Chamada da função de verificação
+        const verifySession = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            console.log('Session in HomePage:', user);
+            console.log('session?.user in HomePage:', user);
 
-    // Comente o bloco acima e descomente o bloco abaixo para o teste temporário
-    /*
-    setTimeout(() => {
-      setLoading(false);
-      console.log('Loading set to false after timeout');
-    }, 1000);
-    */
+            if (!user) {
+                console.log('No user session, navigating to /login from HomePage');
+                navigate('/login');
+            } else {
+                console.log('User session found in HomePage');
+                // Busca o nome do usuário no banco de dados
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('full_name')
+                    .eq('user_id', user.id)
+                    .single();
 
-  }, [navigate]);
+                if (profileError) {
+                    console.error("Erro ao buscar perfil:", profileError);
+                    setUserName('Usuário'); // Define um nome padrão
+                } else if (profile) {
+                    // Pega o primeiro nome
+                    const firstName = profile.full_name.split(' ')[0];
+                    setUserName(firstName);
+                } else {
+                    setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
+                }
+                setLoading(false);
+            }
+        };
+
+        verifySession();
+
+    }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
   if (loading) return <div>Carregando...</div>;
+
+  const greeting = getGreeting();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6">
@@ -55,7 +90,10 @@ const HomePage: React.FC = () => {
 
       {/* Saudação personalizada */}
       <div className="text-center mb-8">
-        <h2 className="text-4xl text-gray-700">Boa noite, Rafael</h2>
+        <h2 className="text-4xl text-gray-700 flex items-center justify-center gap-2">
+          <BubbleIcon />
+          {greeting}, {userName}
+        </h2>
       </div>
 
       {/* Navegação principal em forma de ícones */}
@@ -85,13 +123,13 @@ const HomePage: React.FC = () => {
         {/* Cartão de orientação diária */}
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
           <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors">
-            Olá, Rafael.
+            Olá, {userName}.
           </h3>
           <p className="text-gray-600 text-lg mb-6">
             Estou aqui se precisar de uma conversa para começar seu dia.
           </p>
           <button
-            onClick={navigateToEcoBubble} // ✅ Adicionamos o onClick para navegar
+            onClick={navigateToEcoBubble}
             className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           >
             Receber orientação
