@@ -31,6 +31,7 @@ function EcoBubbleInterface() {
     const conversationContainerRef = useRef<HTMLDivElement | null>(null);
     const conversationLengthRef = useRef(conversation.length);
     const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false); // Novo estado para visibilidade do botão de memória
+    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false); // Novo estado para a mensagem de memória salva
 
     const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
     const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
@@ -39,6 +40,12 @@ function EcoBubbleInterface() {
         navigate('/memories');
     }, [navigate]);
     const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []); // Função para alternar a visibilidade
+    const showMemorySavedMessage = useCallback(() => {
+        setMemorySavedMessageVisible(true);
+        setTimeout(() => {
+            setMemorySavedMessageVisible(false);
+        }, 3000); // Exibe a mensagem por 3 segundos
+    }, [setMemorySavedMessageVisible]);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
@@ -143,7 +150,7 @@ function EcoBubbleInterface() {
                 }
 
                 if (aiResponse?.text && userId) {
-                    await salvarMensagemComMemoria({
+                    const sucessoAoSalvar = await salvarMensagemComMemoria({
                         usuario_id: userId,
                         conteudo: userMessage,
                         sentimento: aiResponse.sentimento || null,
@@ -151,6 +158,9 @@ function EcoBubbleInterface() {
                         emocao_principal: aiResponse.emocao || null,
                         intensidade: aiResponse.intensidade || null,
                     });
+                    if (sucessoAoSalvar) {
+                        showMemorySavedMessage();
+                    }
                 }
             } catch (error: any) {
                 setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
@@ -158,7 +168,7 @@ function EcoBubbleInterface() {
                 setIsSending(false);
             }
         }
-    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName]);
+    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
 
     const togglePlayPause = useCallback(() => {
         if (audioPlayer) {
@@ -236,6 +246,12 @@ function EcoBubbleInterface() {
                 Voltar
             </button>
 
+            {memorySavedMessageVisible && (
+                <div className="absolute top-12 left-1/2 transform -translate-x-1/2 memory-saved-message text-center">
+                    Memória registrada com sucesso!
+                </div>
+            )}
+
             <div className="relative mb-8 flex flex-col items-center">
                 <div onClick={toggleMenu} className={`w-48 h-48 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}>
                     <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
@@ -312,7 +328,7 @@ function EcoBubbleInterface() {
                     </button>
                     <button
                         className={`send-button p-2 rounded-full transition-all duration-300 ${
-                            message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursormessage.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         } ${isSending ? 'scale-90' : 'scale-100'}`}
                         onClick={handleSendMessage}
                         disabled={!message.trim() || isSending || !userId}
@@ -329,7 +345,7 @@ function EcoBubbleInterface() {
                         <span>Feedback</span>
                     </button>
 
-                    <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colorstransition-colors duration-200">
+                    <button onClick={handleSuggestionsClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
                         <Lucide.MessageSquare size={14} />
                         <span>Sugestões</span>
                     </button>
