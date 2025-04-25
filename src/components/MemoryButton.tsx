@@ -9,6 +9,7 @@ interface MemoryButtonProps {
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
+const white = '#FFFFFF'; // Adicionando a constante para branco
 
 const MemoryButton: React.FC<MemoryButtonProps> = ({
     onClick,
@@ -47,7 +48,7 @@ const MemoryButton: React.FC<MemoryButtonProps> = ({
                 size={iconSizes[size]}
                 className="relative z-10"
                 strokeWidth={1.25}
-                color={quartzPink}
+                color={white} // Usando a constante 'white'
             />
         </button>
     );
