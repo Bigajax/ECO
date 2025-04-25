@@ -9,6 +9,8 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
   const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
   const [userFirstName, setUserFirstName] = useState<string>('');
+  const [bubbleText, setBubbleText] = useState<string>(''); // Texto acima do botão
+  const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -53,24 +55,36 @@ const HomePage: React.FC = () => {
       } else {
         console.log('User session found in HomePage');
         // Busca o nome do usuário no banco de dados
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('user_id', user.id)
-          .single();
+        try {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', user.id)
+            .single();
 
-        if (profileError) {
-          console.error("Erro ao buscar perfil:", profileError);
-          setUserName('Usuário'); // Define um nome padrão
+          if (profileError) {
+            console.error("Erro ao buscar perfil:", profileError);
+            setUserName('Usuário'); // Define um nome padrão
+            setUserFirstName('Usuário');
+            setBubbleText("Dê o primeiro passo para um novo mundo!");
+          } else if (profile) {
+            // Pega o primeiro nome
+            const firstName = profile.full_name.split(' ')[0];
+            console.log("Nome completo do usuário:", profile.full_name);
+            console.log("Primeiro nome do usuário:", firstName);
+            setUserName(profile.full_name);
+            setUserFirstName(firstName);
+            setBubbleText("Dê o primeiro passo para um novo mundo!");
+          } else {
+            setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
+            setUserFirstName('Usuário');
+            setBubbleText("Dê o primeiro passo para um novo mundo!");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar perfil:", error);
+          setUserName('Usuário');
           setUserFirstName('Usuário');
-        } else if (profile) {
-          // Pega o primeiro nome
-          const firstName = profile.full_name.split(' ')[0];
-          setUserName(profile.full_name);
-          setUserFirstName(firstName);
-        } else {
-          setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
-          setUserFirstName('Usuário');
+          setBubbleText("Dê o primeiro passo para um novo mundo!");
         }
         setLoading(false);
       }
@@ -127,13 +141,13 @@ const HomePage: React.FC = () => {
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
           <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors flex items-center gap-2">
             <BubbleIcon />
-            Olá, {userFirstName}.
+            {bubbleText}
           </h3>
           <button
             onClick={navigateToEcoBubble}
             className="w-full bg-gradient-to-r from-[#6495ED] to-[#F7CAC9] text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           >
-            Conversar com a Echo
+            {buttonText}
           </button>
         </div>
 
@@ -164,3 +178,4 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
