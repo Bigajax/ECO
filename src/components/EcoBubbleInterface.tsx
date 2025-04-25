@@ -123,9 +123,13 @@ function EcoBubbleInterface() {
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
                 setConversation((prev) => {
+                    let ecoFinalText = ecoText;
+                    if (!ecoText?.startsWith('ECO:')) {
+                        ecoFinalText = `ECO: ${ecoText}`;
+                    }
                     const ecoMessage = isFirstMessage.current
-                        ? { text: `ECO: Olá, ${userName}! ${ecoText}`, isUser: false }
-                        : { text: `ECO: ${ecoText}`, isUser: false };
+                        ? { text: `ECO: Olá, ${userName}! ${ecoFinalText.substring(5).trimStart()}`, isUser: false } // Remove "ECO:" duplicado se presente e trim
+                        : { text: ecoFinalText, isUser: false };
                     return [...prev, ecoMessage];
                 });
                 setAudioPlayer(audioUrl ? new Audio(audioUrl) : null);
@@ -327,17 +331,3 @@ function EcoBubbleInterface() {
                         <span>Sugestões</span>
                     </button>
                 </div>
-            </div>
-
-           {audioPlayer && (
-                <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-                    <button onClick={togglePlayPause} className="focus:outline-none">
-                        {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default EcoBubble
