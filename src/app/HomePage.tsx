@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     // Importar a imagem como um módulo
     // Correção: Use um caminho relativo padrão para importar a imagem
-    import('./caminho/para/sua/logo.png') // Substitua pelo caminho correto da sua logo
+    import('../assets/images/logo.png') // Exemplo de caminho relativo.  **CORRIJA ESTE CAMINHO**
       .then(logo => {
         setLogo(logo.default); // Define o estado com a URL da imagem
       })
@@ -192,3 +192,4 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
