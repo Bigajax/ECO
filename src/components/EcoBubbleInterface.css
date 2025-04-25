@@ -167,3 +167,62 @@
     background-color: var(--color);
   }
 }
+
+/* Estilos para o container do botão "+" e da área de texto */
+.input-controls-container {
+  position: relative; /* Para posicionar o "+" absolutamente dentro */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Espaçamento entre os elementos internos */
+  width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/* Estilo para o botão "+" */
+.plus-button {
+  position: absolute;
+  left: 0.5rem; /* Ajuste a distância da borda esquerda */
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  background: none;
+  border: none;
+  color: #a248f5; /* Cor roxa */
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  z-index: 10; /* Garante que fique acima da área de texto */
+}
+
+.plus-button:hover {
+  background-color: rgba(162, 72, 245, 0.1); /* Feedback ao passar o mouse */
+}
+
+/* Estilo para a área de texto */
+.input-controls-container textarea {
+  padding-left: 3rem; /* Crie espaço para o botão "+" (ajuste conforme o tamanho do botão) */
+  flex-grow: 1; /* Permite que a área de texto ocupe o espaço restante */
+  /* Mantenha outros estilos da sua textarea */
+}
+
+/* Estilo para o botão de memória quando visível */
+.memory-button-wrapper {
+  position: absolute;
+  bottom: calc(100% + 0.5rem); /* Aparece acima da área de entrada */
+  left: 0.5rem; /* Alinhado com o botão "+" */
+  z-index: 15; /* Acima do botão "+" */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s;
+}
+
+.memory-button-wrapper.visible {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* Ajustes para os outros botões (microfone, enviar) */
+.mic-button,
+.send-button {
+  /* Se precisar ajustar a posição deles para não conflitar com o botão de memória */
+}
