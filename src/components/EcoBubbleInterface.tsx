@@ -331,3 +331,8 @@ function EcoBubbleInterface() {
                         <span>Sugestões</span>
                     </button>
                 </div>
+            </div>
+
+           {audioPlayer && (
+                <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+                    <button onClick={togglePlayPause} className="focus:
