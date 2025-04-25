@@ -31,11 +31,13 @@ function EcoBubbleInterface() {
   const isFirstMessage = useRef(true);
   const conversationContainerRef = useRef<HTMLDivElement | null>(null);
   const conversationLengthRef = useRef(conversation.length);
+  const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false); // Novo estado para visibilidade do botão de memória
 
   const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
   const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
   const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
   const handleMemoryButtonClick = useCallback(() => navigate('/memories'), [navigate]);
+  const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []); // Função para alternar a visibilidade
 
   useEffect(() => {
     const getUserIdAndName = async () => {
@@ -270,20 +272,28 @@ function EcoBubbleInterface() {
       </div>
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
-        <div className="relative flex items-end gap-2 w-full">
-          <MemoryButton onClick={handleMemoryButtonClick} size="md" /> {/* O COMPONENTE MemoryButton DE VOLTA AQUI */}
-          <div className="flex-1">
-            <textarea
-              ref={inputRef}
-              value={message}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Sua reflexão..."
-              className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-              style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
-            />
-          </div>
-
+        <div className="relative flex items-center gap-2 w-full input-controls-container"> {/* Adicionada a classe input-controls-container */}
+          <button
+            className="plus-button"
+            onClick={toggleMemoryButtonVisibility}
+            aria-label="Mostrar opções de memória"
+          >
+            <Lucide.Plus size={20} />
+          </button>
+          {isMemoryButtonVisible && (
+            <div className="memory-button-wrapper visible">
+              <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+            </div>
+          )}
+          <textarea
+            ref={inputRef}
+            value={message}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Sua reflexão..."
+            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
+            style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)) + 'px' }}
+          />
           <button
             className={`mic-button p-2 rounded-full transition-all duration-200 ${
               isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -293,7 +303,6 @@ function EcoBubbleInterface() {
           >
             <Lucide.Mic size={20} />
           </button>
-
           <button
             className={`send-button p-2 rounded-full transition-all duration-300 ${
               message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -321,14 +330,3 @@ function EcoBubbleInterface() {
       </div>
 
       {audioPlayer && (
-        <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-          <button onClick={togglePlayPause} className="focus:outline-none">
-            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default EcoBubbleInterface;
