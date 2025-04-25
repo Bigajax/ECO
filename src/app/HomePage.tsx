@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
   const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
   const [userFirstName, setUserFirstName] = useState<string>('');
-  const [bubbleTitle, setBubbleTitle] = useState<string>("..."); // Título do cartão
+  const [bubbleTitle, setBubbleTitle] = useState<string>("Olá!"); // Título do cartão
   const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Subtítulo do cartão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
 
