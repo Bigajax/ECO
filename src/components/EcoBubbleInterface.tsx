@@ -334,19 +334,19 @@ function EcoBubbleInterface() {
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
                 <div className="relative flex items-center gap-2 w-full input-controls-container">
-                    <div className="flex items-center gap-2 w-full">
+                    <div className="flex items-center gap-2 w-full" style={{ flexDirection: 'row-reverse' }}> {/* Alteração aqui */}
                         <button
                             className="plus-button"
                             onClick={toggleMemoryButtonVisibility}
                             aria-label="Mostrar opções de memória"
-                            style={{ order: 0 }}
+                            style={{ order: 4 }} // Mantém a ordem, mas agora no final
                         >
                             <Lucide.Plus size={20} />
                         </button>
                         {isMemoryButtonVisible && (
                             <div
                                 className="memory-button-wrapper visible"
-                                style={{ order: 1, position: 'relative' }} // Adicionado position relative
+                                style={{ order: 3, position: 'relative' }}
                             >
                                 <MemoryButton
                                     onMemoryButtonClick={handleMemoryButtonClick}
@@ -374,7 +374,7 @@ function EcoBubbleInterface() {
                             }`}
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                            style={{ order: 3 }}
+                            style={{ order: 1 }} // Botão de microfone vem antes do de enviar
                         >
                             <Lucide.Mic size={20} />
                         </button>
@@ -386,7 +386,7 @@ function EcoBubbleInterface() {
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
-                            style={{ order: 4 }}
+                            style={{ order: 0 }} // Botão de enviar fica mais à esquerda
                         >
                             <Lucide.Send size={20} />
                         </button>
