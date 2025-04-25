@@ -42,20 +42,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  // useEffect para carregar a logo
-  useEffect(() => {
-    // Importar a imagem como um módulo
-    // Correção: Use um caminho relativo padrão para importar a imagem
-    import('../assets/images/logo.png') // Exemplo de caminho relativo.  **CORRIJA ESTE CAMINHO**
-      .then(logo => {
-        setLogo(logo.default); // Define o estado com a URL da imagem
-      })
-      .catch(error => {
-        console.error("Erro ao carregar a logo:", error);
-        setLogo('/placeholder_logo.png'); // Define um valor padrão em caso de erro
-      });
-  }, []);
-
 
   // useEffect para verificar se o usuário está autenticado e obter o nome
   useEffect(() => {
@@ -192,4 +178,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
