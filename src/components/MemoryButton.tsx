@@ -45,7 +45,7 @@ const MemoryButton: React.FC<MemoryButtonProps> = ({
         >
             <BookOpen
                 size={iconSizes[size]}
-                className="text-white/90 relative z-10"
+                className="relative z-10"
                 strokeWidth={1.25}
                 color={quartzPink}
             />
