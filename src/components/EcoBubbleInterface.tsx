@@ -309,24 +309,27 @@ function EcoBubbleInterface() {
                 className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[400px] overflow-y-auto"
                 ref={conversationContainerRef}
             >
-                {conversation.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 ${msg.isUser ? 'ml-auto' : 'mr-auto'}`}
-                        style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
-                    >
-                        <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
-                            {!msg.isUser && <BubbleIcon />}
-                            <p
-                                className="text-sm break-words text-black"
-                                style={{ wordBreak: 'break-word', fontSize: '0.95rem' }}
-                            >
-                                {!msg.isUser && <span className="font-semibold">ECO: </span>}
-                                {msg.text}
-                            </p>
+                {conversation.map((msg, index) => {
+                    const messageText = msg.text.replace(/(\r\n|\n|\r)/gm, "<br/>");
+                    return (
+                        <div
+                            key={index}
+                            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 ${msg.isUser ? 'ml-auto' : 'mr-auto'}`}
+                            style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
+                        >
+                            <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
+                                {!msg.isUser && <BubbleIcon />}
+                                <p
+                                    className="text-sm break-words text-black"
+                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem' }}
+                                >
+                                    {!msg.isUser && <span className="font-semibold">ECO: </span>}
+                                    <span dangerouslySetInnerHTML={{ __html: messageText }} />
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
