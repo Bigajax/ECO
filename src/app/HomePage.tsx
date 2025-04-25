@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
         if (profileError) {
           console.error("Erro ao buscar perfil:", profileError);
           setUserName('Usuário'); // Define um nome padrão
-          setUserFirstName('Usuário')
+          setUserFirstName('Usuário');
         } else if (profile) {
           // Pega o primeiro nome
           const firstName = profile.full_name.split(' ')[0];
@@ -70,7 +70,7 @@ const HomePage: React.FC = () => {
           setUserFirstName(firstName);
         } else {
           setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
-          setUserFirstName('Usuário')
+          setUserFirstName('Usuário');
         }
         setLoading(false);
       }
