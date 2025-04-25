@@ -281,10 +281,10 @@ function EcoBubbleInterface() {
             <div className="relative mb-8 flex flex-col items-center">
                 <div
                     onClick={toggleMenu}
-                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`} // Alterado para 44
+                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}
                 >
                     <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
-                    <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-white/60 blur-sm"></div> {/* Alterado para 3 */}
+                    <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-white/60 blur-sm"></div>
                 </div>
 
                 {isMenuOpen && (
@@ -321,61 +321,63 @@ function EcoBubbleInterface() {
                                 {!msg.isUser && <BubbleIcon />}
                                 <p
                                     className="text-sm break-words text-black"
-                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }} // Adicionado whiteSpace: 'pre-wrap'
+                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
                                 >
                                     {!msg.isUser && <span className="font-semibold">ECO: </span>}
                                     <span dangerouslySetInnerHTML={{ __html: messageText }} />
                                 </p>
                             </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
                 <div className="relative flex items-center gap-2 w-full input-controls-container">
-                    <button
-                        className="plus-button"
-                        onClick={toggleMemoryButtonVisibility}
-                        aria-label="Mostrar opções de memória"
-                    >
-                        <Lucide.Plus size={20} />
-                    </button>
-                    {isMemoryButtonVisible && (
-                        <div className="memory-button-wrapper visible">
-                            <MemoryButton onMemoryButtonClick={handleMemoryButtonClick} size="md" />
-                        </div>
-                    )}
-                    <textarea
-                        ref={inputRef}
-                        value={message}
-                        onChange={handleInputChange}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Sua reflexão..."
-                        className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                        style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)' }} // Ajuste na largura
-                    />
-                    <button
-                        className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
-                            ? 'bg-red-500 text-white animate-pulse'
-                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    <div className="flex items-center gap-2 w-full"> {/* Agrupar os elementos */}
+                        <button
+                            className="plus-button"
+                            onClick={toggleMemoryButtonVisibility}
+                            aria-label="Mostrar opções de memória"
+                        >
+                            <Lucide.Plus size={20} />
+                        </button>
+                        {isMemoryButtonVisible && (
+                            <div className="memory-button-wrapper visible">
+                                <MemoryButton onMemoryButtonClick={handleMemoryButtonClick} size="md" />
+                            </div>
+                        )}
+                        <textarea
+                            ref={inputRef}
+                            value={message}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Sua reflexão..."
+                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
+                            style={{ height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)), width: 'calc(100% - 100px)' }}
+                        />
+                        <button
+                            className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
+                                ? 'bg-red-500 text-white animate-pulse'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                             }`}
-                        onClick={handleMicClick}
-                        aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                    >
-                        <Lucide.Mic size={20} />
-                    </button>
-                    <button
-                        className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
-                            ? 'bg-blue-500 text-white hover:bg-blue-600'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            onClick={handleMicClick}
+                            aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
+                        >
+                            <Lucide.Mic size={20} />
+                        </button>
+                        <button
+                            className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
+                                ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             }`}
-                        onClick={handleSendMessage}
-                        disabled={!message.trim() || isSending || !userId}
-                        aria-label="Enviar mensagem"
-                    >
-                        <Lucide.Send size={20} />
-                    </button>
+                            onClick={handleSendMessage}
+                            disabled={!message.trim() || isSending || !userId}
+                            aria-label="Enviar mensagem"
+                        >
+                            <Lucide.Send size={20} />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
