@@ -47,11 +47,16 @@ function EcoBubbleInterface() {
     const handleMemoryButtonClick = useCallback(async () => {
         navigate('/memories');
         if (memoryToSave && userId) {
-            const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
-            if (sucessoAoSalvar) {
-                showMemorySavedMessage();
-                setMemoryToSave(null); // Limpa a memória a ser salva.
+            try{
+                const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
+                if (sucessoAoSalvar) {
+                    showMemorySavedMessage();
+                    setMemoryToSave(null); // Limpa a memória a ser salva.
+                }
+            } catch(error){
+                console.error("Erro ao salvar memória", error);
             }
+
         }
     }, [navigate, memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
 
@@ -63,29 +68,34 @@ function EcoBubbleInterface() {
 
     useEffect(() => {
         const getUserIdAndName = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                setUserId(user.id);
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('full_name')
-                    .eq('user_id', user.id)
-                    .single();
+            try{
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    setUserId(user.id);
+                    const { data: profile, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('full_name')
+                        .eq('user_id', user.id)
+                        .single();
 
-                if (profileError) {
-                    console.error("Erro ao buscar perfil:", profileError);
-                    setUserName("usuário");
-                    return;
-                }
+                    if (profileError) {
+                        console.error("Erro ao buscar perfil:", profileError);
+                        setUserName("usuário");
+                        return;
+                    }
 
-                if (profile) {
-                    setUserName(profile.full_name);
+                    if (profile) {
+                        setUserName(profile.full_name);
+                    } else {
+                        setUserName("usuário");
+                    }
                 } else {
-                    setUserName("usuário");
+                    navigate('/login');
                 }
-            } else {
-                navigate('/login');
+            } catch(error){
+                console.error("Erro ao obter usuário", error);
             }
+
         };
 
         getUserIdAndName();
@@ -175,7 +185,7 @@ function EcoBubbleInterface() {
                 setIsSending(false);
             }
         }
-    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, userName, isFirstMessage]);
+    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, userName, isFirstMessage, setMemoryToSave]);
 
 
     useEffect(() => {
@@ -380,4 +390,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
