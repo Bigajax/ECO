@@ -1,4 +1,3 @@
-// Arquivo: src/components/EcoBubbleInterface/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from './MemoryButton'; // Certifique-se que o arquivo se chama MemoryButton.tsx
+import MemoryButton from './MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -30,62 +29,105 @@ function EcoBubbleInterface() {
     const isFirstMessage = useRef(true);
     const conversationContainerRef = useRef<HTMLDivElement | null>(null);
     const conversationLengthRef = useRef(conversation.length);
-    const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false); // Novo estado para visibilidade do botão de memória
-    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false); // Novo estado para a mensagem de memória salva
+    const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
+    const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false);
+    const [memoryToSave, setMemoryToSave] = useState<{
+        usuario_id: string;
+        conteudo: string;
+        sentimento: string | null;
+        resumo_eco: string | null;
+        emocao_principal: string | null;
+        intensidade: number | null;
+    } | null>(null);
 
-    const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
-    const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
-    const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
-    const handleMemoryButtonClick = useCallback(() => {
-        navigate('/memories');
+
+    const handleGoBack = useCallback(() => {
+        console.log("handleGoBack chamado");
+        navigate('/home');
     }, [navigate]);
-    const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []); // Função para alternar a visibilidade
+
+    const startVibration = useCallback(() => {
+        console.log("startVibration chamado");
+        setIsEcoSpeaking(true)
+    }, []);
+    const stopVibration = useCallback(() => {
+        console.log("stopVibration chamado");
+        setIsEcoSpeaking(false);
+    }, []);
+
+    const handleMemoryButtonClick = useCallback(async () => {
+        console.log("handleMemoryButtonClick chamado", { memoryToSave, userId });
+        //navigate('/memories'); // Removendo a navegação para outra página
+        if (memoryToSave && userId) {
+            try {
+                const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
+                console.log("salvarMensagemComMemoria resultado:", sucessoAoSalvar);
+                if (sucessoAoSalvar) {
+                    showMemorySavedMessage();
+                    setMemoryToSave(null); // Limpa a memória a ser salva.
+                }
+            } catch (error) {
+                console.error("Erro ao salvar memória", error);
+            }
+
+        }
+    }, [memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]); // Removendo navigate
+
+    const toggleMemoryButtonVisibility = useCallback(() => {
+        console.log("toggleMemoryButtonVisibility chamado");
+        setIsMemoryButtonVisible(prev => !prev)
+    }, []);
+
     const showMemorySavedMessage = useCallback(() => {
+        console.log("showMemorySavedMessage chamado");
         setMemorySavedMessageVisible(true);
-        setTimeout(() => {
-            setMemorySavedMessageVisible(false);
-        }, 3000); // Exibe a mensagem por 3 segundos
+        setTimeout(() => setMemorySavedMessageVisible(false), 3000);
     }, [setMemorySavedMessageVisible]);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            console.log("User:", user);
-            if (user) {
-                setUserId(user.id);
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('full_name')
-                    .eq('user_id', user.id)
-                    .single();
+            console.log("useEffect [getUserIdAndName] chamado");
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                console.log("supabase.auth.getUser() resultado:", user);
+                if (user) {
+                    setUserId(user.id);
+                    const { data: profile, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('full_name')
+                        .eq('user_id', user.id)
+                        .single();
+                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
 
-                console.log("Profile:", profile);
-                console.log("Profile Error:", profileError);
+                    if (profileError) {
+                        console.error("Erro ao buscar perfil:", profileError);
+                        setUserName("usuário");
+                        return;
+                    }
 
-                if (profileError) {
-                    console.error("Erro ao buscar perfil:", profileError);
-                    setUserName("usuário");
-                    return;
-                }
-
-                if (profile) {
-                    setUserName(profile.full_name);
+                    if (profile) {
+                        setUserName(profile.full_name);
+                    } else {
+                        setUserName("usuário");
+                    }
                 } else {
-                    setUserName("usuário");
+                    navigate('/login');
                 }
-            } else {
-                navigate('/login');
+            } catch (error) {
+                console.error("Erro ao obter usuário", error);
             }
+
         };
 
         getUserIdAndName();
 
         return () => {
+            console.log("useEffect [getUserIdAndName] cleanup chamado");
             if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
             stopVibration();
             if (recognitionRef.current) recognitionRef.current.stop();
         };
-    }, [navigate]);
+    }, [navigate, stopVibration]);
 
     useEffect(() => {
         console.log("Current userName:", userName);
@@ -117,6 +159,7 @@ function EcoBubbleInterface() {
             if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
             console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
+            console.log("handleSendMessage chamado com mensagem:", message);
 
             let messageToSendToAI = userMessage;
             let conversationToSend = conversation.map(msg => ({
@@ -128,8 +171,9 @@ function EcoBubbleInterface() {
                 const aiResponse = await sendMessageToOpenAI(
                     messageToSendToAI,
                     userName,
-                    conversationToSend // Passa o histórico formatado
+                    conversationToSend
                 );
+                console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
                 setConversation((prev) => {
@@ -138,7 +182,7 @@ function EcoBubbleInterface() {
                         ecoFinalText = `ECO: ${ecoText}`;
                     }
                     const ecoMessage = isFirstMessage.current
-                        ? { text: `ECO: Olá, ${userName}! ${ecoFinalText.substring(5).trimStart()}`, isUser: false } // Remove "ECO:" duplicado se presente e trim
+                        ? { text: `ECO: Olá, ${userName}! ${ecoFinalText.substring(5).trimStart()}`, isUser: false }
                         : { text: ecoFinalText, isUser: false };
                     return [...prev, ecoMessage];
                 });
@@ -150,7 +194,7 @@ function EcoBubbleInterface() {
                 }
 
                 if (aiResponse?.text && userId) {
-                    const sucessoAoSalvar = await salvarMensagemComMemoria({
+                    setMemoryToSave({
                         usuario_id: userId,
                         conteudo: userMessage,
                         sentimento: aiResponse.sentimento || null,
@@ -158,16 +202,18 @@ function EcoBubbleInterface() {
                         emocao_principal: aiResponse.emocao || null,
                         intensidade: aiResponse.intensidade || null,
                     });
-                    if (sucessoAoSalvar) {
-                        showMemorySavedMessage();
-                    }
                 }
             } catch (error: any) {
+                console.error("Erro ao obter resposta da IA:", error);
                 setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
             } finally {
                 setIsSending(false);
             }
-      }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
+        }
+    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, userName, isFirstMessage, setMemoryToSave]);
+
+
+    useEffect(() => {
         if (audioPlayer) {
             if (isPlaying) {
                 audioPlayer.pause();
@@ -292,12 +338,12 @@ function EcoBubbleInterface() {
             </div>
 
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
-                <div className="relative flex items-center gap-2 w-full input-controls-container"> {/* Adicionada a classe input-controls-container */}
+                <div className="relative flex items-center gap-2 w-full input-controls-container">
                     <button
                         className="plus-button"
                         onClick={toggleMemoryButtonVisibility}
                         aria-label="Mostrar opções de memória"
-                        >
+                    >
                         <Lucide.Plus size={20} />
                     </button>
                     {isMemoryButtonVisible && (
@@ -335,7 +381,6 @@ function EcoBubbleInterface() {
                     </button>
                 </div>
 
-                {/* Feedback section */}
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
                     <button onClick={handleFeedbackClick} className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200">
                         <Lucide.ThumbsUp size={14} />
@@ -349,9 +394,18 @@ function EcoBubbleInterface() {
                 </div>
             </div>
 
-           {audioPlayer && (
+            {audioPlayer && (
                 <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
-                    <button onClick={togglePlayPause} className="focus:outline-none">
+                    <button onClick={() => {
+                        if (audioPlayer) {
+                            if (isPlaying) {
+                                audioPlayer.pause();
+                            } else {
+                                audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
+                            }
+                            setIsPlaying(!isPlaying);
+                        }
+                    }} className="focus:outline-none">
                         {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
                     </button>
                 </div>
