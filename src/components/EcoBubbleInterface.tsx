@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './EcoBubbleInterface.css';
-import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
-import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
-import { supabase } from '../../supabaseClient';
-import MemoryButton from './MemoryButton';
+import './EcoBubbleInterface.css'; // Certifique-se de que este caminho está correto
+import { sendMessageToOpenAI } from '../../sendMessageToOpenAI'; // Certifique-se de que este caminho está correto
+import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Certifique-se de que este caminho está correto
+import { supabase } from '../../supabaseClient'; // Certifique-se de que este caminho está correto
+import MemoryButton from './MemoryButton'; // Certifique-se de que este caminho está correto
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -57,7 +57,6 @@ function EcoBubbleInterface() {
 
     const handleMemoryButtonClick = useCallback(async () => {
         console.log("handleMemoryButtonClick chamado", { memoryToSave, userId });
-        //navigate('/memories'); // Removendo a navegação para outra página
         if (memoryToSave && userId) {
             try {
                 const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
@@ -71,7 +70,7 @@ function EcoBubbleInterface() {
             }
 
         }
-    }, [memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]); // Removendo navigate
+    }, [memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
 
     const toggleMemoryButtonVisibility = useCallback(() => {
         console.log("toggleMemoryButtonVisibility chamado");
@@ -82,7 +81,7 @@ function EcoBubbleInterface() {
         console.log("showMemorySavedMessage chamado");
         setMemorySavedMessageVisible(true);
         setTimeout(() => setMemorySavedMessageVisible(false), 3000);
-    }, [setMemorySavedMessageVisible]);
+    }, []);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
