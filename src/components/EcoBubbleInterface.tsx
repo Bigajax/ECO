@@ -332,4 +332,4 @@ function EcoBubbleInterface() {
       {audioPlayer && (
         <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
           <button onClick={togglePlayPause} className="focus:outline-none">
-            {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20}
+{isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
