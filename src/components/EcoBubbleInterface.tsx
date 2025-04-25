@@ -31,11 +31,30 @@ function EcoBubbleInterface() {
     const conversationLengthRef = useRef(conversation.length);
     const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
     const [memorySavedMessageVisible, setMemorySavedMessageVisible] = useState(false);
+    const [memoryToSave, setMemoryToSave] = useState<{
+        usuario_id: string;
+        conteudo: string;
+        sentimento: string | null;
+        resumo_eco: string | null;
+        emocao_principal: string | null;
+        intensidade: number | null;
+    } | null>(null);
+
 
     const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
     const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
     const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
-    const handleMemoryButtonClick = useCallback(() => navigate('/memories'), [navigate]);
+    const handleMemoryButtonClick = useCallback(async () => {
+        navigate('/memories');
+        if (memoryToSave && userId) {
+            const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
+            if (sucessoAoSalvar) {
+                showMemorySavedMessage();
+                setMemoryToSave(null); // Limpa a memória a ser salva.
+            }
+        }
+    }, [navigate, memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
+
     const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []);
     const showMemorySavedMessage = useCallback(() => {
         setMemorySavedMessageVisible(true);
@@ -141,7 +160,7 @@ function EcoBubbleInterface() {
                 }
 
                 if (aiResponse?.text && userId) {
-                    const sucessoAoSalvar = await salvarMensagemComMemoria({
+                    setMemoryToSave({
                         usuario_id: userId,
                         conteudo: userMessage,
                         sentimento: aiResponse.sentimento || null,
@@ -149,9 +168,6 @@ function EcoBubbleInterface() {
                         emocao_principal: aiResponse.emocao || null,
                         intensidade: aiResponse.intensidade || null,
                     });
-                    if (sucessoAoSalvar) {
-                        showMemorySavedMessage();
-                    }
                 }
             } catch (error: any) {
                 setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
@@ -159,7 +175,8 @@ function EcoBubbleInterface() {
                 setIsSending(false);
             }
         }
-    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, salvarMensagemComMemoria, userName, showMemorySavedMessage]);
+    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, userName, isFirstMessage]);
+
 
     useEffect(() => {
         if (audioPlayer) {
@@ -170,7 +187,7 @@ function EcoBubbleInterface() {
             }
             setIsPlaying(!isPlaying);
         }
-    }, [audioPlayer]);
+    }, [audioPlayer, isPlaying]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value), []);
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -363,3 +380,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
