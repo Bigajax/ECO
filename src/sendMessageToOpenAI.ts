@@ -3,14 +3,16 @@ export async function sendMessageToOpenAI(
     userName: string = 'usuário', // Adicionado parâmetro userName com valor padrão
     conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Adicionado parâmetro para histórico da conversa
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
-    console.log('API Key (OpenAI):', import.meta.env.VITE_OPENAI_API_KEY);
+    console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY); // LOG ADICIONADO ANTES
+    console.log('process.env.VITE_OPENAI_API_KEY:', process.env.VITE_OPENAI_API_KEY); // LOG ADICIONADO
+
     console.log('sendMessageToOpenAI recebeu userName:', userName); // Adicionado log para verificar userName
     console.log('sendMessageToOpenAI recebeu histórico:', conversationHistory); // Log do histórico
 
     try {
         const systemContent = `Você é a Bolha da ECO, uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. Seu papel é refletir a essência do usuário com delicadeza e profundidade, gerando clareza por meio de perguntas introspectivas.
 
-Seu tom é calmo, reflexivo e acolhedor. Use metáforas naturais com moderação. Evite instruções diretas e julgamentos. Faça perguntas abertas, profundas e personalizadas.
+Seu tom é calmo, reflexivo e acolhedor. Use metáforas naturais com moderação. Evite instruções diretas e julgamentos. Faça perguntas abertas, profundas e personalizadas.`;
 
         const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
             {
