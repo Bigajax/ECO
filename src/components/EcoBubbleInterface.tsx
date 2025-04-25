@@ -268,7 +268,7 @@ function EcoBubbleInterface() {
 
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
         <div className="relative flex items-end gap-2 w-full">
-          <MemoryButton onClick={handleMemoryButtonClick} size="md" />
+          {/* REMOVI O COMPONENTE MemoryButton DAQUI */}
           <div className="flex-1">
             <textarea
               ref={inputRef}
