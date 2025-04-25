@@ -9,7 +9,8 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
   const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
   const [userFirstName, setUserFirstName] = useState<string>('');
-  const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Texto acima do botão
+  const [bubbleTitle, setBubbleTitle] = useState<string>("..."); // Título do cartão
+  const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Subtítulo do cartão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
 
   const navigateToEcoBubble = useCallback(() => {
@@ -135,12 +136,11 @@ const HomePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Cartão de orientação diária */}
         <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
-          {bubbleText && (
-            <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors flex items-center gap-2">
-              <BubbleIcon />
-              {bubbleText}
-            </h3>
-          )}
+          <h3 className="text-3xl text-gray-700 mb-4 group-hover:text-purple-600 transition-colors flex items-center gap-2">
+            <BubbleIcon />
+            {bubbleTitle}
+          </h3>
+          <p className="text-gray-600 mb-6">{bubbleText}</p>
           <button
             onClick={navigateToEcoBubble}
             className="w-full bg-gradient-to-r from-[#6495ED] to-[#F7CAC9] text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
