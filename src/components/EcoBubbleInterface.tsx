@@ -328,7 +328,7 @@ function EcoBubbleInterface() {
                     </button>
                     <button
                         className={`send-button p-2 rounded-full transition-all duration-300 ${
-331|                              message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        message.trim() ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         onClick={handleSendMessage}
                         disabled={!message.trim() || isSending || !userId}
                         aria-label="Enviar mensagem"
