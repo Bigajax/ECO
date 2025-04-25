@@ -302,7 +302,7 @@ function EcoBubbleInterface() {
                 )}
             </div>
 
-            <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-4 max-h-[400px] overflow-y-auto" ref={conversationContainerRef}>
+            <div className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 max-h-[600px] overflow-y-auto" ref={conversationContainerRef}>
                 {conversation.map((msg, index) => (
                     <div
                         key={index}
