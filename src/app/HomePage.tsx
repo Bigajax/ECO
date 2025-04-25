@@ -125,9 +125,6 @@ const HomePage: React.FC = () => {
             <BubbleIcon />
             Olá, {userName}.
           </h3>
-          <p className="text-gray-600 text-lg mb-6">
-            Sua companhia para todos os momentos. Estou aqui se precisar de uma conversa para começar seu dia.
-          </p>
           <button
             onClick={navigateToEcoBubble}
             className="w-full bg-gradient-to-r from-[#6495ED] to-[#F7CAC9] text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
@@ -163,4 +160,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
