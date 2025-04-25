@@ -12,7 +12,16 @@ const HomePage: React.FC = () => {
   const [bubbleTitle, setBubbleTitle] = useState<string>("Olá!"); // Título do cartão
   const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Subtítulo do cartão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
-  const [logo, setLogo] = useState<string>(''); // Estado para armazenar a URL da logo
+  const [logo, setLogo] = useState<React.ReactNode>(null); // Estado para armazenar a Logo. Alterado para React.ReactNode
+
+    // Componente da Logo ECO
+    const ECOLogo = () => (
+        <span
+        className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
+        >
+        ECO
+        </span>
+    );
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -90,7 +99,7 @@ const HomePage: React.FC = () => {
     };
 
     verifySession();
-
+        setLogo(<ECOLogo />); // Define o componente ECOLogo no estado
   }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
@@ -102,7 +111,7 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6">
       {/* Logo do app */}
       <div className="flex justify-center mb-12 pt-8">
-        {/* Removendo a logo */}
+        {logo}
       </div>
 
       {/* Saudação personalizada */}
