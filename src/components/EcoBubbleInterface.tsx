@@ -41,35 +41,55 @@ function EcoBubbleInterface() {
     } | null>(null);
 
 
-    const handleGoBack = useCallback(() => navigate('/home'), [navigate]);
-    const startVibration = useCallback(() => setIsEcoSpeaking(true), []);
-    const stopVibration = useCallback(() => setIsEcoSpeaking(false), []);
+    const handleGoBack = useCallback(() => {
+        console.log("handleGoBack chamado");
+        navigate('/home');
+    }, [navigate]);
+
+    const startVibration = useCallback(() => {
+        console.log("startVibration chamado");
+        setIsEcoSpeaking(true)
+    }, []);
+    const stopVibration = useCallback(() => {
+        console.log("stopVibration chamado");
+        setIsEcoSpeaking(false);
+    }, []);
+
     const handleMemoryButtonClick = useCallback(async () => {
+        console.log("handleMemoryButtonClick chamado", { memoryToSave, userId });
         navigate('/memories');
         if (memoryToSave && userId) {
-            try{
+            try {
                 const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
+                console.log("salvarMensagemComMemoria resultado:", sucessoAoSalvar);
                 if (sucessoAoSalvar) {
                     showMemorySavedMessage();
                     setMemoryToSave(null); // Limpa a memória a ser salva.
                 }
-            } catch(error){
+            } catch (error) {
                 console.error("Erro ao salvar memória", error);
             }
 
         }
     }, [navigate, memoryToSave, salvarMensagemComMemoria, showMemorySavedMessage, userId]);
 
-    const toggleMemoryButtonVisibility = useCallback(() => setIsMemoryButtonVisible(prev => !prev), []);
+    const toggleMemoryButtonVisibility = useCallback(() => {
+        console.log("toggleMemoryButtonVisibility chamado");
+        setIsMemoryButtonVisible(prev => !prev)
+    }, []);
+
     const showMemorySavedMessage = useCallback(() => {
+        console.log("showMemorySavedMessage chamado");
         setMemorySavedMessageVisible(true);
         setTimeout(() => setMemorySavedMessageVisible(false), 3000);
     }, [setMemorySavedMessageVisible]);
 
     useEffect(() => {
         const getUserIdAndName = async () => {
-            try{
+            console.log("useEffect [getUserIdAndName] chamado");
+            try {
                 const { data: { user } } = await supabase.auth.getUser();
+                console.log("supabase.auth.getUser() resultado:", user);
                 if (user) {
                     setUserId(user.id);
                     const { data: profile, error: profileError } = await supabase
@@ -77,6 +97,7 @@ function EcoBubbleInterface() {
                         .select('full_name')
                         .eq('user_id', user.id)
                         .single();
+                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
 
                     if (profileError) {
                         console.error("Erro ao buscar perfil:", profileError);
@@ -92,7 +113,7 @@ function EcoBubbleInterface() {
                 } else {
                     navigate('/login');
                 }
-            } catch(error){
+            } catch (error) {
                 console.error("Erro ao obter usuário", error);
             }
 
@@ -101,11 +122,12 @@ function EcoBubbleInterface() {
         getUserIdAndName();
 
         return () => {
+            console.log("useEffect [getUserIdAndName] cleanup chamado");
             if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
             stopVibration();
             if (recognitionRef.current) recognitionRef.current.stop();
         };
-    }, [navigate]);
+    }, [navigate, stopVibration]);
 
     useEffect(() => {
         console.log("Current userName:", userName);
@@ -137,6 +159,7 @@ function EcoBubbleInterface() {
             if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
             console.log("Sending message with userName:", userName, "isFirstMessage:", isFirstMessage.current);
+            console.log("handleSendMessage chamado com mensagem:", message);
 
             let messageToSendToAI = userMessage;
             let conversationToSend = conversation.map(msg => ({
@@ -150,6 +173,7 @@ function EcoBubbleInterface() {
                     userName,
                     conversationToSend
                 );
+                console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
                 setConversation((prev) => {
@@ -180,6 +204,7 @@ function EcoBubbleInterface() {
                     });
                 }
             } catch (error: any) {
+                console.error("Erro ao obter resposta da IA:", error);
                 setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
             } finally {
                 setIsSending(false);
