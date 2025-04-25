@@ -1,8 +1,9 @@
+// Arquivo: src/components/MemoryButton/MemoryButton.tsx
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 
 interface MemoryButtonProps {
-    onClick?: () => void;
+    onMemoryButtonClick?: () => void; // Renomeamos a prop onClick para onMemoryButtonClick
     size?: 'sm' | 'md' | 'lg';
     className?: string;
 }
@@ -11,18 +12,20 @@ const seryldaBlue = '#6495ED';
 const white = '#FFFFFF';
 
 const MemoryButton: React.FC<MemoryButtonProps> = ({
-    onClick,
+    onMemoryButtonClick, // Usamos o novo nome da prop
     size = 'md',
     className = '',
 }) => {
     const [showMessage, setShowMessage] = useState(false);
 
     const handleClick = () => {
-        if (onClick) {
-            onClick();
-        }
         setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 3000); // A mensagem desaparece após 3 segundos
+        setTimeout(() => {
+            setShowMessage(false);
+            if (onMemoryButtonClick) {
+                onMemoryButtonClick(); // Chamamos a função de navegação do pai após exibir a mensagem
+            }
+        }, 3000);
     };
 
     const sizeClasses = {
