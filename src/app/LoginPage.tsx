@@ -11,14 +11,14 @@ const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-    // Componente da Logo ECO (mesmo componente usado na HomePage)
-    const ECOLogo = () => (
-        <span
-        className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
-        >
-        ECO
-        </span>
-    );
+  // Componente da Logo ECO (mesmo componente usado na HomePage)
+  const ECOLogo = () => (
+    <span
+      className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
+    >
+      ECO
+    </span>
+  );
 
   useEffect(() => {
     const verifySession = async () => {
@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     };
 
     verifySession();
-        setLogo(<ECOLogo />); // Define a logo no estado
+    setLogo(<ECOLogo />); // Define a logo no estado
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -53,11 +53,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-100 to-pink-100 px-4 py-12">
+      {/* Adiciona a logo aqui, fora do container de login */}
+      <div className="flex justify-center mb-8">
+        {logo}
+      </div>
       <div className="w-full max-w-md bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl">
-        {/* Adiciona a logo aqui */}
-        <div className="flex justify-center mb-8">
-            {logo}
-        </div>
         <h2 className="text-3xl font-semibold text-center text-indigo-700 mb-8">Login</h2>
         <form onSubmit={handleLogin} className="space-y-5">
           <input
