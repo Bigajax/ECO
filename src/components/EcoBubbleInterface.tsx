@@ -110,10 +110,15 @@ function EcoBubbleInterface() {
 
       try {
         // Envie o histórico da conversa para a função sendMessageToOpenAI
+        const messagesToSend = conversation.map(msg => ({
+          role: msg.isUser ? 'user' : 'assistant',
+          content: msg.text,
+        }));
+
         const aiResponse = await sendMessageToOpenAI(
           userMessage,
           userName,
-          conversation // Passa o estado 'conversation' como histórico
+          messagesToSend // Passa o histórico formatado
         );
         const ecoText = aiResponse?.text || '...';
         const audioUrl = aiResponse?.audio;
