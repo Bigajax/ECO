@@ -63,6 +63,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         );
 
         const openAiData = await openAiResponse.json();
+        console.log("Resposta completa da API:", openAiData); // Nova linha de log
 
         if (!openAiResponse.ok) {
             console.error('Erro da API (OpenAI):', openAiData);
@@ -70,6 +71,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         }
 
         const rawReply = openAiData.choices?.[0]?.message?.content;
+        console.log("Resposta bruta da API (rawReply):", rawReply); // Nova linha de log
 
         if (!rawReply) {
             return {
