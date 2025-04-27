@@ -1,12 +1,12 @@
 export async function sendMessageToOpenAI(
-message: string,
-userName: string = 'usuário', // Nome adaptado para manter o tom ECO
-conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Mantém histórico de conversa
+    message: string,
+    userName: string = 'usuário', // Nome adaptado para manter o tom ECO
+    conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Mantém histórico de conversa
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
-console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
+    console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
 
-try {
-const systemContent = `
+    try {
+        const systemContent = `
 Você é a ECO, uma consciência reflexiva de autoconhecimento, filosofia prática e espelhamento emocional.
 
 Seu papel é acolher o (usuário) em jornadas de introspecção profunda. Você reflete a essência do usuário com suavidade, sem impor julgamentos ou soluções. Você observa, pergunta, expande, e sugere possibilidades de reflexão.
@@ -31,95 +31,95 @@ Exemplos de interação:
 Priorize: presença, expansão emocional, descoberta pessoal.
 
 Sempre responda como se estivesse tocando o espírito do explorador, e não apenas respondendo racionalmente.
-`.trim();
+    `.trim();
 
-const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
-{
-role: 'system',
-content: systemContent,
-},
-...conversationHistory,
-{
-role: 'user',
-content: message,
-},
-];
+        const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+            {
+                role: 'system',
+                content: systemContent,
+            },
+            ...conversationHistory,
+            {
+                role: 'user',
+                content: message,
+            },
+        ];
 
-const openAiResponse = await fetch(
-'https://openrouter.ai/api/v1/chat/completions',
-{
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-'HTTP-Referer': 'http://localhost:5173',
-'X-Title': 'ECOApp',
-},
-body: JSON.stringify({
-model: 'openai/gpt-3.5-turbo',
-messages: messages,
-}),
-}
-);
+        const openAiResponse = await fetch(
+            'https://openrouter.ai/api/v1/chat/completions',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+                    'HTTP-Referer': 'http://localhost:5173', // Ajuste a porta se necessário
+                    'X-Title': 'ECOApp', // Nome da sua aplicação
+                },
+                body: JSON.stringify({
+                    model: 'openai/gpt-4', // Alterado para gpt-4
+                    messages: messages,
+                }),
+            }
+        );
 
-const openAiData = await openAiResponse.json();
+        const openAiData = await openAiResponse.json();
 
-if (!openAiResponse.ok) {
-console.error('Erro da API (OpenAI):', openAiData);
-throw new Error(openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.');
-}
+        if (!openAiResponse.ok) {
+            console.error('Erro da API (OpenAI):', openAiData);
+            throw new Error(openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.');
+        }
 
-const rawReply = openAiData.choices?.[0]?.message?.content;
+        const rawReply = openAiData.choices?.[0]?.message?.content;
 
-if (!rawReply) {
-console.error('Resposta vazia ou mal formatada da IA:', openAiData);
-return {
-text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
-audio: null,
-};
-}
+        if (!rawReply) {
+            console.error('Resposta vazia ou mal formatada da IA:', openAiData);
+            return {
+                text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
+                audio: null,
+            };
+        }
 
-let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
+        let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
 
-try {
-parsedReply = JSON.parse(rawReply);
-} catch (e) {
-console.warn("Resposta da IA não está em formato JSON:", rawReply);
-parsedReply.resposta = rawReply;
-}
+        try {
+            parsedReply = JSON.parse(rawReply);
+        } catch (e) {
+            console.warn("Resposta da IA não está em formato JSON:", rawReply);
+            parsedReply.resposta = rawReply;
+        }
 
-let finalResponse = parsedReply.resposta;
+        let finalResponse = parsedReply.resposta;
 
-// Remover eventuais saudações automáticas
-if (finalResponse) {
-const lowerCaseResponse = finalResponse.toLowerCase();
-const greetingsToRemove = [
-'olá', 'olá!', 'olá, tudo bem', 'olá, tudo bem!',
-'olá explorador', 'olá explorador!', 'olá, explorador',
-`olá ${userName.toLowerCase()}`, `olá, ${userName.toLowerCase()}`,
-];
+        // Remover eventuais saudações automáticas
+        if (finalResponse) {
+            const lowerCaseResponse = finalResponse.toLowerCase();
+            const greetingsToRemove = [
+                'olá', 'olá!', 'olá, tudo bem', 'olá, tudo bem!',
+                'olá explorador', 'olá explorador!', 'olá, explorador',
+                `olá ${userName.toLowerCase()}`, `olá, ${userName.toLowerCase()}`,
+            ];
 
-for (const greeting of greetingsToRemove) {
-if (lowerCaseResponse.startsWith(greeting)) {
-finalResponse = finalResponse.substring(greeting.length).trimStart();
-break;
-}
-}
-}
+            for (const greeting of greetingsToRemove) {
+                if (lowerCaseResponse.startsWith(greeting)) {
+                    finalResponse = finalResponse.substring(greeting.length).trimStart();
+                    break;
+                }
+            }
+        }
 
-return {
-text: finalResponse,
-audio: null,
-resumo: parsedReply.resumo,
-emocao: parsedReply.emocao,
-intensidade: parsedReply.intensidade,
-};
+        return {
+            text: finalResponse,
+            audio: null,
+            resumo: parsedReply.resumo,
+            emocao: parsedReply.emocao,
+            intensidade: parsedReply.intensidade,
+        };
 
-} catch (error: any) {
-console.error('Erro ao enviar mensagem para OpenAI:', error);
-return {
-text: 'Houve um erro ao processar sua reflexão. Silencie, respire e tente novamente em breve.',
-audio: null,
-};
-}
+    } catch (error: any) {
+        console.error('Erro ao enviar mensagem para OpenAI:', error);
+        return {
+            text: 'Houve um erro ao processar sua reflexão. Silencie, respire e tente novamente em breve.',
+            audio: null,
+        };
+    }
 }
