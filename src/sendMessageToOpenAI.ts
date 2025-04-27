@@ -54,7 +54,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
                 'X-Title': 'ECOApp',
             },
             body: {
-                model: 'anthropic/claude-3-opus', // Alterado para claude-3-opus
+                model: 'openai/gpt-4', // Alterado para gpt-4
                 messages: messages,
             },
         });
@@ -70,7 +70,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
                     'X-Title': 'ECOApp',
                 },
                 body: JSON.stringify({
-                    model: 'anthropic/claude-3-opus', // Alterado para claude-3-opus
+                    model: 'openai/gpt-4', // Alterado para gpt-4
                     messages: messages,
                 }),
             }
