@@ -72,8 +72,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         const rawReply = openAiData.choices?.[0]?.message?.content;
 
         if (!rawReply) {
-            console.error('Resposta vazia ou mal formatada da IA:', openAiData);
-            return {
+             return {
                 text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
                 audio: null,
             };
@@ -82,32 +81,14 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
 
         try {
-            // Tenta analisar a resposta como JSON
             parsedReply = JSON.parse(rawReply);
         } catch (e) {
             console.warn("Resposta da IA não está em formato JSON:", rawReply);
-            // Se falhar, assume que a resposta é um texto simples
-            parsedReply = { resposta: rawReply };
+            parsedReply.resposta = rawReply;
         }
 
         let finalResponse = parsedReply.resposta;
 
-        // Remover eventuais saudações automáticas
-        if (finalResponse) {
-            const lowerCaseResponse = finalResponse.toLowerCase();
-            const greetingsToRemove = [
-                'olá', 'olá!', 'olá, tudo bem', 'olá, tudo bem!',
-                'olá explorador', 'olá explorador!', 'olá, explorador',
-                `olá ${userName.toLowerCase()}`, `olá, ${userName.toLowerCase()}`,
-            ];
-
-            for (const greeting of greetingsToRemove) {
-                if (lowerCaseResponse.startsWith(greeting)) {
-                    finalResponse = finalResponse.substring(greeting.length).trimStart();
-                    break;
-                }
-            }
-        }
 
         return {
             text: finalResponse,
