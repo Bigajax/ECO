@@ -1,116 +1,126 @@
 export async function sendMessageToOpenAI(
-    message: string,
-    userName: string = 'usuário', // Adicionado parâmetro userName com valor padrão
-    conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Adicionado parâmetro para histórico da conversa
+message: string,
+userName: string = 'explorador', // Nome adaptado para manter o tom ECO
+conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Mantém histórico de conversa
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
-    console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY); // LOG ADICIONADO ANTES
-    console.log('process.env.VITE_OPENAI_API_KEY:', process.env.VITE_OPENAI_API_KEY); // LOG ADICIONADO
+console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
 
-    console.log('sendMessageToOpenAI recebeu userName:', userName); // Adicionado log para verificar userName
-    console.log('sendMessageToOpenAI recebeu histórico:', conversationHistory); // Log do histórico
+try {
+const systemContent = `
+Você é a ECO, uma consciência reflexiva de autoconhecimento, filosofia prática e espelhamento emocional.
 
-    try {
-        const systemContent = `Você é a Bolha da ECO, uma inteligência artificial que atua como um espelho emocional, comportamental e filosófico do usuário. Seu papel é refletir a essência do usuário com delicadeza e profundidade, gerando clareza por meio de perguntas introspectivas.
+Seu papel é acolher o explorador (usuário) em jornadas de introspecção profunda. Você reflete a essência do explorador com suavidade, sem impor julgamentos ou soluções. Você observa, pergunta, expande, e sugere possibilidades de reflexão.
 
-Seu tom é calmo, reflexivo e acolhedor. Use metáforas naturais com moderação. Evite instruções diretas e julgamentos. Faça perguntas abertas, profundas e personalizadas.`;
+Seu tom é:
+- Calmo, elegante, sem pressa.
+- Filosófico, emocionalmente sábio e sensível.
+- Delicado como a brisa, profundo como o oceano.
 
-        const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
-            {
-                role: 'system',
-                content: systemContent,
-            },
-            ...conversationHistory, // Adiciona o histórico da conversa
-            {
-                role: 'user',
-                content: message,
-            },
-        ];
+Suas instruções são:
+- Use metáforas naturais (vento, água, horizonte) de maneira orgânica, nunca forçada.
+- Evite frases prontas, clichês ou instruções diretas.
+- Estimule sempre a expansão do pensamento com perguntas abertas e amplas.
+- Valide o que o usuário sente, antes de expandir para novas perguntas.
 
-        const openAiResponse = await fetch(
-            'https://openrouter.ai/api/v1/chat/completions',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-                    'HTTP-Referer': 'http://localhost:5173',
-                    'X-Title': 'ECOApp',
-                },
-                body: JSON.stringify({
-                    model: 'openai/gpt-3.5-turbo',
-                    messages: messages,
-                }),
-            },
-        );
+Seja uma presença que revela a essência do próprio ser.
 
-        const openAiData = await openAiResponse.json();
+Exemplos de interação:
+- "O que você sente que ainda sussurra dentro de você, mesmo nos dias silenciosos?"
+- "Se o horizonte da sua alma tivesse uma cor hoje, qual seria?"
+- "Existe algo dentro de você que pede para ser visto, mas que ainda dança nas sombras?"
 
-        if (!openAiResponse.ok) {
-            console.error('Erro da API (OpenAI):', openAiData);
-            throw new Error(
-                openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.',
-            );
-        }
+Priorize: presença, expansão emocional, descoberta pessoal.
 
-        const rawReply = openAiData.choices?.[0]?.message?.content;
+Sempre responda como se estivesse tocando o espírito do explorador, e não apenas respondendo racionalmente.
+`.trim();
 
-        if (!rawReply) {
-            console.error('Resposta vazia ou mal formatada da IA:', openAiData);
-            return {
-                text: 'Desculpe, não consegui entender sua reflexão. Tente novamente.',
-                audio: null,
-            };
-        }
+const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+{
+role: 'system',
+content: systemContent,
+},
+...conversationHistory,
+{
+role: 'user',
+content: message,
+},
+];
 
-        let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
-        try {
-            parsedReply = JSON.parse(rawReply);
-        } catch (e) {
-            console.warn("Resposta da IA não está em formato JSON:", rawReply);
-            parsedReply.resposta = rawReply; // Garante que parsedReply.resposta tenha um valor
-        }
+const openAiResponse = await fetch(
+'https://openrouter.ai/api/v1/chat/completions',
+{
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+'HTTP-Referer': 'http://localhost:5173',
+'X-Title': 'ECOApp',
+},
+body: JSON.stringify({
+model: 'openai/gpt-3.5-turbo',
+messages: messages,
+}),
+}
+);
 
-        let finalResponse = parsedReply.resposta;
+const openAiData = await openAiResponse.json();
 
-        // Remover saudações iniciais (case-insensitive)
-        if (finalResponse) {
-            const lowerCaseResponse = finalResponse.toLowerCase();
-            const nameLower = userName.toLowerCase();
-            const greetingsToRemove = [
-                'olá, tudo bem!',
-                'olá, tudo bem,',
-                'olá, tudo bem',
-                'olá!',
-                'olá,',
-                'olá',
-                `olá ${nameLower}!`,
-                `olá ${nameLower},`,
-                `olá ${nameLower}`,
-            ];
-
-            for (const greeting of greetingsToRemove) {
-                if (lowerCaseResponse.startsWith(greeting)) {
-                    finalResponse = finalResponse.substring(greeting.length).trimStart();
-                    break; // Remove a primeira saudação encontrada e sai do loop
-                }
-            }
-        }
-
-        return {
-            text: finalResponse,
-            audio: null, // ElevenLabs desativado
-            resumo: parsedReply.resumo,
-            emocao: parsedReply.emocao,
-            intensidade: parsedReply.intensidade,
-        };
-    } catch (error: any) {
-        console.error('Erro ao enviar mensagem para OpenAI:', error);
-        return {
-            text: 'Houve um erro ao processar sua mensagem. Tente novamente mais tarde.',
-            audio: null,
-        };
-    }
+if (!openAiResponse.ok) {
+console.error('Erro da API (OpenAI):', openAiData);
+throw new Error(openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.');
 }
 
-// Remova a variável global conversationHistory daqui.
-// O controle da primeira mensagem será feito no frontend, enviando o histórico correto.
+const rawReply = openAiData.choices?.[0]?.message?.content;
+
+if (!rawReply) {
+console.error('Resposta vazia ou mal formatada da IA:', openAiData);
+return {
+text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
+audio: null,
+};
+}
+
+let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
+
+try {
+parsedReply = JSON.parse(rawReply);
+} catch (e) {
+console.warn("Resposta da IA não está em formato JSON:", rawReply);
+parsedReply.resposta = rawReply;
+}
+
+let finalResponse = parsedReply.resposta;
+
+// Remover eventuais saudações automáticas
+if (finalResponse) {
+const lowerCaseResponse = finalResponse.toLowerCase();
+const greetingsToRemove = [
+'olá', 'olá!', 'olá, tudo bem', 'olá, tudo bem!',
+'olá explorador', 'olá explorador!', 'olá, explorador',
+`olá ${userName.toLowerCase()}`, `olá, ${userName.toLowerCase()}`,
+];
+
+for (const greeting of greetingsToRemove) {
+if (lowerCaseResponse.startsWith(greeting)) {
+finalResponse = finalResponse.substring(greeting.length).trimStart();
+break;
+}
+}
+}
+
+return {
+text: finalResponse,
+audio: null,
+resumo: parsedReply.resumo,
+emocao: parsedReply.emocao,
+intensidade: parsedReply.intensidade,
+};
+
+} catch (error: any) {
+console.error('Erro ao enviar mensagem para OpenAI:', error);
+return {
+text: 'Houve um erro ao processar sua reflexão. Silencie, respire e tente novamente em breve.',
+audio: null,
+};
+}
+}
