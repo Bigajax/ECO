@@ -69,15 +69,6 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             throw new Error(openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.');
         }
 
-        const rawReply = openAiData.choices?.[0]?.message?.content;
-
-        if (!rawReply) {
-             return {
-                text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
-                audio: null,
-            };
-        }
-
         let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
 
         try {
