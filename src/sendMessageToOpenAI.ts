@@ -31,7 +31,7 @@ Exemplos de interação:
 Priorize: presença, expansão emocional, descoberta pessoal.
 
 Sempre responda como se estivesse tocando o espírito do explorador, e não apenas respondendo racionalmente.
-    `.trim();
+        `.trim();
 
         const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
             {
@@ -45,34 +45,31 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             },
         ];
 
+        const requestBody = {
+            model: 'openai/gpt-4', // Alterado para gpt-4
+            messages: messages,
+        };
+
+        const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Verifique esta linha
+            // Removendo os headers para teste.  Adicione de volta se necessário.
+            // 'HTTP-Referer': 'http://localhost:5173',
+            // 'X-Title': 'ECOApp',
+        };
+
         console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
             url: 'https://openrouter.ai/api/v1/chat/completions',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,  // Verifique esta linha
-                'HTTP-Referer': 'http://localhost:5173',
-                'X-Title': 'ECOApp',
-            },
-            body: {
-                model: 'openai/gpt-4', // Alterado para gpt-4
-                messages: messages,
-            },
+            headers: headers,
+            body: requestBody,
         });
 
         const openAiResponse = await fetch(
             'https://openrouter.ai/api/v1/chat/completions',
             {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Verifique esta linha
-                    'HTTP-Referer': 'http://localhost:5173',
-                    'X-Title': 'ECOApp',
-                },
-                body: JSON.stringify({
-                    model: 'openai/gpt-4', // Alterado para gpt-4
-                    messages: messages,
-                }),
+                headers: headers,
+                body: JSON.stringify(requestBody),
             }
         );
 
@@ -83,6 +80,10 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
 
         if (!openAiResponse.ok) {
             console.error('Erro da API (OpenAI):', openAiData);
+             // Tenta fornecer detalhes de erro mais específicos, se disponíveis.
+            if (openAiData && openAiData.error) {
+                console.error("Detalhes do Erro:", openAiData.error);
+            }
             throw new Error(`Erro da API do OpenAI: ${openAiResponse.status} - ${JSON.stringify(openAiData)}`);
         }
 
@@ -101,7 +102,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         try {
             parsedReply = JSON.parse(rawReply);
         } catch (e) {
-            console.warn("Resposta da IA não está em formato JSON:", rawReply);
+            console.warn("Resposta da IA não está em formato JSON:", rawReply, e); // Inclui o erro `e` no log
             parsedReply.resposta = rawReply;
         }
 
