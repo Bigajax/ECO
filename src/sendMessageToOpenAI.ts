@@ -124,4 +124,3 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         };
     }
 }
-
