@@ -54,7 +54,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
                 'X-Title': 'ECOApp',
             },
             body: {
-                model: 'openai/gpt-4', // Alterado para gpt-4
+                model: 'anthropic/claude-3-opus', // Alterado para claude-3-opus
                 messages: messages,
             },
         });
@@ -70,14 +70,14 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
                     'X-Title': 'ECOApp',
                 },
                 body: JSON.stringify({
-                    model: 'openai/gpt-4', // Alterado para gpt-4
+                    model: 'anthropic/claude-3-opus', // Alterado para claude-3-opus
                     messages: messages,
                 }),
             }
         );
 
         const openAiData = await openAiResponse.json();
-        console.log("Resposta completa da API:", openAiData);
+        console.log("Resposta completa da API:", openAiData); // Adicionado para logar a resposta completa
         console.log("Status da resposta da API:", openAiResponse.status);
 
 
