@@ -1,6 +1,6 @@
 export async function sendMessageToOpenAI(
 message: string,
-userName: string = 'explorador', // Nome adaptado para manter o tom ECO
+userName: string = 'usuário', // Nome adaptado para manter o tom ECO
 conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Mantém histórico de conversa
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
 console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
