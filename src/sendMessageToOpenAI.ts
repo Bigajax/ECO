@@ -1,7 +1,7 @@
 export async function sendMessageToOpenAI(
     message: string,
-    userName: string = 'usuário', // Nome adaptado para manter o tom ECO
-    conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [] // Mantém histórico de conversa
+    userName: string = 'usuário',
+    conversationHistory: { role: 'user' | 'assistant'; content: string }[] = []
 ): Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }> {
     console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
 
@@ -52,11 +52,11 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-                    'HTTP-Referer': 'http://localhost:5173', // Ajuste a porta se necessário
-                    'X-Title': 'ECOApp', // Nome da sua aplicação
+                    'HTTP-Referer': 'http://localhost:5173',
+                    'X-Title': 'ECOApp',
                 },
                 body: JSON.stringify({
-                    model: 'openai/gpt-4', // Alterado para gpt-4
+                    model: 'openai/gpt-4',
                     messages: messages,
                 }),
             }
@@ -82,10 +82,12 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         let parsedReply: { resposta: string; sentimento?: string; emocao?: string; intensidade?: number; resumo?: string } = { resposta: rawReply };
 
         try {
+            // Tenta analisar a resposta como JSON
             parsedReply = JSON.parse(rawReply);
         } catch (e) {
             console.warn("Resposta da IA não está em formato JSON:", rawReply);
-            parsedReply.resposta = rawReply;
+            // Se falhar, assume que a resposta é um texto simples
+            parsedReply = { resposta: rawReply };
         }
 
         let finalResponse = parsedReply.resposta;
