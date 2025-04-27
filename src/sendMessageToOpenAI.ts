@@ -45,6 +45,20 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             },
         ];
 
+        console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
+            url: 'https://openrouter.ai/api/v1/chat/completions',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+                'HTTP-Referer': 'http://localhost:5173',
+                'X-Title': 'ECOApp',
+            },
+            body: {
+                model: 'openai/gpt-4',
+                messages: messages,
+            },
+        });
+
         const openAiResponse = await fetch(
             'https://openrouter.ai/api/v1/chat/completions',
             {
@@ -63,15 +77,17 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         );
 
         const openAiData = await openAiResponse.json();
-        console.log("Resposta completa da API:", openAiData); // Nova linha de log
+        console.log("Resposta completa da API:", openAiData);
+        console.log("Status da resposta da API:", openAiResponse.status);
+
 
         if (!openAiResponse.ok) {
             console.error('Erro da API (OpenAI):', openAiData);
-            throw new Error(openAiData.error?.message || 'Erro desconhecido ao obter resposta da IA.');
+            throw new Error(`Erro da API do OpenAI: ${openAiResponse.status} - ${JSON.stringify(openAiData)}`);
         }
 
         const rawReply = openAiData.choices?.[0]?.message?.content;
-        console.log("Resposta bruta da API (rawReply):", rawReply); // Nova linha de log
+        console.log("Resposta bruta da API (rawReply):", rawReply);
 
         if (!rawReply) {
             return {
