@@ -1,3 +1,9 @@
+/**
+ * vercel.json
+ *
+ * Este ficheiro é usado para configurar o Vercel, a plataforma onde você está hospedando o seu site.
+ * Ele diz ao Vercel como lidar com as solicitações e onde encontrar os ficheiros do seu site.
+ */
 {
     "build": {
         "outputDir": "dist"
