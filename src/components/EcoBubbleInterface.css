@@ -1,5 +1,4 @@
-/* EcoBubbleInterface.css */
-
+/* src/components/EcoBubbleInterface.css */
 .eco-bubble-vibrate {
     animation: vibrate 0.3s infinite linear alternate;
 }
@@ -14,11 +13,10 @@
 }
 
 .conversation-container {
-    display: flex; /* Adiciona um display flex para controlar o layout dos itens */
-    flex-direction: column; /* Garante que as mensagens fiquem em coluna */
-    overflow-y: auto; /* Mantém a rolagem vertical */
-    padding: 0.5rem; /* Reduzindo um pouco o padding do container */
-    /* Mantenha outras propriedades que você já tinha */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 0.5rem;
 }
 
 .conversation-container::-webkit-scrollbar {
@@ -35,58 +33,56 @@
     border-radius: 4px;
 }
 
-.conversation-container > div { /* Aplica estilos diretamente aos divs de mensagem */
-    width: fit-content; /* Faz a largura se ajustar ao conteúdo */
-    max-width: 90%; /* Impede que as mensagens fiquem muito largas */
-    border-radius: 0.75rem; /* Equivalente a rounded-lg */
-    padding: 0.75rem; /* Equivalente a p-4 */
-    margin-bottom: 0.5rem; /* Reduzindo um pouco a margem inferior */
-    color: black; /* Equivalente a text-black */
-    word-break: break-word; /* Permite que palavras longas quebrem para evitar overflow horizontal */
+.conversation-container > div {
+    width: fit-content;
+    max-width: 90%;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    color: black;
+    word-break: break-word;
 }
 
-.conversation-container > div.ml-auto { /* Estilos para mensagens do usuário */
-    margin-left: auto; /* Equivalente a ml-auto */
-    background-color: #6495ED; /* Cor azul para o usuário (seryldaBlue) */
+.conversation-container > div.ml-auto {
+    margin-left: auto;
+    background-color: #6495ED;
     color: white;
 }
 
-.conversation-container > div.mr-auto { /* Estilos para mensagens da ECO */
-    margin-right: auto; /* Equivalente a mr-auto */
-    background-color: #F7CAC9; /* Cor rosa para a ECO (quartzPink) */
-    min-width: 50%; /* Adiciona uma largura mínima para as mensagens da ECO */
-    /* Você pode ajustar esse valor percentual conforme preferir */
+.conversation-container > div.mr-auto {
+    margin-right: auto;
+    background-color: #F7CAC9;
+    min-width: 50%;
 }
 
-.conversation-container > div.mr-auto .flex { /* Aplica ao flex container da mensagem da ECO */
-    display: flex;
-    align-items: flex-start; /* Alinha o ícone e o texto no topo */
-}
-
-.conversation-container > div.ml-auto .flex { /* Aplica ao flex container da mensagem do usuário (se houver ícone futuro) */
+.conversation-container > div.mr-auto .flex {
     display: flex;
     align-items: flex-start;
-    flex-direction: row-reverse; /* Se adicionar um ícone do usuário, ele ficará à direita */
+}
+
+.conversation-container > div.ml-auto .flex {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row-reverse;
 }
 
 .conversation-container p {
-    font-size: 1rem; /* Reduzindo o tamanho da fonte para um valor mais confortável */
-    line-height: 1.4; /* Melhora a legibilidade do texto */
-    margin: 0; /* Remove margens desnecessárias do parágrafo */
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
 }
 
 .conversation-container .font-semibold {
-    font-weight: 600; /* Mantém o estilo de negrito para o "ECO:" */
+    font-weight: 600;
 }
 
 .conversation-container .flex {
-    align-items: flex-start; /* Alinha os itens verticalmente no início */
-    gap: 0.5rem; /* Reduzindo o espaçamento entre o ícone e o texto */
+    align-items: flex-start;
+    gap: 0.5rem;
 }
 
-/* Ajuste para o ícone da ECO */
 .conversation-container .flex .relative {
-    width: 1.5rem; /* Reduzindo o tamanho do ícone */
+    width: 1.5rem;
     height: 1.5rem;
 }
 
@@ -96,23 +92,22 @@
 }
 
 .expanded-input {
-    /* Mantenha outros estilos que você possa ter */
 }
 
 .audio-visualizer {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60%; /* Diminuindo a largura do visualizador */
-    height: 30px; /* Diminuindo a altura do visualizador */
+    width: 60%;
+    height: 30px;
     overflow: hidden;
 }
 
 .audio-visualizer span {
-    width: 3px; /* Ajustando a largura das barras */
-    margin: 0 1.5px; /* Ajustando o espaçamento entre as barras */
-    height: 5px; /* Altura base das barras */
-    background-color: #ccc; /* Default color */
+    width: 3px;
+    margin: 0 1.5px;
+    height: 5px;
+    background-color: #ccc;
     animation: visualizer 0.3s infinite alternate;
 }
 
@@ -158,58 +153,53 @@
 
 @keyframes visualizer {
     0% {
-        transform: scaleY(0.7); /* Ajustando a escala inicial */
+        transform: scaleY(0.7);
         background-color: var(--color);
     }
 
     100% {
-        transform: scaleY(1.4); /* Ajustando a escala final */
+        transform: scaleY(1.4);
         background-color: var(--color);
     }
 }
 
-/* Estilos para o container do botão "+" e da área de texto */
 .input-controls-container {
-    position: relative; /* Para posicionar o "+" absolutamente dentro */
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* Espaçamento entre os elementos internos */
-    width: 100%; /* Ocupa toda a largura disponível */
+    gap: 0.5rem;
+    width: 100%;
 }
 
-/* Estilo para o botão "+" */
 .plus-button {
     position: absolute;
-    left: 0.5rem; /* Ajuste a distância da borda esquerda */
+    left: 0.5rem;
     top: 50%;
-    transform: translateY(-50%); /* Centraliza verticalmente */
+    transform: translateY(-50%);
     background: none;
     border: none;
-    color: #a248f5; /* Cor roxa */
+    color: #a248f5;
     padding: 0.5rem;
     border-radius: 50%;
     cursor: pointer;
     outline: none;
-    z-index: 10; /* Garante que fique acima da área de texto */
+    z-index: 10;
 }
 
 .plus-button:hover {
-    background-color: rgba(162, 72, 245, 0.1); /* Feedback ao passar o mouse */
+    background-color: rgba(162, 72, 245, 0.1);
 }
 
-/* Estilo para a área de texto */
 .input-controls-container textarea {
-    padding-left: 3rem; /* Crie espaço para o botão "+" (ajuste conforme o tamanho do botão) */
-    flex-grow: 1; /* Permite que a área de texto ocupe o espaço restante */
-    /* Mantenha outros estilos da sua textarea */
+    padding-left: 3rem;
+    flex-grow: 1;
 }
 
-/* Estilo para o botão de memória quando visível */
 .memory-button-wrapper {
     position: absolute;
-    bottom: calc(100% + 0.5rem); /* Aparece acima da área de entrada */
-    left: 0.5rem; /* Alinhado com o botão "+" */
-    z-index: 15; /* Acima do botão "+" */
+    bottom: calc(100% + 0.5rem);
+    left: 0.5rem;
+    z-index: 15;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s;
@@ -221,13 +211,10 @@
     transition-delay: 0s;
 }
 
-/* Ajustes para os outros botões (microfone, enviar) */
 .mic-button,
 .send-button {
-    /* Se precisar ajustar a posição deles para não conflitar com o botão de memória */
 }
 
-/* Estilo para a mensagem de memória salva */
 .memory-saved-message {
     background: linear-gradient(to right, #f5f5f5, #e9e9e9, #f2f2f2, #e6e6e6, #f5f5f5);
     color: #010101;
@@ -235,6 +222,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    background-color: rgba(245, 245, 245, 0.8); /* Fallback para navegadores sem backdrop-filter */
-    z-index: 50; /* Garante que a mensagem fique acima de outros elementos */
+    background-color: rgba(245, 245, 245, 0.8);
+    z-index: 50;
 }
+```typescript
