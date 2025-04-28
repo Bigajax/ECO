@@ -3,21 +3,20 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()], // Usa o plugin do React para suporte a JSX
-    base: '/', // Defina isso para '/' se o seu site estiver na raiz do domínio
-    // ou para '/<subdiretorio>/' se estiver em um subdiretório.
+    plugins: [react()],
+    base: '/',
     build: {
-        outDir: 'dist', 
+        outDir: 'dist',
     },
     optimizeDeps: {
         exclude: ['lucide-react'],
     },
     resolve: {
         alias: {
-        '../../sendMessageToOpenAI': '/src/sendMessageToOpenAI.ts',
-        '../../salvarMensagemComMemoria': '/src/salvarMensagemComMemoria.js',
-        '../../supabaseClient': '/src/supabaseClient.ts',
-        'supabaseClient': '/src/supabaseClient.ts',
+            '../../sendMessageToOpenAI': '/src/sendMessageToOpenAI.ts',
+            '../../salvarMensagemComMemoria': '/src/salvarMensagemComMemoria.js',
+            '../../supabaseClient': '/src/supabaseClient.ts',
+            'supabaseClient': '/src/supabaseClient.ts',
         },
     },
     define: {
