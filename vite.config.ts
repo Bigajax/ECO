@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
-    base: '/',
+    plugins: [react()], // Usa o plugin do React para suporte a JSX
+    base: '/', // Defina isso para '/' se o seu site estiver na raiz do domínio
+    // ou para '/<subdiretorio>/' se estiver em um subdiretório.
     build: {
-        outDir: 'dist',
+        outDir: 'dist', // O diretório onde os ficheiros de produção serão gerados
     },
     optimizeDeps: {
-     exclude: ['lucide-react'],
+        exclude: ['lucide-react'],
     },
     resolve: {
         alias: {
