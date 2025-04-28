@@ -1,7 +1,7 @@
-import './IntroductionPage.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import './IntroductionPage.css';
 
 interface GlassBubbleProps {
   color: string;
@@ -218,35 +218,46 @@ const IntroductionPage: React.FC = () => {
   const [autoPlay, setAutoPlay] = useState(true);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    console.log('useEffect IntroductionPage iniciado');
+    let timer: NodeJS.Timeout | null = null; // Inicializa como null para melhor controle
 
     if (autoPlay) {
       timer = setTimeout(() => {
+        console.log('setTimeout executado. Slide atual:', currentSlideIndex);
         if (currentSlideIndex < slides.length - 1) {
           setCurrentSlideIndex((prevIndex) => prevIndex + 1);
+          console.log('Próximo slide:', currentSlideIndex + 1);
         } else {
           // Optional: loop back to the beginning
           // setCurrentSlideIndex(0);
+          console.log('Fim dos slides.');
         }
       }, 6000); // Change slide every 6 seconds
     }
 
     return () => {
-      clearTimeout(timer);
+      console.log('useEffect IntroductionPage desmontado. Limpando timer:', timer);
+      if (timer) {
+        clearTimeout(timer);
+      }
     };
   }, [currentSlideIndex, autoPlay]);
 
   const goToNextSlide = () => {
+    console.log('goToNextSlide chamado. Slide atual:', currentSlideIndex);
     if (currentSlideIndex < slides.length - 1) {
       setCurrentSlideIndex((prevIndex) => prevIndex + 1);
       setAutoPlay(false); // Pause autoplay when manually navigating
+      console.log('Navegando para o próximo slide:', currentSlideIndex + 1);
     }
   };
 
   const goToPrevSlide = () => {
+    console.log('goToPrevSlide chamado. Slide atual:', currentSlideIndex);
     if (currentSlideIndex > 0) {
       setCurrentSlideIndex((prevIndex) => prevIndex - 1);
       setAutoPlay(false); // Pause autoplay when manually navigating
+      console.log('Navegando para o slide anterior:', currentSlideIndex - 1);
     }
   };
 
@@ -273,6 +284,7 @@ const IntroductionPage: React.FC = () => {
                 index === currentSlideIndex ? 'bg-gray-800 w-4' : 'bg-gray-400'
               }`}
               onClick={() => {
+                console.log('Botão de navegação clicado. Indíce:', index);
                 setCurrentSlideIndex(index);
                 setAutoPlay(false);
               }}
