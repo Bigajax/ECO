@@ -1,4 +1,3 @@
-// src/components/eco/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -134,7 +133,7 @@ function EcoBubbleInterface() {
                         .select('full_name')
                         .eq('user_id', user.id)
                         .single();
-                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
+                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
 
                     if (profileError) {
                         console.error("Erro ao buscar perfil:", profileError);
@@ -401,7 +400,8 @@ function EcoBubbleInterface() {
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
                             className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                             height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
+                            style={{
+                                height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
                                 width: 'calc(100% - 100px)',
                                 order: 2,
                             }}
@@ -475,4 +475,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
