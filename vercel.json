@@ -1,6 +1,5 @@
 {
     "build": {
-        "command": "npm run build",
         "outputDir": "dist"
     },
     "routes": [
@@ -10,4 +9,3 @@
         }
     ]
 }
-
