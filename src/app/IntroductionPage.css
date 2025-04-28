@@ -1,1 +1,22 @@
+/* Estilos para a transição dos slides */
+.slide-enter {
+  opacity: 0;
+  transform: translateX(100%); /* Começa fora da tela à direita */
+}
 
+.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0%); /* Termina na posição normal */
+  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.slide-exit {
+  opacity: 1;
+  transform: translateX(0%); /* Começa na posição normal */
+}
+
+.slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100%); /* Termina fora da tela à esquerda */
+  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
