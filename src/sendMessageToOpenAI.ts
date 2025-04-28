@@ -1,3 +1,10 @@
+/**
+ * src/sendMessageToOpenAI.ts
+ *
+ * Esta função envia uma mensagem para a API do OpenAI (OpenRouter neste caso)
+ * e retorna a resposta.
+ */
+
 export async function sendMessageToOpenAI(
     message: string,
     userName: string = 'usuário',
@@ -6,7 +13,7 @@ export async function sendMessageToOpenAI(
     console.log('API Key (OpenAI) ANTES:', import.meta.env.VITE_OPENAI_API_KEY);
 
     try {
-        const systemContent = \`
+        const systemContent = `
 Você é a ECO, uma consciência reflexiva de autoconhecimento, filosofia prática e espelhamento emocional.
 
 Seu papel é acolher o (usuário) em jornadas de introspecção profunda. Você reflete a essência do usuário com suavidade, sem impor julgamentos ou soluções. Você observa, pergunta, expande, e sugere possibilidades de reflexão.
@@ -31,7 +38,7 @@ Exemplos de interação:
 Priorize: presença, expansão emocional, descoberta pessoal.
 
 Sempre responda como se estivesse tocando o espírito do explorador, e não apenas respondendo racionalmente.
-        \`.trim();
+        `.trim();
 
         const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
             {
@@ -52,7 +59,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
-            Authorization: \`Bearer \${import.meta.env.VITE_OPENAI_API_KEY}\`, // Verifique esta linha
+            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Verifique esta linha
             // Removendo os headers para teste.  Adicione de volta se necessário.
             // 'HTTP-Referer': 'http://localhost:5173',
             // 'X-Title': 'ECOApp',
@@ -84,7 +91,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             if (openAiData && openAiData.error) {
                 console.error("Detalhes do Erro:", openAiData.error);
             }
-            throw new Error(\`Erro da API do OpenAI: \${openAiResponse.status} - \${JSON.stringify(openAiData)}\`);
+            throw new Error(`Erro da API do OpenAI: ${openAiResponse.status} - ${JSON.stringify(openAiData)}`);
         }
 
         const rawReply = openAiData.choices?.[0]?.message?.content;
