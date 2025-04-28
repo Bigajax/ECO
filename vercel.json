@@ -1,17 +1,16 @@
-/**
- * vercel.json
- *
- * Este ficheiro é usado para configurar o Vercel, a plataforma onde você está hospedando o seu site.
- * Ele diz ao Vercel como lidar com as solicitações e onde encontrar os ficheiros do seu site.
- */
-{
-    "build": {
-        "outputDir": "dist"
-    },
-    "routes": [
+    {
+      "version": 2,
+      "builds": [
         {
-            "src": "/(.*)",
-            "dest": "/index.html"
+          "src": "package.json",
+          "use": "@vercel/next" // Ou "@vercel/react" para Create React App
         }
-    ]
-}
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "/"
+        }
+      ]
+    }
+    
