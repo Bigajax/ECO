@@ -1,4 +1,3 @@
-```typescript
 // src/components/eco/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
@@ -476,4 +475,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-```typescript
+
