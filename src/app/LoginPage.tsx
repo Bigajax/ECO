@@ -25,7 +25,8 @@ const LoginPage: React.FC = () => {
     const verifySession = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error) console.error('Erro ao buscar sessão:', error);
-      if (data?.session?.user) {
+      // Redireciona apenas se houver uma sessão ativa (token presente)
+      if (data?.session?.access_token) {
         navigate('/home'); // Alterei para '/home' para consistência com App.tsx
       }
     };
