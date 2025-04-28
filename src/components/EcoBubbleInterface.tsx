@@ -1,3 +1,5 @@
+```typescript
+// src/components/eco/EcoBubbleInterface.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -5,14 +7,37 @@ import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
-import MemoryButton from './MemoryButton';
+import MemoryButton from '../MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
 
+interface Message {
+    text: string;
+    isUser: boolean;
+}
+
+interface OpenAIResponse {
+    text: string;
+    audio?: string;
+    sentimento?: string;
+    resumo?: string;
+    emocao?: string;
+    intensidade?: number;
+}
+
+interface MemoryData {
+    usuario_id: string;
+    conteudo: string;
+    sentimento: string | null;
+    resumo_eco: string | null;
+    emocao_principal: string | null;
+    intensidade: number | null;
+}
+
 function EcoBubbleInterface() {
     const [message, setMessage] = useState('');
-    const [conversation, setConversation] = useState<{ text: string; isUser: boolean }[]>([]);
+    const [conversation, setConversation] = useState<Message[]>([]);
     const [isSending, setIsSending] = useState(false);
     const navigate = useNavigate();
     const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
@@ -30,14 +55,7 @@ function EcoBubbleInterface() {
     const conversationContainerRef = useRef<HTMLDivElement | null>(null);
     const conversationLengthRef = useRef(conversation.length);
     const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
-    const [memoryToSave, setMemoryToSave] = useState<{
-        usuario_id: string;
-        conteudo: string;
-        sentimento: string | null;
-        resumo_eco: string | null;
-        emocao_principal: string | null;
-        intensidade: number | null;
-    } | null>(null);
+    // Removido: const [memoryToSave, setMemoryToSave] = useState<MemoryData | null>(null);
 
 
     const handleGoBack = useCallback(() => {
@@ -49,23 +67,52 @@ function EcoBubbleInterface() {
         console.log("startVibration chamado");
         setIsSpeaking(true);
     }, []);
+
     const stopVibration = useCallback(() => {
         console.log("stopVibration chamado");
         setIsSpeaking(false);
     }, []);
 
-    const handleMemoryButtonClick = useCallback(async () => {
-        console.log("handleMemoryButtonClick chamado", { memoryToSave, userId });
-        if (memoryToSave && userId) {
+      const handleSaveMemory = useCallback(async (memoryData: MemoryData) => {
+        console.log("handleSaveMemory chamado", { memoryData, userId });
+        if (userId) {
             try {
-                const sucessoAoSalvar = await salvarMensagemComMemoria(memoryToSave);
+                const sucessoAoSalvar = await salvarMensagemComMemoria({ ...memoryData, usuario_id: userId });
                 console.log("salvarMensagemComMemoria resultado:", sucessoAoSalvar);
+                if (sucessoAoSalvar) {
+                    alert("Memória salva com sucesso!"); // Substituir por notificação UI
+                    setIsMemoryButtonVisible(false);
+                }
             } catch (error) {
                 console.error("Erro ao salvar memória", error);
+                alert("Erro ao salvar memória");
             }
-
         }
-    }, [memoryToSave, salvarMensagemComMemoria, userId]);
+    }, [userId]);
+
+    const handleMemoryButtonClick = useCallback(() => {
+        console.log("handleMemoryButtonClick chamado");
+        // Coletar os dados relevantes para salvar na memória
+        if (latestUserMessage.current && userId) {
+            const lastAIResponse = conversation.findLast(msg => !msg.isUser)?.text;
+             const sentimento = conversation.findLast(msg => !msg.isUser && msg.text.includes("Sentimento:"))?.text.split("Sentimento:").pop()?.trim() || null;
+            const resumo_eco = conversation.findLast(msg => !msg.isUser && msg.text.includes("Resumo:"))?.text.split("Resumo:").pop()?.trim() || null;
+            const emocao_principal = conversation.findLast(msg => !msg.isUser && msg.text.includes("Emoção:"))?.text.split("Emoção:").pop()?.trim() || null;
+            const intensidade = conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim() ? parseFloat(conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim()!) : null;
+
+            const memoryData: MemoryData = {
+                usuario_id: userId,
+                conteudo: latestUserMessage.current,
+                sentimento: sentimento,
+                resumo_eco: resumo_eco,
+                emocao_principal: emocao_principal,
+                intensidade: intensidade,
+            };
+            handleSaveMemory(memoryData);
+        } else {
+            console.warn("Nenhuma mensagem de usuário recente ou ID de usuário disponível para salvar na memória.");
+        }
+    }, [userId, conversation, handleSaveMemory]);
 
     const toggleMemoryButtonVisibility = useCallback(() => {
         console.log("toggleMemoryButtonVisibility chamado");
@@ -88,7 +135,7 @@ function EcoBubbleInterface() {
                         .select('full_name')
                         .eq('user_id', user.id)
                         .single();
-                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
+                    console.log("supabase.from('profiles').select('full_name').eq('user_id', user.id).single() resultado:", { profile, profileError });
 
                     if (profileError) {
                         console.error("Erro ao buscar perfil:", profileError);
@@ -179,16 +226,7 @@ function EcoBubbleInterface() {
                     isFirstMessage.current = false;
                 }
 
-                if (aiResponse?.text && userId) {
-                    setMemoryToSave({
-                        usuario_id: userId,
-                        conteudo: userMessage,
-                        sentimento: aiResponse.sentimento || null,
-                        resumo_eco: aiResponse.resumo || null,
-                        emocao_principal: aiResponse.emocao || null,
-                        intensidade: aiResponse.intensidade || null,
-                    });
-                }
+
             } catch (error: any) {
                 console.error("Erro ao obter resposta da IA:", error);
                 setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
@@ -196,7 +234,7 @@ function EcoBubbleInterface() {
                 setIsSending(false);
             }
         }
-    }, [message, isSending, latestUserMessage, setConversation, stopVibration, typingIntervalRef, sendMessageToOpenAI, setAudioPlayer, isPlaying, userId, userName, isFirstMessage, setMemoryToSave]);
+    }, [message, isSending, userId, userName, conversation, stopVibration]);
 
 
     useEffect(() => {
@@ -211,6 +249,7 @@ function EcoBubbleInterface() {
     }, [audioPlayer, isPlaying]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value), []);
+
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (e.key === 'Enter' && !isSending && !e.shiftKey) {
@@ -323,7 +362,7 @@ function EcoBubbleInterface() {
                                     className="text-sm break-words text-black"
                                     style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
                                 >
-                                    {!msg.isUser && <span className="font-semibold">ECO: </span>}
+                                    {!msg.isUser && msg.text.startsWith("ECO: ") ? "" : (!msg.isUser ? <span className="font-semibold">ECO: </span> : "")}
                                     <span dangerouslySetInnerHTML={{ __html: messageText }} />
                                 </p>
                             </div>
@@ -340,8 +379,7 @@ function EcoBubbleInterface() {
                                 className="plus-button"
                                 onClick={toggleMemoryButtonVisibility}
                                 aria-label="Mostrar opções de memória"
-                                style={{ marginTop: '8px' }} // Added marginTop to align with the "Type your feeling" text
-
+                                style={{ marginTop: '8px' }}
                             >
                                 <Lucide.Plus size={20} />
                             </button>
@@ -364,8 +402,7 @@ function EcoBubbleInterface() {
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
                             className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
-                            style={{
-                                height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
+                             height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
                                 width: 'calc(100% - 100px)',
                                 order: 2,
                             }}
@@ -374,7 +411,7 @@ function EcoBubbleInterface() {
                             className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
                                 ? 'bg-red-500 text-white animate-pulse'
                                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            }`}
+                                }`}
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
                             style={{ order: 1 }}
@@ -385,7 +422,7 @@ function EcoBubbleInterface() {
                             className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
                                 ? 'bg-blue-500 text-white hover:bg-blue-600'
                                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            }`}
+                                }`}
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
@@ -439,4 +476,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
+```typescript
