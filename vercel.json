@@ -1,16 +1,18 @@
+{
+  "version": 2,
+  "builds": [
     {
-      "version": 2,
-      "builds": [
-        {
-          "src": "dist",
-          "use": "@vercel/static"
-        }
-      ],
-      "routes": [
-        {
-          "src": "/(.*)",
-          "dest": "/index.html"
-        }
-      ]
+      "src": "build",
+      "use": "@vercel/static"
     }
-    
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+```
+
+Lembre-se de que arquivos JSON não suportam comentári
