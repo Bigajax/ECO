@@ -7,7 +7,7 @@ export default defineConfig({
     base: '/', // Defina isso para '/' se o seu site estiver na raiz do domínio
     // ou para '/<subdiretorio>/' se estiver em um subdiretório.
     build: {
-        outDir: 'dist', // O diretório onde os ficheiros de produção serão gerados
+        outDir: 'dist', 
     },
     optimizeDeps: {
         exclude: ['lucide-react'],
