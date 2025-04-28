@@ -30,4 +30,4 @@ export const sendMessageToOpenAI = async (message: string, userName: string, con
         throw error;
     }
 };
-```typescript
+
