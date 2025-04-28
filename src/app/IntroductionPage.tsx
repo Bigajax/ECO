@@ -1,7 +1,7 @@
+import './IntroductionPage.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import './IntroductionPage.css';
 
 interface GlassBubbleProps {
   color: string;
