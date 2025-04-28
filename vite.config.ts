@@ -14,7 +14,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '../../sendMessageToOpenAI': '/src/sendMessageToOpenAI.ts',
-            '../../salvarMensagemComMemoria': '/src/salvarMensagemCommemoria.js',
+            '../../salvarMensagemComMemoria': '/src/salvarMensagemComMemoria.js',
             '../../supabaseClient': '/src/supabaseClient.ts',
             'supabaseClient': '/src/supabaseClient.ts',
         },
