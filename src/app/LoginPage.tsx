@@ -8,7 +8,6 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logo, setLogo] = useState<React.ReactNode>(null); // Adiciona estado para a logo
-
   const navigate = useNavigate();
 
   // Componente da Logo ECO (mesmo componente usado na HomePage)
@@ -53,6 +52,10 @@ const LoginPage: React.FC = () => {
     setLoading(false);
   };
 
+  const handleOpenTour = () => {
+    navigate('/introduction'); // Aqui definimos a rota para a página de introdução
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-100 to-pink-100 px-4 py-12">
       {/* Adiciona a logo no topo */}
@@ -87,6 +90,14 @@ const LoginPage: React.FC = () => {
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
+        {/* Novo botão para abrir o tour */}
+        <button
+          type="button"
+          onClick={handleOpenTour}
+          className="w-full py-3 mt-4 rounded-lg text-indigo-600 font-bold border border-indigo-300 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+        >
+          Abrir o tour
+        </button>
         <div className="mt-6 text-center text-sm text-gray-600">
           Esqueceu a senha? <a href="#" className="text-indigo-600 underline">Recuperar</a>
         </div>
