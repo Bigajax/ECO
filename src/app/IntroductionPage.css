@@ -20,3 +20,5 @@
   transform: translateX(-100%); /* Termina fora da tela à esquerda */
   transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
 }
+
+/* Adicione outros estilos específicos para IntroductionPage.css abaixo, se necessário */
