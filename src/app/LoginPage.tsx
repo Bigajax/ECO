@@ -4,9 +4,9 @@ import { supabase } from 'supabaseClient';
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { BiLoaderCircle } from 'react-icons/bi';
 
-// Defina as cores Serilda e Quartzo (ajuste os valores exatos se necessário)
-const serildaBlue = '#74CBD4'; // Exemplo de azul Serilda
-const quartzoPink = '#F2B8B5'; // Exemplo de rosa Quartzo
+// Defina as cores Serilda e Quartzo
+const serildaBlue = '#74CBD4';
+const quartzoPink = '#F2B8B5';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +19,8 @@ const LoginPage: React.FC = () => {
   const ECOLogo = () => (
     <div className="flex justify-center mb-10">
       <span
-        className="text-5xl font-bold text-indigo-700 drop-shadow-md" // Mantive o indigo para o texto
+        className="text-5xl font-bold drop-shadow-md"
+        style={{ color: serildaBlue }} // Aplica a cor azul Serilda à logo
       >
         Eco
       </span>
@@ -71,7 +72,7 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaUser className="text-gray-400" style={{ color: serildaBlue }} /> {/* Cor do ícone */}
+              <FaUser className="text-gray-400" style={{ color: serildaBlue }} />
             </div>
             <input
               type="email"
@@ -85,7 +86,7 @@ const LoginPage: React.FC = () => {
 
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaLock className="text-gray-400" style={{ color: serildaBlue }} /> {/* Cor do ícone */}
+              <FaLock className="text-gray-400" style={{ color: serildaBlue }} />
             </div>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -96,7 +97,7 @@ const LoginPage: React.FC = () => {
               className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" style={{ color: serildaBlue }} />} {/* Cor do ícone */}
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" style={{ color: serildaBlue }} />}
             </div>
           </div>
 
@@ -109,13 +110,20 @@ const LoginPage: React.FC = () => {
               loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             }`}
           >
-            {loading ? <div className="flex justify-center items-center"><BiLoaderCircle className="animate-spin mr-2" style={{ color: quartzoPink }}/> Entrando...</div> : 'Entrar'}
+            {loading ? (
+              <div className="flex justify-center items-center">
+                <BiLoaderCircle className="animate-spin mr-2" style={{ color: quartzoPink }} />
+                Entrando...
+              </div>
+            ) : (
+              <span style={{ color: quartzoPink }}>Entrar</span> // Aplica a cor rosa Quartzo ao texto "Entrar"
+            )}
           </button>
         </form>
 
         <div className="mt-6 text-center text-sm">
-          <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Esqueceu a senha?
+          <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500" style={{ color: serildaBlue }}>
+            Esqueceu a senha? {/* Aplica a cor azul Serilda ao texto "Esqueceu a senha?" */}
           </a>
         </div>
 
@@ -124,9 +132,7 @@ const LoginPage: React.FC = () => {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-gray-500">
-              ou
-            </span>
+            <span className="bg-white px-2 text-gray-500">ou</span>
           </div>
         </div>
 
