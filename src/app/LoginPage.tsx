@@ -285,30 +285,28 @@ const LoginPage: React.FC = () => {
                     </button>
                 </form>
 
-                <div className="text-center mt-4 space-y-3">
+                <div className="text-center mt-4 space-y-4">
                     <button
                         onClick={() => navigate('/signup')}
                         className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Criar conta
                     </button>
-
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                            <div className="w-full border-t border-gray-300" />
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="bg-white px-2 text-gray-500">ou</span>
+                        </div>
+                    </div>
                     <button
                         type="button"
                         onClick={handleOpenTour}
-                        className="w-full py-3  bg-white text-black rounded-full font-medium transition-all duration-300  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" // Estilo do botão Iniciar Tour
+                        className="w-full py-3  bg-white text-black rounded-full font-medium transition-all duration-300  shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Iniciar Tour
                     </button>
-                </div>
-
-                <div className="mt-6 relative">
-                    <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div className="w-full border-t border-gray-300" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                        <span className="bg-white px-2 text-gray-500">ou</span>
-                    </div>
                 </div>
             </div>
             <p className="mt-4 text-xs text-gray-500">v1.0</p>
