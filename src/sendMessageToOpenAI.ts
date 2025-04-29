@@ -55,15 +55,12 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Verifique esta linha
-            // Removendo os headers para teste.  Adicione de volta se necessário.
-            // 'HTTP-Referer': 'http://localhost:5173',
-            // 'X-Title': 'ECOApp',
         };
 
         console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
             url: 'https://openrouter.ai/api/v1/chat/completions',
             headers: headers,
-            body: requestBody, // ADICIONEI ESTE LOG
+            body: requestBody,
         });
 
         const openAiResponse = await fetch(
@@ -86,8 +83,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         }
 
         console.log("Resposta completa da API:", openAiData);
-        console.log("Status da resposta da API:", openAiResponse.status); // ADICIONEI ESTE LOG
-
+        console.log("Status da resposta da API:", openAiResponse.status);
 
         if (!openAiResponse.ok) {
             console.error('Erro da API (OpenAI):', openAiData);
@@ -106,7 +102,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         console.log("Resposta bruta da API (rawReply):", rawReply);
 
         if (!rawReply) {
-            console.warn("A API do OpenAI retornou uma resposta vazia ou nula."); // ADICIONEI ESTE LOG
+            console.warn("A API do OpenAI retornou uma resposta vazia ou nula.");
             return {
                 text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
                 audio: null,
@@ -118,13 +114,12 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         try {
             parsedReply = JSON.parse(rawReply);
         } catch (e: any) {
-            console.warn("Resposta da IA não está em formato JSON:", rawReply, e); // Inclui o erro `e` no log
-             console.error("Detalhes do erro de parsing:", e.message);
+            console.warn("Resposta da IA não está em formato JSON:", rawReply, e);
+            console.error("Detalhes do erro de parsing:", e.message);
             parsedReply.resposta = rawReply;
         }
 
         let finalResponse = parsedReply.resposta;
-
 
         return {
             text: finalResponse,
