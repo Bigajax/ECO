@@ -18,7 +18,7 @@ interface OpenAIResponse {
     text: string;
     audio?: string;
     sentimento?: string;
-    resumo?: string;
+    resumo_eco?: string;
     emocao?: string;
     intensidade?: number;
 }
@@ -237,7 +237,7 @@ function EcoBubbleInterface() {
 
             } catch (error: any) {
                 console.error("Erro ao obter resposta da IA:", error);
-                setConversation((prev) => [...prev, { text: `ECO: Erro ao obter resposta: ${error.message}`, isUser: false }]);
+                setConversation((prev) => [...prev, { text: `ECO: Desculpe, não consegui entender sua reflexão. Vamos tentar novamente? Erro: ${error.message}`, isUser: false }]); // Adicionei a mensagem de erro
             } finally {
                 setIsSending(false);
             }
@@ -349,7 +349,7 @@ function EcoBubbleInterface() {
             </div>
 
             <div
-                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[550px] overflow-y-auto" // Alterei o height para 550px
+                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[550px] overflow-y-auto"
                 ref={conversationContainerRef}
             >
                 {conversation.map((msg, index) => {
@@ -406,9 +406,9 @@ function EcoBubbleInterface() {
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
-                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[60px] max-h-[160px] placeholder-gray-400" // Aumentei os valores de min-h e max-h
+                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[60px] max-h-[160px] placeholder-gray-400"
                             style={{
-                                height: Math.min(160, Math.max(60, 20 + message.split('\n').length * 20)), // Ajustei o cálculo da altura
+                                height: Math.min(160, Math.max(60, 20 + message.split('\n').length * 20)),
                                 width: 'calc(100% - 100px)',
                                 order: 2,
                             }}
