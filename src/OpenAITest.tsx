@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export async function sendMessageToOpenAI(message: string) {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
@@ -10,7 +10,7 @@ export async function sendMessageToOpenAI(message: string) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
       "HTTP-Referer": "http://localhost:5173",  // URL local do projeto, pode ser ajustado conforme necessário
-      "X-Title": "MeuAppOpenRouter",             // Nome do seu app, escolha qualquer nome
+      "X-Title": "MeuAppOpenRouter",                    // Nome do seu app, escolha qualquer nome
     },
     body: JSON.stringify({
       model: "openai/gpt-3.5-turbo",  // Modelo que você deseja usar
@@ -60,4 +60,3 @@ function OpenAITest() {
 }
 
 export default OpenAITest;
-
