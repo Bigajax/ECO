@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './EcoBubbleInterface.css';
@@ -71,7 +70,7 @@ function EcoBubbleInterface() {
         setIsSpeaking(false);
     }, []);
 
-      const handleSaveMemory = useCallback(async (memoryData: MemoryData) => {
+    const handleSaveMemory = useCallback(async (memoryData: MemoryData) => {
         console.log("handleSaveMemory chamado", { memoryData, userId });
         if (userId) {
             try {
@@ -399,9 +398,9 @@ function EcoBubbleInterface() {
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
-                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
+                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[60px] max-h-[180px] placeholder-gray-400"
                             style={{
-                                height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
+                                height: Math.min(180, Math.max(60, 20 + message.split('\n').length * 24)), // Aumentei o mínimo e o incremento
                                 width: 'calc(100% - 100px)',
                                 order: 2,
                             }}
