@@ -1,19 +1,28 @@
-// src/app/SignupPage.tsx
 import React, { useState } from 'react';
-import { Mail, Lock, UserCheck, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from 'supabaseClient';
+import { FaUser, FaLock, FaEye as FaEyeIcon, FaEyeSlash } from 'react-icons/fa';
+import { BiLoaderCircle } from 'react-icons/bi';
 
-function SignupPage() {
+const SignupPage: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // Adicionado
+  const [name, setName] = useState(''); // Adicionado
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Adicionado
 
-  const navigate = useNavigate();
+  // Componente da Logo ECO (Reutilizando do LoginPage)
+  const ECOLogo = () => (
+    <span
+      className="text-4xl font-bold text-black drop-shadow-lg transition-all duration-300 hover:scale-105  cursor-pointer"
+    >
+      ECO
+    </span>
+  );
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,143 +35,141 @@ function SignupPage() {
       return;
     }
 
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: name }
-        }
-      });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name, // Salva o nome do usuário
+        },
+      },
+    });
 
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess(true);
-        setTimeout(() => navigate('/home'), 2000); // Redireciona para '/home'
-      }
-    } catch (err: any) {
-      setError(err.message || 'Erro inesperado.');
-    } finally {
-      setLoading(false);
+    if (error) {
+      setError(error.message || 'Erro ao criar conta');
+    } else {
+      // Redireciona para a página de login após o cadastro bem-sucedido
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setName('');
+      navigate('/login');
     }
+    setLoading(false);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => { // Adicionado
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="text-6xl font-bold tracking-wider bg-gradient-to-r from-[#6495ED] to-[#4682B4] bg-clip-text text-transparent flex items-center">
-            EC<div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#6495ED] to-[#4682B4] ml-1"></div>
-          </div>
+    <div
+      className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
+    >
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg shadow-xl">
+        <div className="flex justify-center mb-12">
+          <ECOLogo />
         </div>
+        <form onSubmit={handleSignUp} className="space-y-6">
+          {/* Campo Nome */}
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaUser className="text-gray-400" style={{ color: 'black' }} />
+            </div>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Digite seu nome completo"
+              required
+              className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          {/* Campo Email */}
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaUser className="text-gray-400" style={{ color: 'black' }} />
+            </div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Digite seu e-mail"
+              required
+              className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
 
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Criar minha conta</h1>
-
-        <form onSubmit={handleSignUp} className="space-y-5">
-          {/* Nome */}
-          <div>
-            <label htmlFor="name" className="text-sm text-gray-600 mb-1 block">Nome</label>
-            <div className="relative">
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
-                placeholder="Seu nome completo"
-                required
-              />
-              <UserCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          {/* Campo Senha */}
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaLock className="text-gray-400" style={{ color: 'black' }} />
+            </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Digite sua senha"
+              required
+              className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEyeIcon className="text-gray-400" style={{ color: 'black' }} />}
             </div>
           </div>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="text-sm text-gray-600 mb-1 block">E-mail</label>
-            <div className="relative">
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
-                placeholder="seu@email.com"
-                required
-              />
-              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          {/* Campo Confirmar Senha */}
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaLock className="text-gray-400" style={{ color: 'black' }} />
+            </div>
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirme sua senha"
+              required
+              className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={toggleConfirmPasswordVisibility}>
+              {showConfirmPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEyeIcon className="text-gray-400" style={{ color: 'black' }} />}
             </div>
           </div>
 
-          {/* Senha */}
-          <div>
-            <label htmlFor="password" className="text-sm text-gray-600 mb-1 block">Senha</label>
-            <div className="relative">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
-                placeholder="••••••••"
-                required
-              />
-              <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            </div>
-          </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {/* Confirmar Senha */}
-          <div>
-            <label htmlFor="confirmPassword" className="text-sm text-gray-600 mb-1 block">Confirmar Senha</label>
-            <div className="relative">
-              <input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED]"
-                placeholder="••••••••"
-                required
-              />
-              <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            </div>
-          </div>
-
-          {/* Erro ou sucesso */}
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-          {success && (
-            <div className="text-green-600 flex items-center gap-2 text-sm">
-              <CheckCircle size={20} /> Cadastro realizado! Redirecionando...
-            </div>
-          )}
-
-          {/* Botão */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white py-3 rounded-xl font-medium transition-all ${
-              loading
-                ? 'bg-[#6495ED]/70 cursor-not-allowed'
-                : 'bg-[#6495ED] hover:bg-[#4682B4]'
-            }`}
+            className="w-full bg-black text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg"
           >
-            {loading ? 'Criando...' : 'Criar conta'}
+            {loading ? (
+              <div className="flex justify-center items-center">
+                <BiLoaderCircle className="animate-spin mr-2" style={{ color: 'white' }} />
+                Criando conta...
+              </div>
+            ) : (
+              'Criar conta'
+            )}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Já tem uma conta?{' '}
+        <div className="text-center mt-4 space-y-4">
           <button
             onClick={() => navigate('/login')}
-            className="text-[#6495ED] hover:text-[#4682B4] font-medium"
+            className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Entrar
+            Já possui conta? Entrar
           </button>
         </div>
       </div>
+      <p className="mt-4 text-xs text-gray-500">v1.0</p>
     </div>
   );
-}
+};
 
 export default SignupPage;
