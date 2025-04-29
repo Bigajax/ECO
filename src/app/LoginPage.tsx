@@ -1,172 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from 'supabaseClient';
-import { Moon, Compass, Music, Eye } from 'lucide-react';
 import { FaUser, FaLock, FaEye as FaEyeIcon, FaEyeSlash } from 'react-icons/fa';
 import { BiLoaderCircle } from 'react-icons/bi';
-
-// Defina as cores Serilda e Quartzo
-const serildaBlue = '#74CBD4';
-const quartzoPink = '#F2B8B5';
-
-// Componente principal da HomePage (usado para pegar a logo e estilo)
-const HomePage: React.FC = () => {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
-    const [userName, setUserName] = useState<string>('');
-    const [userFirstName, setUserFirstName] = useState<string>('');
-    const [logo, setLogo] = useState<React.ReactNode>(null);
-
-    // Componente da Logo ECO (Mantido igual ao da HomePage)
-    const ECOLogo = () => (
-        <span
-            className="text-4xl font-bold text-black drop-shadow-lg transition-all duration-300 hover:scale-105  cursor-pointer"
-        >
-            ECO
-        </span>
-    );
-
-    const navigateToEcoBubble = useCallback(() => {
-        navigate('/eco-bubble');
-    }, [navigate]);
-
-    // Função para exibir o ícone da bolha
-    const BubbleIcon = () => (
-        <div className="relative w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
-            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
-                <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
-                </div>
-            </div>
-        </div>
-    );
-
-    // Função para obter a saudação com base no horário
-    const getGreeting = () => {
-        const hour = new Date().getHours();
-        if (hour >= 6 && hour < 12) {
-            return 'Bom dia';
-        } else if (hour >= 12 && hour < 18) {
-            return 'Boa tarde';
-        } else {
-            return 'Boa noite';
-        }
-    };
-
-    useEffect(() => {
-        const verifySession = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            if (!user) {
-                navigate('/login');
-            } else {
-                try {
-                    const { data: profile, error: profileError } = await supabase
-                        .from('profiles')
-                        .select('full_name')
-                        .eq('user_id', user.id)
-                        .single();
-
-                    if (profileError) {
-                        console.error("Erro ao buscar perfil:", profileError);
-                        setUserName('Utilizador');
-                        setUserFirstName('Utilizador');
-                    } else if (profile) {
-                        const firstName = profile.full_name.split(' ')[0];
-                        setUserName(profile.full_name);
-                        setUserFirstName(firstName);
-                    } else {
-                        setUserName('Utilizador');
-                        setUserFirstName('Utilizador');
-                    }
-                } catch (error) {
-                    console.error("Erro ao buscar perfil:", error);
-                    setUserName('Utilizador');
-                    setUserFirstName('Utilizador');
-                }
-                setLoading(false);
-            }
-        };
-
-        verifySession();
-        setLogo(<ECOLogo />);
-    }, [navigate]);
-
-    if (loading) return <div>Carregando...</div>;
-
-    const greeting = getGreeting();
-
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6">
-            <div className="flex justify-center mb-12 pt-8">
-                {logo}
-            </div>
-            <div className="text-center mb-8">
-                <h2 className="text-4xl text-gray-700">
-                    {greeting}, {userFirstName}
-                </h2>
-            </div>
-            <div className="flex justify-center gap-12 mb-12">
-                <button className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
-                    <div className="p-3">
-                        <Moon size={24} />
-                    </div>
-                    <span>Hoje</span>
-                </button>
-                <button className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
-                    <div className="p-3">
-                        <Compass size={24} />
-                    </div>
-                    <span>Explorar</span>
-                </button>
-                <button className="flex flex-col items-center text-gray-600 hover:text-purple-600 transition-colors">
-                    <div className="p-3">
-                        <Music size={24} />
-                    </div>
-                    <span>Músicas</span>
-                </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                <div className="group bg-white rounded-3xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:bg-white/95 cursor-pointer border border-gray-100">
-                    <h3 className="text-3xl text-gray-700 mb-2 group-hover:text-purple-600 transition-colors flex items-center gap-2">
-                        <BubbleIcon />
-                        Olá!
-                    </h3>
-                    <p className="text-gray-600 mb-6">Dê o primeiro passo para um novo mundo!</p>
-                    <button
-                        onClick={navigateToEcoBubble}
-                        className="w-full bg-black text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg"
-                    >
-                        Conversar com a ECO
-                    </button>
-                </div>
-                <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100"
-                    style={{ backgroundColor: '#f8f8f8' }}
-                >
-                    <div
-                        className="h-48 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
-                        style={{
-                            backgroundImage: `url('https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg')`,
-                        }}
-                    >
-                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-6 group-hover:bg-black/20 transition-colors">
-                            <p className="text-white text-xl text-center group-hover:scale-[1.02] transition-transform">
-                                O céu não se importa com a altura em que a pipa voa - ele só dá espaço para que ela dance.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="bg-white p-4 flex justify-end group-hover:bg-white/95 transition-colors">
-                        <button className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors">
-                            <Eye size={20} />
-                            <span>Ver detalhes</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -176,7 +12,7 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
-    // Componente da Logo ECO (usando o mesmo da HomePage)
+    // Componente da Logo ECO
     const ECOLogo = () => (
         <span
             className="text-4xl font-bold text-black drop-shadow-lg transition-all duration-300 hover:scale-105  cursor-pointer"
@@ -315,4 +151,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-
