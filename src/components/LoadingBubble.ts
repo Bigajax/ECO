@@ -19,8 +19,10 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
     xl: 'w-40 h-40',
   };
 
+  const containerClasses = `flex flex-col items-center justify-center ${className}`;
+
   return (
-    <div className={`flex flex-col items-center justify-center ${className}`}>
+    <div className={containerClasses}>
       <div
         className={`loading-bubble relative rounded-full ${sizeClasses[size]}`}
         aria-label="Loading"
