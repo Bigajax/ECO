@@ -212,6 +212,8 @@ function EcoBubbleInterface() {
                 content: msg.text,
             }));
 
+            console.log("Enviando para sendMessageToOpenAI:", { messageToSendAI, userName, conversationToSend }); // ADICIONEI ESTE LOG
+
             try {
                 const aiResponse = await sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend);
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
