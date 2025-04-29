@@ -7,7 +7,7 @@ interface LoadingBubbleProps {
   className?: string;
 }
 
-const LoadingBubble: React.FC<LoadingBubbleProps> = ({ 
+const LoadingBubble: React.FC<LoadingBubbleProps> = ({
   size = 'md',
   label,
   className = ''
@@ -21,7 +21,7 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
 
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
-      <div 
+      <div
         className={`loading-bubble relative rounded-full ${sizeClasses[size]}`}
         aria-label="Loading"
         role="status"
@@ -36,4 +36,3 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
 };
 
 export default LoadingBubble;
-
