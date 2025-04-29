@@ -190,7 +190,6 @@ function EcoBubbleInterface() {
     useEffect(() => {
         if (conversationContainerRef.current && conversation.length > conversationLengthRef.current) {
             conversationContainerRef.current.scrollTop = conversationContainerRef.current.scrollHeight;
-            conversationLengthRef.current = conversation.length;
         }
     }, [conversation]);
 
@@ -350,7 +349,7 @@ function EcoBubbleInterface() {
             </div>
 
             <div
-                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-full overflow-y-auto" // Alterei o height para h-full
+                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[900px] overflow-y-auto" // Alterei o height para 900px
                 ref={conversationContainerRef}
             >
                 {conversation.map((msg, index) => {
