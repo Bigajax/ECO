@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { cn } from "@/lib/utils" // Assuming this is for merging class names
+import { cn } from "@/lib/utils" // Supondo que isso seja para mesclar nomes de classes
 
-// Define the Inter font globally (if it's not already)
+// Define a fonte Inter globalmente (se já não estiver)
 const inter = "Inter";
 
-// Styles (Consider moving to a separate CSS file or a CSS-in-JS solution)
+// Estilos (Considere mover para um arquivo CSS separado ou uma solução de CSS-in-JS)
 const styles = `
 :root {
   --serylian-blue: #87CEEB;
@@ -101,11 +101,8 @@ body {
 `;
 
 const EcoAudio = () => {
-  const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
 
@@ -139,37 +136,6 @@ const EcoAudio = () => {
     }
   }, [audioUrl]);
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        chunksRef.current.push(e.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/wav' });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        if (wavesurferRef.current) {
-          wavesurferRef.current.load(url);
-        }
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Erro ao acessar o microfone:', error);
-    }
-  };
-
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
-  };
 
   const togglePlayback = () => {
     if (wavesurferRef.current) {
@@ -204,7 +170,7 @@ const EcoAudio = () => {
 
       <div className="glass-bubble w-64 h-64 flex items-center justify-center mb-16 p-4">
         <div ref={waveformRef} className="w-full h-full flex items-center">
-          {!audioUrl && !isRecording && (
+          {!audioUrl && !isPlaying && ( // Alterado para verificar !isPlaying
             <div className="audio-wave">
               {[...Array(7)].map((_, i) => (
                 <span
@@ -233,28 +199,6 @@ const EcoAudio = () => {
             ) : (
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
             )}
-          </svg>
-        </button>
-        <button
-          className="glass-bubble w-20 h-20 flex items-center justify-center"
-          onClick={isRecording ? stopRecording : startRecording}
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill={isRecording ? '#ff4444' : 'white'}>
-            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-          </svg>
-        </button>
-        <button
-          className="glass-bubble w-16 h-16 flex items-center justify-center"
-          onClick={() => {
-            setAudioUrl(null);
-            setIsPlaying(false);
-            wavesurferRef.current?.empty();
-          }}
-          disabled={!audioUrl}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
           </svg>
         </button>
       </div>
