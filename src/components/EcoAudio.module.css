@@ -3,7 +3,12 @@
   --quartz-pink: #FFB7C5;
 }
 
-/* Não precisamos mais do estilo para o body aqui, pois ele é global */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--serylian-blue) 0%, var(--quartz-pink) 100%);
+}
 
 .glassBubble {
   background: rgba(255, 255, 255, 0.2);
@@ -84,4 +89,3 @@
   display: block;
   width: 100%;
 }
-
