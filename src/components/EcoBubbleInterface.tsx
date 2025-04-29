@@ -5,6 +5,7 @@ import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
 import MemoryButton from './MemoryButton';
+import styled from 'styled-components';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -32,109 +33,130 @@ interface MemoryData {
     intensidade: number | null;
 }
 
-const conversationContainerStyle = {
-    width: '100%',
-    maxWidth: '640px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '1rem',
-    boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.1)',
-    marginBottom: '1rem',
-    padding: '1.5rem',
-    height: '400px',
-    overflowY: 'auto',
-};
+const ConversationContainer = styled.div`
+    width: 100%;
+    max-width: 640px;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    height: 400px;
+    overflow-y: auto;
+`;
 
-const messageStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'fit-content',
-    maxWidth: '98%',
-    borderRadius: '0.75rem',
-    padding: '1rem',
-    margin: '0.5rem 0',
-};
+const MessageWrapper = styled.div<{ isUser: boolean }>`
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 98%;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    margin-left: ${props => props.isUser ? 'auto' : 'unset'};
+    margin-right: ${props => props.isUser ? 'unset' : 'auto'};
+    background-color: white;
+`;
 
-const userMessageStyle = {
-    ...messageStyle,
-    marginLeft: 'auto',
-    backgroundColor: 'white', // Corrigido para 'white' e movido para style inline
-};
+const TextStyle = styled.p`
+    font-size: 0.95rem;
+    word-break: break-word;
+    white-space: pre-wrap;
+    color: black;
+`;
 
-const ecoMessageStyle = {
-    ...messageStyle,
-    marginRight: 'auto',
-    backgroundColor: 'white',  // Corrigido para 'white' e movido para style inline
-};
+const InputControlsContainer = styled.div`
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+`;
 
-const textStyle = {
-    fontSize: '0.95rem',
-    wordBreak: 'break-word',
-    whiteSpace: 'pre-wrap',
-    color: 'black'
-};
+const RowReverse = styled.div`
+    flex-direction: row-reverse;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+`;
 
-const inputControlsContainerStyle = {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    width: '100%',
-};
+const PlusButton = styled.button`
+    margin-top: 0.5rem;
+`;
 
-const rowReverseStyle = {
-    flexDirection: 'row-reverse',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    width: '100%',
-};
+const MemoryButtonWrapper = styled.div`
+    position: relative;
+`;
 
-const plusButtonStyle = {
-    marginTop: '0.5rem',
-};
+const Input = styled.textarea`
+    width: calc(100% - 100px);
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    color: #1f2937;
+    resize: none;
+    outline: none;
+    transition: all 0.2s ease;
+    min-height: 2.5rem;
+    max-height: 7.5rem;
+    placeholder-color: #9ca3af;
+    order: 2;
+    height: ${props => props.style?.height || 'auto'};
+`;
 
-const memoryButtonWrapperStyle = {
-    position: 'relative',
-};
+const MicButton = styled.button`
+    padding: 0.5rem;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+    order: 1;
+    ${props => props.isListening
+        ? 'background-color: red; color: white; animation: pulse 2s infinite;'
+        : 'color: #6b7280; &:hover { color: #374151; background-color: #f9fafb; }'
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+`;
 
-const inputStyle = {
-    width: 'calc(100% - 100px)',
-    padding: '0.75rem 1rem',
-    borderRadius: '1rem',
-    backgroundColor: 'white',
-    border: '1px solid #e5e7eb',
-    color: '#1f2937',
-    resize: 'none',
-    outline: 'none',
-    transition: 'all 0.2s ease',
-    minHeight: '2.5rem',
-    maxHeight: '7.5rem',
-    placeholderColor: '#9ca3af',
-    order: 2,
-};
+const SendButton = styled.button`
+    padding: 0.5rem;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    order: 0;
+    background-color: ${props => props.disabled ? '#f3f4f6' : '#3b82f6'};
+    color: ${props => props.disabled ? '#9ca3af' : 'white'};
+    &:hover {
+        background-color: ${props => props.disabled ? '#f3f4f6' : '#2563eb'};
+    }
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+`;
 
-const micButtonStyle = {
-    padding: '0.5rem',
-    borderRadius: '9999px',
-    transition: 'all 0.2s ease',
-    order: 1,
-};
+const FeedbackButton = styled.button`
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #6b7280;
+    transition: color 0.2s ease;
+    &:hover {
+        color: #374151;
+    }
+`;
 
-const sendButtonStyle = {
-    padding: '0.5rem',
-    borderRadius: '9999px',
-    transition: 'all 0.3s ease',
-    order: 0,
-};
-
-const feedbackButtonStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    color: '#6b7280',
-    transition: 'color 0.2s ease',
-};
+const BubbleIcon = () => (
+    <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center">
+        <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200">
+            <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center">
+                
+            </div>
+        </div>
+    </div>
+);
 
 function EcoBubbleInterface() {
     const [message, setMessage] = useState('');
@@ -400,16 +422,7 @@ function EcoBubbleInterface() {
         alert('Obrigado pelas suas sugestões!');
     }, []);
 
-    const BubbleIcon = () => (
-        <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center">
-            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200">
-                <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    
-                </div>
-            </div>
-        </div>
-    );
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
@@ -445,109 +458,84 @@ function EcoBubbleInterface() {
                 )}
             </div>
 
-            <div
-                style={conversationContainerStyle}
-                ref={conversationContainerRef}
-            >
+            <ConversationContainer ref={conversationContainerRef}>
                 {conversation.map((msg, index) => {
                     const messageText = msg.text.replace(/(\r\n|\n|\r)/gm, "<br/>");
                     return (
-                        <div
-                            key={index}
-                            style={msg.isUser? userMessageStyle: ecoMessageStyle}
-
-                        >
+                        <MessageWrapper key={index} isUser={msg.isUser}>
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                                 {!msg.isUser && <BubbleIcon />}
-                                <p
-                                    style={textStyle}
-                                    dangerouslySetInnerHTML={{ __html: messageText }}
-                                />
+                                <TextStyle dangerouslySetInnerHTML={{ __html: messageText }} />
                             </div>
-                        </div>
+                        </MessageWrapper>
                     );
                 })}
-            </div>
+            </ConversationContainer>
 
             <div style={{position: 'sticky', bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', padding: '0.75rem', width: '100%', maxWidth: '640px', display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem', boxShadow: '0 0.25rem 0.5rem rgba(0, 0, 0, 0.1)' }}>
-                <div style={inputControlsContainerStyle}>
-                    <div style={rowReverseStyle}>
+                <InputControlsContainer>
+                    <RowReverse>
                         <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
-                            <button
+                            <PlusButton
                                 className="plus-button"
                                 onClick={toggleMemoryButtonVisibility}
                                 aria-label="Mostrar opções de memória"
-                                style={plusButtonStyle}
                             >
                                 <Lucide.Plus size={20} />
-                            </button>
+                            </PlusButton>
                             {isMemoryButtonVisible && (
-                                <div
-                                    className="memory-button-wrapper visible"
-                                    style={memoryButtonWrapperStyle}
-                                >
+                                <MemoryButtonWrapper className="memory-button-wrapper visible">
                                     <MemoryButton
                                         onMemoryButtonClick={handleMemoryButtonClick}
                                         size="md"
                                     />
-                                </div>
+                                </MemoryButtonWrapper>
                             )}
                         </div>
-                        <textarea
+                        <Input
                             ref={inputRef}
                             value={message}
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
                             style={{
-                                ...inputStyle,
                                 height: Math.min(7.5 * 16, Math.max(2.5 * 16, 20 + message.split('\n').length * 20)),
                             }}
                         />
-                        <button
-                            className={`mic-button ${isListening
-                                ? 'bg-red-500 text-white animate-pulse'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
+                        <MicButton
+                            className="mic-button"
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                            style={micButtonStyle}
+                            isListening={isListening}
                         >
                             <Lucide.Mic size={20} />
-                        </button>
-                        <button
-                            className={`send-button ${message.trim()
-                                ? 'bg-blue-500 text-white hover:bg-blue-600'
-                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                }`}
+                        </MicButton>
+                        <SendButton
+                            className="send-button"
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
-                            aria-label="Enviar mensagem"
-                            style={sendButtonStyle}
                         >
                             <Lucide.Send size={20} />
-                        </button>
-                    </div>
-                </div>
+                        </SendButton>
+                    </RowReverse>
+                </InputControlsContainer>
 
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
-                    <button
+                    <FeedbackButton
                         onClick={handleFeedbackClick}
-                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
-                        style={feedbackButtonStyle}
+                        className="feedback-button"
                     >
                         <Lucide.ThumbsUp size={14} />
                         <span>Feedback</span>
-                    </button>
+                    </FeedbackButton>
 
-                    <button
+                    <FeedbackButton
                         onClick={handleSuggestionsClick}
-                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
-                        style={feedbackButtonStyle}
+                        className="feedback-button"
                     >
                         <Lucide.MessageSquare size={14} />
                         <span>Sugestões</span>
-                    </button>
+                    </FeedbackButton>
                 </div>
             </div>
 
