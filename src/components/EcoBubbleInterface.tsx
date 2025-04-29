@@ -319,12 +319,13 @@ function EcoBubbleInterface() {
             </button>
 
             <div className="relative mb-8 flex flex-col items-center">
+                {/* Remoção da bolha */}
                 <div
                     onClick={toggleMenu}
-                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer`}
+                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-transparent to-transparent backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer`}
                 >
-                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
-                    <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-white/60 blur-sm"></div>
+                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-transparent to-transparent"></div>
+                    <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-transparent blur-sm"></div>
                 </div>
 
                 {isMenuOpen && (
@@ -479,3 +480,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
