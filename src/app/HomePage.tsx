@@ -7,21 +7,21 @@ import { Moon, Compass, Music, Eye } from 'lucide-react';
 const HomePage: React.FC = () => {
   const navigate = useNavigate(); // Hook para navegação entre rotas
   const [loading, setLoading] = useState(true); // Estado para controlar carregamento da página
-  const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do usuário
+  const [userName, setUserName] = useState<string>(''); // Estado para armazenar o nome do utilizador
   const [userFirstName, setUserFirstName] = useState<string>('');
   const [bubbleTitle, setBubbleTitle] = useState<string>("Olá!"); // Título do cartão
   const [bubbleText, setBubbleText] = useState<string>("Dê o primeiro passo para um novo mundo!"); // Subtítulo do cartão
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
   const [logo, setLogo] = useState<React.ReactNode>(null); // Estado para armazenar a Logo. Alterado para React.ReactNode
 
-    // Componente da Logo ECO
-    const ECOLogo = () => (
-        <span
-        className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
-        >
-        ECO
-        </span>
-    );
+  // Componente da Logo ECO
+  const ECOLogo = () => (
+    <span
+      className="text-4xl font-bold text-black drop-shadow-lg transition-all duration-300 hover:scale-105  cursor-pointer"
+    >
+      ECO
+    </span>
+  );
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
   };
 
 
-  // useEffect para verificar se o usuário está autenticado e obter o nome
+  // useEffect para verificar se o utilizador está autenticado e obter o nome
   useEffect(() => {
     console.log('HomePage useEffect triggered');
 
@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
         navigate('/login');
       } else {
         console.log('User session found in HomePage');
-        // Busca o nome do usuário no banco de dados
+        // Busca o nome do utilizador na base de dados
         try {
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -76,30 +76,30 @@ const HomePage: React.FC = () => {
 
           if (profileError) {
             console.error("Erro ao buscar perfil:", profileError);
-            setUserName('Usuário'); // Define um nome padrão
-            setUserFirstName('Usuário');
+            setUserName('Utilizador'); // Define um nome padrão
+            setUserFirstName('Utilizador');
           } else if (profile) {
             // Pega o primeiro nome
             const firstName = profile.full_name.split(' ')[0];
-            console.log("Nome completo do usuário:", profile.full_name);
-            console.log("Primeiro nome do usuário:", firstName);
+            console.log("Nome completo do utilizador:", profile.full_name);
+            console.log("Primeiro nome do utilizador:", firstName);
             setUserName(profile.full_name);
             setUserFirstName(firstName);
           } else {
-            setUserName('Usuário'); // Define um nome padrão caso não encontre o perfil
-            setUserFirstName('Usuário');
+            setUserName('Utilizador'); // Define um nome padrão caso não encontre o perfil
+            setUserFirstName('Utilizador');
           }
         } catch (error) {
           console.error("Erro ao buscar perfil:", error);
-          setUserName('Usuário');
-          setUserFirstName('Usuário');
+          setUserName('Utilizador');
+          setUserFirstName('Utilizador');
         }
         setLoading(false);
       }
     };
 
     verifySession();
-        setLogo(<ECOLogo />); // Define o componente ECOLogo no estado
+    setLogo(<ECOLogo />); // Define o componente ECOLogo no estado
   }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
@@ -154,14 +154,16 @@ const HomePage: React.FC = () => {
           <p className="text-gray-600 mb-6">{bubbleText}</p>
           <button
             onClick={navigateToEcoBubble}
-            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]" // Alterado o gradiente do botão
+            className="w-full bg-black text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg"
           >
             {buttonText}
           </button>
         </div>
 
         {/* Cartão com citação/reflexão */}
-        <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100">
+        <div className="group overflow-hidden rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer border border-gray-100"
+          style={{ backgroundColor: '#f8f8f8' }}
+        >
           <div
             className="h-48 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
             style={{
@@ -187,4 +189,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
