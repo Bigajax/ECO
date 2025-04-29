@@ -63,7 +63,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
             url: 'https://openrouter.ai/api/v1/chat/completions',
             headers: headers,
-            body: requestBody,
+            body: requestBody, // ADICIONEI ESTE LOG
         });
 
         const openAiResponse = await fetch(
@@ -86,7 +86,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         }
 
         console.log("Resposta completa da API:", openAiData);
-        console.log("Status da resposta da API:", openAiResponse.status);
+        console.log("Status da resposta da API:", openAiResponse.status); // ADICIONEI ESTE LOG
 
 
         if (!openAiResponse.ok) {
@@ -106,6 +106,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         console.log("Resposta bruta da API (rawReply):", rawReply);
 
         if (!rawReply) {
+            console.warn("A API do OpenAI retornou uma resposta vazia ou nula."); // ADICIONEI ESTE LOG
             return {
                 text: 'Desculpe, não consegui entender sua reflexão. Vamos tentar novamente?',
                 audio: null,
@@ -116,8 +117,9 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
 
         try {
             parsedReply = JSON.parse(rawReply);
-        } catch (e) {
+        } catch (e: any) {
             console.warn("Resposta da IA não está em formato JSON:", rawReply, e); // Inclui o erro `e` no log
+             console.error("Detalhes do erro de parsing:", e.message);
             parsedReply.resposta = rawReply;
         }
 
