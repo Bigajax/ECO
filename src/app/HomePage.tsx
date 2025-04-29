@@ -14,14 +14,14 @@ const HomePage: React.FC = () => {
   const [buttonText, setButtonText] = useState<string>("Conversar com a ECO"); // Texto do botão
   const [logo, setLogo] = useState<React.ReactNode>(null); // Estado para armazenar a Logo. Alterado para React.ReactNode
 
-    // Componente da Logo ECO
-    const ECOLogo = () => (
-        <span
-        className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
-        >
-        ECO
-        </span>
-    );
+  // Componente da Logo ECO
+  const ECOLogo = () => (
+    <span
+      className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
+    >
+      ECO
+    </span>
+  );
 
   const navigateToEcoBubble = useCallback(() => {
     navigate('/eco-bubble'); // Navegação para a rota da EcoBubbleInterface
@@ -99,7 +99,7 @@ const HomePage: React.FC = () => {
     };
 
     verifySession();
-        setLogo(<ECOLogo />); // Define o componente ECOLogo no estado
+    setLogo(<ECOLogo />); // Define o componente ECOLogo no estado
   }, [navigate]);
 
   // Tela de carregamento enquanto verifica a sessão
@@ -154,7 +154,8 @@ const HomePage: React.FC = () => {
           <p className="text-gray-600 mb-6">{bubbleText}</p>
           <button
             onClick={navigateToEcoBubble}
-            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]" // Alterado o gradiente do botão
+            className="w-full text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+            style={{ backgroundImage: 'linear-gradient(to right, #80ed99, #8ac926, #f72585)' }} // Aplica o gradiente ao botão
           >
             {buttonText}
           </button>
@@ -187,4 +188,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
