@@ -52,9 +52,15 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             messages: messages,
         };
 
+        // Verifica se a chave da API está definida
+        if (!import.meta.env.VITE_OPENAI_API_KEY) {
+            console.warn("A variável de ambiente VITE_OPENAI_API_KEY não está definida!");
+        }
+
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Usa Authorization
+            'apikey': import.meta.env.VITE_OPENAI_API_KEY,             // Tenta também com 'apikey'
             'X-Title': 'ECOApp', // Adicionado cabeçalho X-Title
         };
 
@@ -135,3 +141,4 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         };
     }
 };
+
