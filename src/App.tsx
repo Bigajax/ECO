@@ -1,47 +1,47 @@
-// src/App.tsx
-import React from 'react';
-import Slide from './app/IntroductionPage'; // Importe o componente Slide
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LoadingBubble from './components/LoadingBubble'; // Importe o LoadingBubble
 import LoginPage from './app/LoginPage';
 import HomePage from './app/HomePage';
 import SignupPage from './app/SignupPage';
 import EcoBubbleInterface from './components/EcoBubbleInterface';
 import IntroductionPage from './app/IntroductionPage';
-
-// Dados de exemplo para o componente Slide (para teste isolado)
-const testSlideData = {
-  title: "Teste",
-  text: ["Linha 1", "Linha 2"],
-  color: "#007BA7",
-  bubblePosition: "floating",
-  background: "linear-gradient(145deg, #F8F5F0 0%, #F8F5F0 100%)",
-  onNext: () => {},
-  onPrev: () => {},
-  isFirst: true,
-  isLast: false,
-};
+//import Slide from './app/IntroductionPage'; // Remova ou comente esta linha, parece não ser usada aqui
 
 function App() {
-  // Descomente a linha abaixo para testar o componente Slide isoladamente
-  // return (
-  //   <div className="App">
-  //     <Slide {...testSlideData} />
-  //   </div>
-  // );
+  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
 
-  // Comente o bloco abaixo (o return com as rotas) para testar o Slide isoladamente
+  useEffect(() => {
+    // Simule o carregamento inicial da aplicação
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Define para falso após a simulação de 3 segundos
+    }, 3000);
+
+    return () => clearTimeout(timer); // Limpeza
+  }, []);
+
   return (
-    <Router>
-      <Routes>
-        {/* Redireciona da raiz para /login */}
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/eco-bubble" element={<EcoBubbleInterface />} />
-        <Route path="/introduction" element={<IntroductionPage />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      {isLoading ? (
+        <LoadingBubble
+          size="xl"
+          label="Carregando Aplicação..."
+          className="fixed inset-0 bg-gray-900/90 flex items-center justify-center z-50"
+        />
+      ) : (
+        <Router>
+          <Routes>
+            {/* Redireciona da raiz para /login */}
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/eco-bubble" element={<EcoBubbleInterface />} />
+            <Route path="/introduction" element={<IntroductionPage />} />
+          </Routes>
+        </Router>
+      )}
+    </div>
   );
 }
 
