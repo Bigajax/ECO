@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoadingBubble from './components/LoadingBubble'; // Importe o LoadingBubble
+import LoadingBubble from './components/LoadingBubble';
 import LoginPage from './app/LoginPage';
 import HomePage from './app/HomePage';
 import SignupPage from './app/SignupPage';
 import EcoBubbleInterface from './components/EcoBubbleInterface';
 import IntroductionPage from './app/IntroductionPage';
-//import Slide from './app/IntroductionPage'; // Remova ou comente esta linha, parece não ser usada aqui
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simule o carregamento inicial da aplicação
+    // Simula o carregamento inicial da aplicação (e verifica se o usuário está autenticado)
     const timer = setTimeout(() => {
-      setIsLoading(false); // Define para falso após a simulação de 3 segundos
-    }, 3000);
+      // Aqui você colocaria sua lógica real de verificação de autenticação
+      // Por exemplo:
+      // const usuarioAutenticado = localStorage.getItem('token');
+      // setIsLoading(usuarioAutenticado ? false : false); //Mudei para false para mostrar a tela de home
+      setIsLoading(false); // Remova esta linha quando tiver a lógica de autenticação
+    }, 1500); // Reduzi o tempo de simulação para 1.5 segundos
 
-    return () => clearTimeout(timer); // Limpeza
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -31,7 +34,6 @@ function App() {
       ) : (
         <Router>
           <Routes>
-            {/* Redireciona da raiz para /login */}
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/home" element={<HomePage />} />
