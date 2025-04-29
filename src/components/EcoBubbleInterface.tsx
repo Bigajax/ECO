@@ -93,7 +93,7 @@ function EcoBubbleInterface() {
         // Coletar os dados relevantes para salvar na memória
         if (latestUserMessage.current && userId) {
             const lastAIResponse = conversation.findLast(msg => !msg.isUser)?.text;
-             const sentimento = conversation.findLast(msg => !msg.isUser && msg.text.includes("Sentimento:"))?.text.split("Sentimento:").pop()?.trim() || null;
+              const sentimento = conversation.findLast(msg => !msg.isUser && msg.text.includes("Sentimento:"))?.text.split("Sentimento:").pop()?.trim() || null;
             const resumo_eco = conversation.findLast(msg => !msg.isUser && msg.text.includes("Resumo:"))?.text.split("Resumo:").pop()?.trim() || null;
             const emocao_principal = conversation.findLast(msg => !msg.isUser && msg.text.includes("Emoção:"))?.text.split("Emoção:").pop()?.trim() || null;
             const intensidade = conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim() ? parseFloat(conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim()!) : null;
@@ -299,7 +299,7 @@ function EcoBubbleInterface() {
 
     const BubbleIcon = () => (
         <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center">
-            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200 animate-pulse-slow">
+            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200">
                 <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
@@ -318,7 +318,7 @@ function EcoBubbleInterface() {
             <div className="relative mb-8 flex flex-col items-center">
                 <div
                     onClick={toggleMenu}
-                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer ${isEcoSpeaking ? 'eco-bubble-vibrate' : ''}`}
+                    className={`w-44 h-44 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-lg shadow-xl relative flex items-center justify-center cursor-pointer`}
                 >
                     <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 to-transparent"></div>
                     <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-white/60 blur-sm"></div>
@@ -475,3 +475,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
