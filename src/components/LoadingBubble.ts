@@ -3,13 +3,11 @@ import './LoadingBubble.css';
 
 interface LoadingBubbleProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  label?: string;
   className?: string;
 }
 
 const LoadingBubble: React.FC<LoadingBubbleProps> = ({
   size = 'md',
-  label,
   className = ''
 }) => {
   const sizeClasses = {
@@ -19,8 +17,8 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
     xl: 'w-40 h-40',
   };
 
-  const containerClasses = `flex flex-col items-center justify-center ${className}`; // Use template literals
-  const bubbleClasses = `loading-bubble relative rounded-full ${sizeClasses[size]}`; // Use template literals
+  const containerClasses = `flex flex-col items-center justify-center ${className}`;
+  const bubbleClasses = `loading-bubble relative rounded-full ${sizeClasses[size]}`;
 
   return (
     <div className={containerClasses}>
@@ -31,9 +29,6 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
       >
         <div className="bubble-inner absolute inset-0 rounded-full"></div>
       </div>
-      {label && (
-        <p className="mt-4 text-white/80 font-medium">{label}</p>
-      )}
     </div>
   );
 };
