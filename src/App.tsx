@@ -5,6 +5,7 @@ import HomePage from './app/HomePage';
 import SignupPage from './app/SignupPage';
 import EcoBubbleInterface from './components/EcoBubbleInterface';
 import IntroductionPage from './app/IntroductionPage';
+import EcoAudio from './app/EcoAudio'; // Importe o componente EcoAudio
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/eco-bubble" element={<EcoBubbleInterface />} />
           <Route path="/introduction" element={<IntroductionPage />} />
+          <Route path="/ecoaudio" element={<EcoAudio />} /> {/* Adicione a rota para EcoAudio */}
         </Routes>
       </Router>
     </div>
