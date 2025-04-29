@@ -227,7 +227,7 @@ const LoginPage: React.FC = () => {
         <div
             className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
         >
-            <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg shadow-xl"> {/* Adicionada sombra */}
+            <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg shadow-xl">
                 <div className="flex justify-center mb-12">
                     <ECOLogo />
                 </div>
@@ -285,12 +285,20 @@ const LoginPage: React.FC = () => {
                     </button>
                 </form>
 
-                <div className="text-center mt-4">
+                <div className="text-center mt-4 space-y-3">
                     <button
                         onClick={() => navigate('/signup')}
-                        className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Criar conta
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={handleOpenTour}
+                        className="w-full py-3  bg-white text-black rounded-full font-medium transition-all duration-300  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" // Estilo do botão Iniciar Tour
+                    >
+                        Iniciar Tour
                     </button>
                 </div>
 
@@ -302,14 +310,6 @@ const LoginPage: React.FC = () => {
                         <span className="bg-white px-2 text-gray-500">ou</span>
                     </div>
                 </div>
-
-                <button
-                    type="button"
-                    onClick={handleOpenTour}
-                    className="w-full py-3 mt-4 rounded-full bg-black text-white font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg" // Estilo do botão Iniciar Tour
-                >
-                    Iniciar Tour
-                </button>
             </div>
             <p className="mt-4 text-xs text-gray-500">v1.0</p>
         </div>
