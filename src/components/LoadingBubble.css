@@ -1,1 +1,76 @@
+.loading-bubble {
+  background: rgba(92, 167, 255, 0.1);
+  box-shadow: 0 0 40px rgba(92, 167, 255, 0.2);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.bubble-inner {
+  background: radial-gradient(
+    circle,
+    rgba(255, 130, 170, 0.6) 0%,
+    rgba(92, 167, 255, 0.4) 45%,
+    rgba(92, 167, 255, 0.1) 100%
+  );
+  opacity: 0.8;
+  filter: blur(4px);
+  transform: scale(0.85);
+  animation: glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+
+.loading-bubble::before,
+.loading-bubble::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 130, 170, 0.3) 0%,
+    rgba(92, 167, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: wave 8s linear infinite;
+  border-radius: 45%;
+}
+
+.loading-bubble::after {
+  animation: wave 8s linear infinite reverse;
+  opacity: 0.5;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.6;
+    filter: blur(4px);
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 0.9;
+    filter: blur(2px);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
