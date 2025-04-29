@@ -73,7 +73,7 @@ body {
   color: white;
   cursor: pointer;
   margin-right: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(25, 255, 255, 0.3);
   transition: background-color 0.3s ease, transform 0.2s ease;
   font-family: 'Inter', sans-serif;
   backdrop-filter: blur(5px);
