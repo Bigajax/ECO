@@ -227,7 +227,7 @@ const LoginPage: React.FC = () => {
         <div
             className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
         >
-            <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
+            <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg shadow-xl"> {/* Adicionada sombra */}
                 <div className="flex justify-center mb-12">
                     <ECOLogo />
                 </div>
@@ -306,7 +306,7 @@ const LoginPage: React.FC = () => {
                 <button
                     type="button"
                     onClick={handleOpenTour}
-                    className="w-full py-3 mt-4 rounded-md border border-gray-300 shadow-sm bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="w-full py-3 mt-4 rounded-full bg-black text-white font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg" // Estilo do botão Iniciar Tour
                 >
                     Iniciar Tour
                 </button>
