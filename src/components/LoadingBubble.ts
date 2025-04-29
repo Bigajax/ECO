@@ -19,8 +19,8 @@ const LoadingBubble: React.FC<LoadingBubbleProps> = ({
     xl: 'w-40 h-40',
   };
 
-  const containerClasses = 'flex flex-col items-center justify-center ' + className;
-  const bubbleClasses = 'loading-bubble relative rounded-full ' + sizeClasses[size];
+  const containerClasses = `flex flex-col items-center justify-center ${className}`; // Use template literals
+  const bubbleClasses = `loading-bubble relative rounded-full ${sizeClasses[size]}`; // Use template literals
 
   return (
     <div className={containerClasses}>
