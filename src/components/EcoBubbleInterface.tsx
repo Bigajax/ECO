@@ -32,109 +32,17 @@ interface MemoryData {
     intensidade: number | null;
 }
 
-const conversationContainerStyle = {
-    width: '100%',
-    maxWidth: '640px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '1rem',
-    boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.1)',
-    marginBottom: '1rem',
-    padding: '1.5rem',
-    height: '400px',
-    overflowY: 'auto',
-};
-
-const messageStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'fit-content',
-    maxWidth: '98%',
-    borderRadius: '0.75rem',
-    padding: '1rem',
-    margin: '0.5rem 0',
-};
-
-const userMessageStyle = {
-    ...messageStyle,
-    marginLeft: 'auto',
-    backgroundColor: 'white',
-};
-
-const ecoMessageStyle = {
-    ...messageStyle,
-    marginRight: 'auto',
-    backgroundColor: 'white',
-};
-
-const textStyle = {
-    fontSize: '0.95rem',
-    wordBreak: 'break-word',
-    whiteSpace: 'pre-wrap',
-    color: 'black'
-};
-
-const inputControlsContainerStyle = {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    width: '100%',
-};
-
-const rowReverseStyle = {
-    flexDirection: 'row-reverse',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    width: '100%',
-};
-
-const plusButtonStyle = {
-    marginTop: '0.5rem',
-};
-
-const memoryButtonWrapperStyle = {
-    position: 'relative',
-};
-
-const inputStyle = {
-    width: 'calc(100% - 100px)',
-    padding: '0.75rem 1rem',
-    borderRadius: '1rem',
-    backgroundColor: 'white',
-    border: '1px solid #e5e7eb',
-    color: '#1f2937',
-    resize: 'none',
-    outline: 'none',
-    transition: 'all 0.2s ease',
-    minHeight: '2.5rem',
-    maxHeight: '7.5rem',
-    placeholderColor: '#9ca3af',
-    order: 2,
-};
-
-const micButtonStyle = {
-    padding: '0.5rem',
-    borderRadius: '9999px',
-    transition: 'all 0.2s ease',
-    order: 1,
-};
-
-const sendButtonStyle = {
-    padding: '0.5rem',
-    borderRadius: '9999px',
-    transition: 'all 0.3s ease',
-    order: 0,
-};
-
-const feedbackButtonStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    color: '#6b7280',
-    transition: 'color 0.2s ease',
-};
+// Componente auxiliar para o botão de adicionar memória
+const PlusButton = ({ className, onClick, ariaLabel, style, children }: { className: string, onClick: () => void, ariaLabel: string, style?: React.CSSProperties, children: React.ReactNode }) => (
+    <button
+        className={className}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        style={style}
+    >
+        {children}
+    </button>
+);
 
 function EcoBubbleInterface() {
     const [message, setMessage] = useState('');
@@ -174,7 +82,7 @@ function EcoBubbleInterface() {
         setIsSpeaking(false);
     }, []);
 
-      const handleSaveMemory = useCallback(async (memoryData: MemoryData) => {
+    const handleSaveMemory = useCallback(async (memoryData: MemoryData) => {
         console.log("handleSaveMemory chamado", { memoryData, userId });
         if (userId) {
             try {
@@ -196,7 +104,7 @@ function EcoBubbleInterface() {
         // Coletar os dados relevantes para salvar na memória
         if (latestUserMessage.current && userId) {
             const lastAIResponse = conversation.findLast(msg => !msg.isUser)?.text;
-              const sentimento = conversation.findLast(msg => !msg.isUser && msg.text.includes("Sentimento:"))?.text.split("Sentimento:").pop()?.trim() || null;
+            const sentimento = conversation.findLast(msg => !msg.isUser && msg.text.includes("Sentimento:"))?.text.split("Sentimento:").pop()?.trim() || null;
             const resumo_eco = conversation.findLast(msg => !msg.isUser && msg.text.includes("Resumo:"))?.text.split("Resumo:").pop()?.trim() || null;
             const emocao_principal = conversation.findLast(msg => !msg.isUser && msg.text.includes("Emoção:"))?.text.split("Emoção:").pop()?.trim() || null;
             const intensidade = conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim() ? parseFloat(conversation.findLast(msg => !msg.isUser && msg.text.includes("Intensidade:"))?.text.split("Intensidade:").pop()?.trim()!) : null;
@@ -400,7 +308,7 @@ function EcoBubbleInterface() {
         alert('Obrigado pelas suas sugestões!');
     }, []);
 
-    const BubbleIcon = () => null; // Alteração: Removendo o conteúdo do componente, efetivamente removendo o ícone.
+    const BubbleIcon = () => null;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
@@ -437,7 +345,7 @@ function EcoBubbleInterface() {
             </div>
 
             <div
-                style={conversationContainerStyle}
+                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[400px] overflow-y-auto"
                 ref={conversationContainerRef}
             >
                 {conversation.map((msg, index) => {
@@ -445,39 +353,46 @@ function EcoBubbleInterface() {
                     return (
                         <div
                             key={index}
-                            style={msg.isUser ? userMessageStyle : ecoMessageStyle}
+                            className={`flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2 ${msg.isUser ? 'ml-auto' : 'mr-auto'}`}
+                            style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
                         >
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                                 {!msg.isUser && <BubbleIcon />}
                                 <p
-                                    style={textStyle}
-                                    dangerouslySetInnerHTML={{ __html: messageText }}
-                                />
+                                    className="text-sm break-words text-black"
+                                    style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
+                                >
+                                    {!msg.isUser && msg.text.startsWith("ECO: ") ? "" : (!msg.isUser ? <span className="font-semibold">ECO: </span> : "")}
+                                    <span dangerouslySetInnerHTML={{ __html: messageText }} />
+                                </p>
                             </div>
                         </div>
                     );
                 })}
             </div>
 
-            <div style={{position: 'sticky', bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', padding: '0.75rem', width: '100%', maxWidth: '640px', display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem', boxShadow: '0 0.25rem 0.5rem rgba(0, 0, 0, 0.1)' }}>
-                <InputControlsContainer>
-                    <RowReverse>
+            <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
+                <div className="relative flex items-center gap-2 w-full input-controls-container">
+                    <div className="flex items-center gap-2 w-full" style={{ flexDirection: 'row-reverse' }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
                             <PlusButton
                                 className="plus-button"
                                 onClick={toggleMemoryButtonVisibility}
                                 aria-label="Mostrar opções de memória"
-                                style={plusButtonStyle}
+                                style={{ marginTop: '8px' }}
                             >
                                 <Lucide.Plus size={20} />
                             </PlusButton>
                             {isMemoryButtonVisible && (
-                                <MemoryButtonWrapper className="memory-button-wrapper visible" style={memoryButtonWrapperStyle}>
+                                <div
+                                    className="memory-button-wrapper visible"
+                                    style={{ position: 'relative' }}
+                                >
                                     <MemoryButton
                                         onMemoryButtonClick={handleMemoryButtonClick}
                                         size="md"
                                     />
-                                </MemoryButtonWrapper>
+                                </div>
                             )}
                         </div>
                         <textarea
@@ -486,42 +401,43 @@ function EcoBubbleInterface() {
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             placeholder="Sua reflexão..."
+                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[40px] max-h-[120px] placeholder-gray-400"
                             style={{
-                                ...inputStyle,
-                                height: Math.min(7.5 * 16, Math.max(2.5 * 16, 20 + message.split('\n').length * 20)),
+                                height: Math.min(120, Math.max(40, 20 + message.split('\n').length * 20)),
+                                width: 'calc(100% - 100px)',
+                                order: 2,
                             }}
                         />
                         <button
-                            className={`mic-button ${isListening
+                            className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
                                 ? 'bg-red-500 text-white animate-pulse'
                                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                                 }`}
                             onClick={handleMicClick}
                             aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                            style={micButtonStyle}
+                            style={{ order: 1 }}
                         >
                             <Lucide.Mic size={20} />
                         </button>
                         <button
-                            className={`send-button ${message.trim()
+                            className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
                                 ? 'bg-blue-500 text-white hover:bg-blue-600'
                                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                 }`}
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
-                            style={sendButtonStyle}
+                            style={{ order: 0 }}
                         >
                             <Lucide.Send size={20} />
                         </button>
                     </div>
-                </InputControlsContainer>
+                </div>
 
                 <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
                     <button
                         onClick={handleFeedbackClick}
                         className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
-                        style={feedbackButtonStyle}
                     >
                         <Lucide.ThumbsUp size={14} />
                         <span>Feedback</span>
@@ -530,7 +446,6 @@ function EcoBubbleInterface() {
                     <button
                         onClick={handleSuggestionsClick}
                         className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
-                        style={feedbackButtonStyle}
                     >
                         <Lucide.MessageSquare size={14} />
                         <span>Sugestões</span>
