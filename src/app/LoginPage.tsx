@@ -225,16 +225,16 @@ const LoginPage: React.FC = () => {
 
     return (
         <div
-            className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6" // Estilo da HomePage
+            className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
         >
             <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
                 <div className="flex justify-center mb-12">
-                  <ECOLogo />
+                    <ECOLogo />
                 </div>
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="relative rounded-md shadow-sm">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <FaUser className="text-gray-400" style={{ color: 'black' }} /> {/* Cor do ícone */}
+                            <FaUser className="text-gray-400" style={{ color: 'black' }} />
                         </div>
                         <input
                             type="email"
@@ -248,7 +248,7 @@ const LoginPage: React.FC = () => {
 
                     <div className="relative rounded-md shadow-sm">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <FaLock className="text-gray-400" style={{ color: 'black' }} />  {/* Cor do ícone */}
+                            <FaLock className="text-gray-400" style={{ color: 'black' }} />
                         </div>
                         <input
                             type={showPassword ? 'text' : 'password'}
@@ -259,7 +259,7 @@ const LoginPage: React.FC = () => {
                             className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
-                            {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEyeIcon className="text-gray-400" style={{ color: 'black' }} />}  {/* Cor do ícone */}
+                            {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEyeIcon className="text-gray-400" style={{ color: 'black' }} />}
                         </div>
                     </div>
 
@@ -268,7 +268,7 @@ const LoginPage: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-black text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg" // Estilo do botão da HomePage
+                        className="w-full bg-black text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-lg"
                     >
                         {loading ? (
                             <div className="flex justify-center items-center">
@@ -282,8 +282,13 @@ const LoginPage: React.FC = () => {
                 </form>
 
                 <div className="mt-6 text-center text-sm">
-                    <a href="#" className="font-medium text-black hover:text-indigo-500">  {/* Cor do link */}
+                    <a href="#" className="font-medium text-black hover:text-indigo-500">
                         Esqueceu a senha?
+                    </a>
+                </div>
+                <div className="text-center mt-4">
+                    <a href="/signup" className="text-black font-medium"> {/* Alterado para preto */}
+                        Criar conta
                     </a>
                 </div>
 
