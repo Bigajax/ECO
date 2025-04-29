@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
   // Componente da Logo ECO
   const ECOLogo = () => (
     <span
-      className="text-4xl font-bold bg-gradient-to-r from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
+      className="text-4xl font-bold text-black drop-shadow-lg transition-all duration-300 hover:scale-105  cursor-pointer"
     >
       ECO
     </span>
