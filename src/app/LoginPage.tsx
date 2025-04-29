@@ -263,7 +263,11 @@ const LoginPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    <div className="mt-6 text-center text-sm">
+                        <a href="#" className="font-medium text-black hover:text-indigo-500">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
 
                     <button
                         type="submit"
@@ -281,15 +285,13 @@ const LoginPage: React.FC = () => {
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm">
-                    <a href="#" className="font-medium text-black hover:text-indigo-500">
-                        Esqueceu a senha?
-                    </a>
-                </div>
                 <div className="text-center mt-4">
-                    <a href="/signup" className="text-black font-medium"> {/* Alterado para preto */}
+                    <button
+                        onClick={() => navigate('/signup')}
+                        className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
                         Criar conta
-                    </a>
+                    </button>
                 </div>
 
                 <div className="mt-6 relative">
@@ -315,3 +317,4 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+
