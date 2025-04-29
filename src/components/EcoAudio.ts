@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { cn } from "@/lib/utils" // Supondo que isso seja para mesclar nomes de classes
-import styles from './EcoAudio.module.css'; // Importe o arquivo CSS
+import { cn } from "@/lib/utils"
+import styles from './EcoAudio.module.css';
 
 // Define a fonte Inter globalmente (se já não estiver)
 const inter = "Inter";
@@ -14,21 +14,25 @@ const EcoAudio = () => {
 
   useEffect(() => {
     if (waveformRef.current) {
-      wavesurferRef.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: 'white',
-        progressColor: 'rgba(255, 255, 255, 0.5)',
-        cursorColor: 'transparent', // Make cursor invisible
-        barWidth: 4,
-        barGap: 3,
-        height: 40,
-        normalize: true,
-        backend: 'MediaElement', // Use MediaElement backend
-      });
+      try {
+        wavesurferRef.current = WaveSurfer.create({
+          container: waveformRef.current,
+          waveColor: 'white',
+          progressColor: 'rgba(255, 255, 255, 0.5)',
+          cursorColor: 'transparent',
+          barWidth: 4,
+          barGap: 3,
+          height: 40,
+          normalize: true,
+          backend: 'MediaElement',
+        });
 
-      wavesurferRef.current.on('play', () => setIsPlaying(true));
-      wavesurferRef.current.on('pause', () => setIsPlaying(false));
-      wavesurferRef.current.on('finish', () => setIsPlaying(false)); // Reset state
+        wavesurferRef.current.on('play', () => setIsPlaying(true));
+        wavesurferRef.current.on('pause', () => setIsPlaying(false));
+        wavesurferRef.current.on('finish', () => setIsPlaying(false));
+      } catch (error) {
+        console.error("WaveSurfer initialization error:", error);
+      }
     }
 
     return () => {
@@ -38,19 +42,27 @@ const EcoAudio = () => {
 
   useEffect(() => {
     if (audioUrl && wavesurferRef.current) {
-      wavesurferRef.current.load(audioUrl);
+      try{
+        wavesurferRef.current.load(audioUrl);
+      } catch(error){
+        console.error("WaveSurfer load error",error);
+      }
     }
   }, [audioUrl]);
 
 
   const togglePlayback = () => {
     if (wavesurferRef.current) {
-      if (isPlaying) {
-        wavesurferRef.current.pause();
-      } else {
-        wavesurferRef.current.play();
+      try {
+        if (isPlaying) {
+          wavesurferRef.current.pause();
+        } else {
+          wavesurferRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
+      } catch(error){
+        console.error("WaveSurfer playback error", error)
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
