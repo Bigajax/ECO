@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { cn } from "@/lib/utils" // Supondo que isso seja para mesclar nomes de classes
+import { cn } from "@/lib/utils" // Assuming this is for merging class names
 
-// Define a fonte Inter globalmente (se já não estiver)
+// Define the Inter font globally (if it's not already)
 const inter = "Inter";
 
-// Estilos (Considere mover para um arquivo CSS separado ou uma solução de CSS-in-JS)
+// Styles (Consider moving to a separate CSS file or a CSS-in-JS solution)
 const styles = `
 :root {
   --serylian-blue: #87CEEB;
@@ -123,9 +123,9 @@ const EcoAudio = () => {
         backend: 'MediaElement', // Use MediaElement backend
       });
 
-        wavesurferRef.current.on('play', () => setIsPlaying(true));
-        wavesurferRef.current.on('pause', () => setIsPlaying(false));
-        wavesurferRef.current.on('finish', () => setIsPlaying(false)); // Reset state
+      wavesurferRef.current.on('play', () => setIsPlaying(true));
+      wavesurferRef.current.on('pause', () => setIsPlaying(false));
+      wavesurferRef.current.on('finish', () => setIsPlaying(false)); // Reset state
     }
 
     return () => {
@@ -133,11 +133,11 @@ const EcoAudio = () => {
     };
   }, []);
 
-    useEffect(() => {
-        if (audioUrl && wavesurferRef.current) {
-             wavesurferRef.current.load(audioUrl);
-        }
-    }, [audioUrl]);
+  useEffect(() => {
+    if (audioUrl && wavesurferRef.current) {
+      wavesurferRef.current.load(audioUrl);
+    }
+  }, [audioUrl]);
 
   const startRecording = async () => {
     try {
@@ -154,8 +154,8 @@ const EcoAudio = () => {
         const blob = new Blob(chunksRef.current, { type: 'audio/wav' });
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
-        if(wavesurferRef.current){
-           wavesurferRef.current.load(url);
+        if (wavesurferRef.current) {
+          wavesurferRef.current.load(url);
         }
       };
 
@@ -283,7 +283,7 @@ const HomePage = () => {
         </button>
       </div>
 
-      <div className="tab-content active" id="home-content">
+      <div className={cn("tab-content", activeTab === 'home' && 'active')} id="home-content">
         <div className="flex flex-col items-center justify-center pt-20">
           <h1 className="text-4xl font-bold text-white mb-4">Bem-vindo à Página Inicial</h1>
           <p className="text-lg text-white">Esta é a página inicial do seu aplicativo.</p>
