@@ -349,7 +349,7 @@ function EcoBubbleInterface() {
             </div>
 
             <div
-                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[750px] overflow-y-auto" // Alterei o height para 750px
+                className="w-full max-w-lg bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg mb-4 conversation-container p-6 h-[550px] overflow-y-auto" // Alterei o height para 550px
                 ref={conversationContainerRef}
             >
                 {conversation.map((msg, index) => {
@@ -482,5 +482,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
 
