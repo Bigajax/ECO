@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { cn } from "@/lib/utils" // Assuming this is for class name merging
+import { cn } from "@/lib/utils" // Supondo que isso seja para mesclar nomes de classes
 
-// Define the Inter font globally (if it's not already)
+// Define a fonte Inter globalmente (se já não estiver)
 const inter = "Inter";
 
-// Styles (Consider moving to a separate CSS file or a CSS-in-JS solution)
+// Estilos (Considere mover para um arquivo CSS separado ou uma solução de CSS-in-JS)
 const styles = `
 :root {
   --serylian-blue: #87CEEB;
@@ -162,7 +162,7 @@ const EcoAudio = () => {
       mediaRecorder.start();
       setIsRecording(true);
     } catch (error) {
-      console.error('Error accessing microphone:', error);
+      console.error('Erro ao acessar o microfone:', error);
     }
   };
 
@@ -296,4 +296,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
