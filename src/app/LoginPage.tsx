@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from 'supabaseClient';
-import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'; // Importando ícones
+import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { BiLoaderCircle } from 'react-icons/bi';
+
+// Defina as cores Serilda e Quartzo (ajuste os valores exatos se necessário)
+const serildaBlue = '#74CBD4'; // Exemplo de azul Serilda
+const quartzoPink = '#F2B8B5'; // Exemplo de rosa Quartzo
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +19,7 @@ const LoginPage: React.FC = () => {
   const ECOLogo = () => (
     <div className="flex justify-center mb-10">
       <span
-        className="text-5xl font-bold text-indigo-700 drop-shadow-md"
+        className="text-5xl font-bold text-indigo-700 drop-shadow-md" // Mantive o indigo para o texto
       >
         Eco
       </span>
@@ -67,7 +71,7 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaUser className="text-gray-400" />
+              <FaUser className="text-gray-400" style={{ color: serildaBlue }} /> {/* Cor do ícone */}
             </div>
             <input
               type="email"
@@ -81,7 +85,7 @@ const LoginPage: React.FC = () => {
 
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaLock className="text-gray-400" />
+              <FaLock className="text-gray-400" style={{ color: serildaBlue }} /> {/* Cor do ícone */}
             </div>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -92,7 +96,7 @@ const LoginPage: React.FC = () => {
               className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" style={{ color: serildaBlue }} />} {/* Cor do ícone */}
             </div>
           </div>
 
@@ -105,7 +109,7 @@ const LoginPage: React.FC = () => {
               loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             }`}
           >
-            {loading ? <div className="flex justify-center items-center"><BiLoaderCircle className="animate-spin mr-2" /> Entrando...</div> : 'Entrar'}
+            {loading ? <div className="flex justify-center items-center"><BiLoaderCircle className="animate-spin mr-2" style={{ color: quartzoPink }}/> Entrando...</div> : 'Entrar'}
           </button>
         </form>
 
