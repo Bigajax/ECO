@@ -5,7 +5,6 @@ import HomePage from './app/HomePage';
 import SignupPage from './app/SignupPage';
 import EcoBubbleInterface from './components/EcoBubbleInterface';
 import IntroductionPage from './app/IntroductionPage';
-import EcoAudio from './components/EcoAudio'; // Importe o componente EcoAudio
 
 function App() {
   return (
