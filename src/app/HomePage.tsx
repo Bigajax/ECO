@@ -154,8 +154,7 @@ const HomePage: React.FC = () => {
           <p className="text-gray-600 mb-6">{bubbleText}</p>
           <button
             onClick={navigateToEcoBubble}
-            className="w-full text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-            style={{ backgroundImage: 'linear-gradient(to right, #80ed99, #8ac926, #f72585)' }} // Aplica o gradiente ao botão
+            className="w-full bg-gradient-to-r from-[#80ed99] to-[#f72585] text-white rounded-full py-4 px-6 text-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
           >
             {buttonText}
           </button>
