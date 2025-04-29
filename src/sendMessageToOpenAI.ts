@@ -48,23 +48,24 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         ];
 
         const requestBody = {
-            model: 'gpt-3.5-turbo', // Alterado para gpt-3.5-turbo
+            model: 'openai/gpt-4', // Você pode mudar para 'gpt-3.5-turbo' se preferir
             messages: messages,
         };
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+            'X-Title': 'ECOApp', // Adicionado cabeçalho X-Title
         };
 
         console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
-            url: 'https://api.openai.com/v1/chat/completions', // Alterado para a API da OpenAI
+            url: 'https://openrouter.ai/api/v1/chat/completions', // Endpoint do OpenRouter
             headers: headers,
             body: requestBody,
         });
 
         const openAiResponse = await fetch(
-            'https://api.openai.com/v1/chat/completions', // Alterado para a API da OpenAI
+            'https://openrouter.ai/api/v1/chat/completions', // Endpoint do OpenRouter
             {
                 method: 'POST',
                 headers: headers,
