@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     <div className="flex justify-center mb-10">
       <span
         className="text-5xl font-bold drop-shadow-md"
-        style={{ color: serildaBlue }} // Aplica a cor azul Serilda à logo
+        style={{ color: serildaBlue }}
       >
         Eco
       </span>
@@ -66,7 +66,11 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100"  // Aplica o gradiente ao fundo
+      style={{
+        backgroundImage: `linear-gradient(to bottom, ${serildaBlue}, ${quartzoPink})` // Define o gradiente usando as cores
+      }}
+    >
       <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
         <ECOLogo />
         <form onSubmit={handleLogin} className="space-y-6">
@@ -107,23 +111,28 @@ const LoginPage: React.FC = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-md text-white font-semibold transition ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             }`}
+            style={{
+              backgroundImage: !loading ? `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})` : 'none', // Aplica o gradiente ao botão
+              backgroundColor: loading ? '#gray-400' : undefined, // Mantém o fundo cinza para o estado de loading
+              color: !loading ? 'white' : undefined, // Garante que o texto seja branco se o gradiente estiver ativo
+            }}
           >
             {loading ? (
               <div className="flex justify-center items-center">
-                <BiLoaderCircle className="animate-spin mr-2" style={{ color: quartzoPink }} />
+                <BiLoaderCircle className="animate-spin mr-2" style={{ color: 'white' }} />
                 Entrando...
               </div>
             ) : (
-              <span style={{ color: quartzoPink }}>Entrar</span> // Aplica a cor rosa Quartzo ao texto "Entrar"
+              'Entrar'
             )}
           </button>
         </form>
 
         <div className="mt-6 text-center text-sm">
           <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500" style={{ color: serildaBlue }}>
-            Esqueceu a senha? {/* Aplica a cor azul Serilda ao texto "Esqueceu a senha?" */}
+            Esqueceu a senha?
           </a>
         </div>
 
