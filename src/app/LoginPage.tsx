@@ -17,13 +17,9 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const ECOLogo = () => (
-    <div className="flex justify-center mb-10" style={{
-        backgroundImage: `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})`,
-        WebkitBackgroundClip: 'text',
-        color: 'transparent',
-    }}>
+    <div className="flex justify-center mb-10">
       <span
-        className="text-5xl font-bold drop-shadow-md"
+        className="text-5xl font-bold drop-shadow-md text-black" // Alterado para preto
       >
         Eco
       </span>
@@ -112,11 +108,10 @@ const LoginPage: React.FC = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-md text-white font-semibold transition ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2' // Alterado para preto
             }`}
             style={{
-              backgroundImage: !loading ? `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})` : 'none',
-              backgroundColor: loading ? '#gray-400' : undefined,
+              backgroundColor: loading ? '#gray-400' : 'black', // Mantido preto
               color: !loading ? 'white' : undefined,
             }}
           >
