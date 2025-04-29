@@ -400,16 +400,7 @@ function EcoBubbleInterface() {
         alert('Obrigado pelas suas sugestões!');
     }, []);
 
-    const BubbleIcon = () => (
-        <div className="relative w-6 h-6 md:w-7 md:h-7 flex items-center justify-center">
-            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200">
-                <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    
-                </div>
-            </div>
-        </div>
-    );
+    const BubbleIcon = () => null; // Alteração: Removendo o conteúdo do componente, efetivamente removendo o ícone.
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-4 flex flex-col items-center">
