@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Lucide from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './EcoBubbleInterface.css';
+// Removendo a importação do CSS, pois pode estar causando o erro de build
+// import './EcoBubbleInterface.css';
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';
 import { supabase } from '../../supabaseClient';
@@ -302,7 +303,7 @@ function EcoBubbleInterface() {
             <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[conic-gradient(at_top_left,_#A248F5,_#DABDF9,_#F8F6FF,_#E9F4FF,_#B1D3FF)] shadow-lg shadow-indigo-200">
                 <div className="absolute inset-0 rounded-full bg-white opacity-10 blur-lg pointer-events-none" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-full animate-spin-slower rounded-full border-2 border-dotted border-white/30 opacity-30" />
+                    
                 </div>
             </div>
         </div>
