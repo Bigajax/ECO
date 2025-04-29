@@ -364,4 +364,118 @@ function EcoBubbleInterface() {
                                     className="text-sm break-words text-black"
                                     style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
                                 >
-                                    {!msg.isUser && msg.text.startsWith("ECO: ") ? "" : (!msg.isUser ? <span className="font-semibold">ECO: </span> : 
+                                    {!msg.isUser && msg.text.startsWith("ECO: ") ? "" : (!msg.isUser ? <span className="font-semibold">ECO: </span> : "")}
+                                    <span dangerouslySetInnerHTML={{ __html: messageText }} />
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
+                <div className="relative flex items-center gap-2 w-full input-controls-container">
+                    <div className="flex items-center gap-2 w-full" style={{ flexDirection: 'row-reverse' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
+                            <PlusButton
+                                className="plus-button"
+                                onClick={toggleMemoryButtonVisibility}
+                                aria-label="Mostrar opções de memória"
+                                style={{ marginTop: '8px' }}
+                            >
+                                <Lucide.Plus size={20} />
+                            </PlusButton>
+                            {isMemoryButtonVisible && (
+                                <div
+                                    className="memory-button-wrapper visible"
+                                    style={{ position: 'relative' }}
+                                >
+                                    <MemoryButton
+                                        onMemoryButtonClick={handleMemoryButtonClick}
+                                        size="md"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <textarea
+                            ref={inputRef}
+                            value={message}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Sua reflexão..."
+                            className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 text-gray-900 resize-none outline-none transition-all duration-200 min-h-[60px] max-h-[160px] placeholder-gray-400" // Aumentei os valores de min-h e max-h
+                            style={{
+                                height: Math.min(160, Math.max(60, 20 + message.split('\n').length * 20)), // Ajustei o cálculo da altura
+                                width: 'calc(100% - 100px)',
+                                order: 2,
+                            }}
+                        />
+                        <button
+                            className={`mic-button p-2 rounded-full transition-all duration-200 ${isListening
+                                ? 'bg-red-500 text-white animate-pulse'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
+                            onClick={handleMicClick}
+                            aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
+                            style={{ order: 1 }}
+                        >
+                            <Lucide.Mic size={20} />
+                        </button>
+                        <button
+                            className={`send-button p-2 rounded-full transition-all duration-300 ${message.trim()
+                                ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                            onClick={handleSendMessage}
+                            disabled={!message.trim() || isSending || !userId}
+                            aria-label="Enviar mensagem"
+                            style={{ order: 0 }}
+                        >
+                            <Lucide.Send size={20} />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="mt-2 flex justify-around items-center w-full text-xs text-gray-500">
+                    <button
+                        onClick={handleFeedbackClick}
+                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
+                    >
+                        <Lucide.ThumbsUp size={14} />
+                        <span>Feedback</span>
+                    </button>
+
+                    <button
+                        onClick={handleSuggestionsClick}
+                        className="feedback-button flex items-center gap-1 hover:text-gray-700 transition-colors duration-200"
+                    >
+                        <Lucide.MessageSquare size={14} />
+                        <span>Sugestões</span>
+                    </button>
+                </div>
+            </div>
+
+            {audioPlayer && (
+                <div className="absolute bottom-28 left-4 bg-white/80 backdrop-blur-lg rounded-md shadow-md p-2">
+                    <button
+                        onClick={() => {
+                            if (audioPlayer) {
+                                if (isPlaying) {
+                                    audioPlayer.pause();
+                                } else {
+                                    audioPlayer.play().catch((error) => console.error('Erro ao reproduzir áudio:', error));
+                                }
+                                setIsPlaying(!isPlaying);
+                            }
+                        }}
+                        className="focus:outline-none"
+                    >
+                        {isPlaying ? <Lucide.Pause size={20} /> : <Lucide.Play size={20} />}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default EcoBubbleInterface;
