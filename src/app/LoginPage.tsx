@@ -16,14 +16,16 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-    // Componente da Logo ECO (igual ao da HomePage)
-    const ECOLogo = () => (
-        <span
-            className="text-4xl font-bold bg-gradient-to-r from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
-        >
-            ECO
-        </span>
-    );
+  // Componente da Logo ECO (centralizada e preta)
+  const ECOLogo = () => (
+    <div className="flex justify-center mb-10">
+      <span
+        className="text-5xl font-bold drop-shadow-md text-black"
+      >
+        Eco
+      </span>
+    </div>
+  );
 
   useEffect(() => {
     const verifySession = async () => {
@@ -68,11 +70,11 @@ const LoginPage: React.FC = () => {
       className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
     >
       <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
-        <ECOLogo /> {/* Use o componente ECOLogo aqui */}
+        <ECOLogo />
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaUser className="text-gray-400" style={{ color: serildaBlue }} />
+              <FaUser className="text-gray-400" style={{ color: 'black' }} /> {/* Alterado para preto */}
             </div>
             <input
               type="email"
@@ -86,7 +88,7 @@ const LoginPage: React.FC = () => {
 
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <FaLock className="text-gray-400" style={{ color: serildaBlue }} />
+              <FaLock className="text-gray-400" style={{ color: 'black' }} /> {/* Alterado para preto */}
             </div>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -97,7 +99,7 @@ const LoginPage: React.FC = () => {
               className="appearance-none block w-full px-3 py-3 pl-10 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" style={{ color: serildaBlue }} />}
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" style={{ color: 'black' }} />} {/* Alterado para preto */}
             </div>
           </div>
 
@@ -107,10 +109,10 @@ const LoginPage: React.FC = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-md text-white font-semibold transition ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2' // Alterado para preto
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             }`}
             style={{
-              backgroundColor: loading ? '#gray-400' :  `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})`,
+              backgroundColor: loading ? '#gray-400' : `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})`,
               color: !loading ? 'white' : undefined,
             }}
           >
