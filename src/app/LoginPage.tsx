@@ -303,7 +303,7 @@ const LoginPage: React.FC = () => {
                     <button
                         type="button"
                         onClick={handleOpenTour}
-                        className="w-full py-3  bg-white text-black rounded-full font-medium transition-all duration-300  shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="w-full py-3 bg-white text-black rounded-full font-medium transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Iniciar Tour
                     </button>
