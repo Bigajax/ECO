@@ -17,10 +17,13 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const ECOLogo = () => (
-    <div className="flex justify-center mb-10">
+    <div className="flex justify-center mb-10" style={{
+        backgroundImage: `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})`,
+        WebkitBackgroundClip: 'text',
+        color: 'transparent',
+    }}>
       <span
         className="text-5xl font-bold drop-shadow-md"
-        style={{ color: serildaBlue }}
       >
         Eco
       </span>
@@ -66,10 +69,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100"  // Aplica o gradiente ao fundo
-      style={{
-        backgroundImage: `linear-gradient(to bottom, ${serildaBlue}, ${quartzoPink})` // Define o gradiente usando as cores
-      }}
+    <div
+      className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
     >
       <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
         <ECOLogo />
@@ -114,9 +115,9 @@ const LoginPage: React.FC = () => {
               loading ? 'bg-gray-400 cursor-not-allowed' : 'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
             }`}
             style={{
-              backgroundImage: !loading ? `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})` : 'none', // Aplica o gradiente ao botão
-              backgroundColor: loading ? '#gray-400' : undefined, // Mantém o fundo cinza para o estado de loading
-              color: !loading ? 'white' : undefined, // Garante que o texto seja branco se o gradiente estiver ativo
+              backgroundImage: !loading ? `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})` : 'none',
+              backgroundColor: loading ? '#gray-400' : undefined,
+              color: !loading ? 'white' : undefined,
             }}
           >
             {loading ? (
