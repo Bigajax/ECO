@@ -48,23 +48,23 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         ];
 
         const requestBody = {
-            model: 'openai/gpt-4', // Alterado para gpt-4
+            model: 'gpt-3.5-turbo', // Alterado para gpt-3.5-turbo
             messages: messages,
         };
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Verifique esta linha
+            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
         };
 
         console.log("Enviando requisição para a API do OpenAI com os seguintes dados:", {
-            url: 'https://openrouter.ai/api/v1/chat/completions',
+            url: 'https://api.openai.com/v1/chat/completions', // Alterado para a API da OpenAI
             headers: headers,
             body: requestBody,
         });
 
         const openAiResponse = await fetch(
-            'https://openrouter.ai/api/v1/chat/completions',
+            'https://api.openai.com/v1/chat/completions', // Alterado para a API da OpenAI
             {
                 method: 'POST',
                 headers: headers,
@@ -72,12 +72,10 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             }
         );
 
-        // *** Novo tratamento de resposta ***
         let openAiData;
         try {
             openAiData = await openAiResponse.json();
         } catch (error) {
-            // Se a resposta não for um JSON válido, trate como um erro de parsing
             console.error("Erro ao fazer o parsing da resposta do OpenAI:", error);
             throw new Error(`Erro ao analisar a resposta do servidor: ${openAiResponse.status}`);
         }
@@ -87,7 +85,6 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
 
         if (!openAiResponse.ok) {
             console.error('Erro da API (OpenAI):', openAiData);
-            // Tenta fornecer detalhes de erro mais específicos, se disponíveis.
             let errorMessage = `Erro da API do OpenAI: ${openAiResponse.status}`;
             if (openAiData && openAiData.error) {
                 errorMessage += ` - ${JSON.stringify(openAiData.error)}`;
@@ -95,7 +92,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             } else {
                 errorMessage += ` - ${JSON.stringify(openAiData)}`;
             }
-            throw new Error(errorMessage); // Lança o erro para ser capturado no catch
+            throw new Error(errorMessage);
         }
 
         const rawReply = openAiData.choices?.[0]?.message?.content;
