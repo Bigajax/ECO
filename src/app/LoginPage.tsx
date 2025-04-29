@@ -16,15 +16,14 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const ECOLogo = () => (
-    <div className="flex justify-center mb-10">
-      <span
-        className="text-5xl font-bold drop-shadow-md text-black" // Alterado para preto
-      >
-        Eco
-      </span>
-    </div>
-  );
+    // Componente da Logo ECO (igual ao da HomePage)
+    const ECOLogo = () => (
+        <span
+            className="text-4xl font-bold bg-gradient-to-r from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] text-transparent bg-clip-text drop-shadow-lg transition-all duration-300 hover:scale-105 hover:text-shadow-2xl cursor-pointer"
+        >
+            ECO
+        </span>
+    );
 
   useEffect(() => {
     const verifySession = async () => {
@@ -69,7 +68,7 @@ const LoginPage: React.FC = () => {
       className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#c5e8ff] via-[#e9f1ff] to-[#ffd9e6] animate-gradient-x p-6"
     >
       <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
-        <ECOLogo />
+        <ECOLogo /> {/* Use o componente ECOLogo aqui */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -111,7 +110,7 @@ const LoginPage: React.FC = () => {
               loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2' // Alterado para preto
             }`}
             style={{
-              backgroundColor: loading ? '#gray-400' : 'black', // Mantido preto
+              backgroundColor: loading ? '#gray-400' :  `linear-gradient(to right, ${serildaBlue}, ${quartzoPink})`,
               color: !loading ? 'white' : undefined,
             }}
           >
