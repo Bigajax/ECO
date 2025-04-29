@@ -151,56 +151,14 @@ const EcoAudio = () => {
   return (
     <div className={cn(inter, "min-h-screen flex flex-col items-center justify-center relative p-4 tab-content active")} id="eco-audio-content">
       <style>{styles}</style>
-      <div className="absolute top-8 left-8">
-        <button className="glass-bubble p-4 w-12 h-12 flex items-center justify-center">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path
-              fillRule="evenodd"
-              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <div className="glass-bubble w-20 h-20 flex items-center justify-center mb-20">
-        <span className="text-white text-2xl font-light">ECO</span>
-      </div>
-
-      <div className="glass-bubble w-64 h-64 flex items-center justify-center mb-16 p-4">
-        <div ref={waveformRef} className="w-full h-full flex items-center">
-          {!audioUrl && !isPlaying && ( // Alterado para verificar !isPlaying
-            <div className="audio-wave">
-              {[...Array(7)].map((_, i) => (
-                <span
-                  key={i}
-                  className="animate-pulse"
-                  style={{
-                    animationDelay: `${i * 0.1}s`,
-                    height: i === 3 ? '32px' : i === 2 || i === 4 ? '24px' : '16px',
-                  }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex gap-8">
-        <button
-          className="glass-bubble w-16 h-16 flex items-center justify-center"
-          onClick={togglePlayback}
-          disabled={!audioUrl}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            {isPlaying ? (
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
-            ) : (
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
-            )}
-          </svg>
-        </button>
+      <div>
+        <h1>Eco Audio</h1>
+        {audioUrl && (
+          <button onClick={togglePlayback}>
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
+        )}
+        <div ref={waveformRef} />
       </div>
     </div>
   );
