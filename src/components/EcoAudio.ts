@@ -42,10 +42,10 @@ const EcoAudio = () => {
 
   useEffect(() => {
     if (audioUrl && wavesurferRef.current) {
-      try{
+      try {
         wavesurferRef.current.load(audioUrl);
-      } catch(error){
-        console.error("WaveSurfer load error",error);
+      } catch (error) {
+        console.error("WaveSurfer load error", error);
       }
     }
   }, [audioUrl]);
@@ -60,7 +60,7 @@ const EcoAudio = () => {
           wavesurferRef.current.play();
         }
         setIsPlaying(!isPlaying);
-      } catch(error){
+      } catch (error) {
         console.error("WaveSurfer playback error", error)
       }
     }
@@ -142,29 +142,29 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-serylian-blue to-quartz-pink">
       <div className={styles.root}>
-      <div className="flex justify-center mt-8">
-        <button
-          className={cn(styles.tabButton, activeTab === 'home' && styles.active)}
-          onClick={() => setActiveTab('home')}
-        >
-          Home
-        </button>
-        <button
-          className={cn(styles.tabButton, activeTab === 'eco-audio' && styles.active)}
-          onClick={() => setActiveTab('eco-audio')}
-        >
-          Eco Audio
-        </button>
-      </div>
-
-      <div className={cn(styles.tabContent, activeTab === 'home' && styles.active)} id="home-content">
-        <div className="flex flex-col items-center justify-center pt-20">
-          <h1 className="text-4xl font-bold text-white mb-4">Bem-vindo à Página Inicial</h1>
-          <p className="text-lg text-white">Esta é a página inicial do seu aplicativo.</p>
+        <div className="flex justify-center mt-8">
+          <button
+            className={cn(styles.tabButton, activeTab === 'home' && styles.active)}
+            onClick={() => setActiveTab('home')}
+          >
+            Home
+          </button>
+          <button
+            className={cn(styles.tabButton, activeTab === 'eco-audio' && styles.active)}
+            onClick={() => setActiveTab('eco-audio')}
+          >
+            Eco Audio
+          </button>
         </div>
-      </div>
 
-      {activeTab === 'eco-audio' && <EcoAudio />}
+        <div className={cn(styles.tabContent, activeTab === 'home' && styles.active)} id="home-content">
+          <div className="flex flex-col items-center justify-center pt-20">
+            <h1 className="text-4xl font-bold text-white mb-4">Bem-vindo à Página Inicial</h1>
+            <p className="text-lg text-white">Esta é a página inicial do seu aplicativo.</p>
+          </div>
+        </div>
+
+        {activeTab === 'eco-audio' && <EcoAudio />}
       </div>
     </div>
   );
