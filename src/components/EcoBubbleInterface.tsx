@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils"
 import { sendMessageToOpenAI } from '../../sendMessageToOpenAI'; // Ajuste o caminho se necessário
 import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';// Ajuste o caminho se necessário
 import { supabase } from '../../supabaseClient';       // Ajuste o caminho se necessário
+import { salvarMensagem } from '../../salvarMensagem';     // Importação de salvarMensagem.ts
+import { usuarioService } from '../../usuarioService'; // Importação de usuarioService.ts
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -530,3 +532,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
