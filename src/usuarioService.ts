@@ -1,110 +1,52 @@
-import React, { useState } from 'react';
-import { cadastrarUsuario } from '../usuarioService'; // Ajuste o caminho do arquivo se necessário
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Loader2 } from "lucide-react"
+import { supabase } from './supabaseClient'; // Certifique-se de que o caminho está correto
 
-const CadastroForm = () => {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [mensagem, setMensagem] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setIsError(false);
-    setMensagem('Cadastrando...');
+export const usuarioService = {
+  obterNomeUsuario: async (userId: string): Promise<string> => {
     try {
-      await cadastrarUsuario(nome, email, senha);
-      setMensagem('Usuário cadastrado com sucesso!');
-      // Redirecione o usuário para a página de login, por exemplo
-      // history.push('/login'); // Se você estiver usando react-router-dom
-      setNome('');
-      setEmail('');
-      setSenha('');
-    } catch (error: any) {
-      setMensagem(error.message); // Exibe a mensagem de erro
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles') // Nome da tabela no Supabase
+        .select('full_name')
+        .eq('user_id', userId)
+        .single();
+
+      if (profileError) {
+        console.error("Erro ao buscar perfil:", profileError);
+        throw new Error("Erro ao buscar perfil do utilizador"); // Lança erro
+      }
+
+      if (profile) {
+        return profile.full_name;
+      } else {
+        return "utilizador";
+      }
+    } catch (error) {
+       console.error("Erro geral ao obter nome do utilizador:", error);
+      return "utilizador"; // Retorna um valor padrão em caso de erro
     }
-  };
+  },
+  deletarUsuario: async (userId: string): Promise<boolean> => {
+    try {
+      const { error: deleteProfileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('user_id', userId);
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Cadastro</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="nome">Nome</Label>
-            <Input
-              id="nome"
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Digite seu nome"
-              required
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Digite seu email"
-              required
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="senha">Senha</Label>
-            <Input
-              id="senha"
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="Digite sua senha"
-              required
-              className="mt-1"
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Cadastrando...
-              </>
-            ) : (
-              "Cadastrar"
-            )}
-          </Button>
-        </form>
-        {mensagem && (
-          <div className="mt-4">
-            {isError ? (
-              <Alert variant="destructive">
-                <AlertTitle>Erro</AlertTitle>
-                <AlertDescription>{mensagem}</AlertDescription>
-              </Alert>
-            ) : (
-              <Alert>
-                <AlertTitle>Sucesso</AlertTitle>
-                <AlertDescription>{mensagem}</AlertDescription>
-              </Alert>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+      if (deleteProfileError) {
+        console.error("Erro ao eliminar perfil:", deleteProfileError);
+        throw new Error("Erro ao eliminar perfil do utilizador");
+      }
+
+      const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(userId);
+
+
+      if (deleteAuthError) {
+        console.error("Erro ao eliminar utilizador da autenticação:", deleteAuthError);
+        throw new Error("Erro ao eliminar utilizador da autenticação.");
+      }
+      return true;
+    } catch (error: any) {
+      console.error("Erro geral ao eliminar utilizador:", error);
+      return false;
+    }
+  },
 };
-
-export default CadastroForm;
