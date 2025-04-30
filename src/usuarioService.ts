@@ -1,74 +1,110 @@
-import { supabase } from './supabaseClient'; // Supondo que você tenha um arquivo supabaseClient.ts
+import React, { useState } from 'react';
+import { cadastrarUsuario } from '../usuarioService'; // Ajuste o caminho do arquivo se necessário
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Loader2 } from "lucide-react"
 
-/**
- * Cadastra um novo usuário e insere seus dados na tabela 'usuarios'.
- *
- * @param {string} nome - O nome do usuário.
- * @param {string} email - O email do usuário.
- * @param {string} senha - A senha do usuário.
- * @returns {Promise<void>} - Uma Promise que resolve quando o usuário é cadastrado e seus dados são inseridos com sucesso, ou rejeita com um erro.
- */
-export const cadastrarUsuario = async (nome: string, email: string, senha: string): Promise<void> => {
-  try {
-    // 1. Cadastra o usuário no sistema de autenticação do Supabase
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password: senha,
-    });
+const CadastroForm = () => {
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-    if (signUpError) {
-      console.error("Erro ao cadastrar usuário:", signUpError);
-      throw new Error(`Erro ao cadastrar usuário: ${signUpError.message}`); // Lança o erro para ser capturado no catch
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setIsError(false);
+    setMensagem('Cadastrando...');
+    try {
+      await cadastrarUsuario(nome, email, senha);
+      setMensagem('Usuário cadastrado com sucesso!');
+      // Redirecione o usuário para a página de login, por exemplo
+      // history.push('/login'); // Se você estiver usando react-router-dom
+      setNome('');
+      setEmail('');
+      setSenha('');
+    } catch (error: any) {
+      setMensagem(error.message); // Exibe a mensagem de erro
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    // 2. Obtém o ID do usuário cadastrado
-    const { user } = signUpData;
-
-    // 3. Insere os dados do usuário na tabela 'usuarios'
-    const { data: insertData, error: insertError } = await supabase
-      .from('usuarios')
-      .insert([{
-        id: user.id,
-        nome,
-        email,
-        data_criacao: new Date(), // Usa new Date() para obter a data e hora atuais
-        tipo_plano: 'basic', // Valor padrão para o tipo de plano
-      }]);
-
-    if (insertError) {
-      console.error("Erro ao inserir dados do usuário na tabela 'usuarios':", insertError);
-      // Aqui, você pode querer excluir o usuário recém-criado no Auth, dependendo da sua lógica de negócio
-      // Exemplo (requer função 'excluirUsuario' - veja o código completo abaixo):
-      // await excluirUsuario(user.id);
-      throw new Error(`Erro ao inserir dados do usuário: ${insertError.message}`);
-    }
-
-    console.log("Usuário cadastrado e dados inseridos com sucesso:", insertData);
-    // Se tudo ocorreu bem, a Promise resolve sem retornar nada (void)
-  } catch (error: any) {
-    // Captura qualquer erro ocorrido nos passos anteriores
-    console.error("Erro geral ao cadastrar usuário:", error);
-    throw error; // Re-lança o erro para que quem chamou a função possa tratá-lo
-  }
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Cadastro</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="nome">Nome</Label>
+            <Input
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Digite seu nome"
+              required
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Digite seu email"
+              required
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="senha">Senha</Label>
+            <Input
+              id="senha"
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Digite sua senha"
+              required
+              className="mt-1"
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Cadastrando...
+              </>
+            ) : (
+              "Cadastrar"
+            )}
+          </Button>
+        </form>
+        {mensagem && (
+          <div className="mt-4">
+            {isError ? (
+              <Alert variant="destructive">
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>{mensagem}</AlertDescription>
+              </Alert>
+            ) : (
+              <Alert>
+                <AlertTitle>Sucesso</AlertTitle>
+                <AlertDescription>{mensagem}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
-/**
- * Exclui um usuário do sistema de autenticação do Supabase (auth.users).
- *
- * @param {string} userId - O ID do usuário a ser excluído.
- * @returns {Promise<void>} - Uma Promise que resolve quando o usuário é excluído com sucesso.
- */
-const excluirUsuario = async (userId: string): Promise<void> => {
-  try {
-    const { error } = await supabase.rpc('delete_user', { user_id: userId }); // Usando uma função RPC para excluir o usuário
-
-    if (error) {
-      console.error("Erro ao excluir usuário do Auth:", error);
-      throw new Error(`Erro ao excluir usuário do Auth: ${error.message}`);
-    }
-    console.log(`Usuário ${userId} excluído do Auth.`);
-  } catch (error: any) {
-    console.error("Erro ao excluir usuário do Auth (catch):", error);
-    throw error;
-  }
-};
+export default CadastroForm;
