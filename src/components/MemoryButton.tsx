@@ -1,29 +1,66 @@
-// Arquivo: src/components/MemoryButton/MemoryButton.tsx
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
+import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Importe a função
+import { usuarioService } from '../../usuarioService';
+import { useEffect } from 'react';
 
 interface MemoryButtonProps {
-    onMemoryButtonClick?: () => void; // Renomeamos a prop onClick para onMemoryButtonClick
+    onMemoryButtonClick?: (memoryData: MemoryData) => void;
     size?: 'sm' | 'md' | 'lg';
     className?: string;
+    conteudo: string; // Adicionando a prop conteudo
+}
+
+interface MemoryData {
+    usuario_id: string;
+    conteudo: string;
+    sentimento: string | null;
+    resumo_eco: string | null;
+    emocao_principal: string | null;
+    intensidade: number | null;
 }
 
 const seryldaBlue = '#6495ED';
 const white = '#FFFFFF';
 
 const MemoryButton: React.FC<MemoryButtonProps> = ({
-    onMemoryButtonClick, // Usamos o novo nome da prop
+    onMemoryButtonClick,
     size = 'md',
     className = '',
+    conteudo, // Usando a prop conteudo
 }) => {
     const [showMessage, setShowMessage] = useState(false);
+    const [userId, setUserId] = useState<string | null>(null);
+
+     useEffect(() => {
+        const getUserId = async () => {
+            try {
+                //Obtém o ID do usuário logado.
+                const id = await usuarioService.obterIdUsuario();
+                setUserId(id);
+            } catch (error) {
+                console.error("Erro ao obter ID do usuário:", error);
+                // Tratar o erro (exibir mensagem, redirecionar, etc.)
+            }
+        };
+        getUserId();
+    }, []);
 
     const handleClick = () => {
         setShowMessage(true);
         setTimeout(() => {
             setShowMessage(false);
-            if (onMemoryButtonClick) {
-                onMemoryButtonClick(); // Chamamos a função de navegação do pai após exibir a mensagem
+            if (onMemoryButtonClick && userId) {
+                // Criar objeto memoryData
+                const memoryData: MemoryData = {
+                    usuario_id: userId,
+                    conteudo: conteudo,
+                    sentimento: null,  // Preencha com os dados reais se disponíveis
+                    resumo_eco: null,    // Preencha com os dados reais se disponíveis
+                    emocao_principal: null, // Preencha com os dados reais se disponíveis
+                    intensidade: null,   // Preencha com os dados reais se disponíveis
+                };
+                onMemoryButtonClick(memoryData); // Passa os dados para o componente pai
             }
         }, 3000);
     };
