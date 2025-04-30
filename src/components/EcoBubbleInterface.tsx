@@ -8,12 +8,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Settings } from 'lucide-react';
 import { cn } from "@/lib/utils"
 
-// Supondo que estes arquivos estejam no mesmo diretório ou em um caminho relativo correto
-import { sendMessageToOpenAI } from '../../sendMessageToOpenAI'; // Ajuste o caminho se necessário
-import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria';// Ajuste o caminho se necessário
-import { supabase } from '../../supabaseClient';       // Ajuste o caminho se necessário
-import { salvarMensagem } from '../../salvarMensagem';     // Importação de salvarMensagem.ts
-import { usuarioService } from '../../usuarioService'; // Importação de usuarioService.ts
+// Supondo que estes arquivos estejam na raiz do projeto
+import { sendMessageToOpenAI } from '../../../sendMessageToOpenAI';
+import { salvarMensagemComMemoria } from '../../../salvarMensagemComMemoria';
+import { supabase } from '../../../supabaseClient';
+import { salvarMensagem } from '../../../salvarMensagem';
+import { usuarioService } from '../../../usuarioService';
+import MemoryButton from '../../components/MemoryButton/MemoryButton';
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -432,6 +433,7 @@ function EcoBubbleInterface() {
                                     <MemoryButton
                                         onMemoryButtonClick={handleMemoryButtonClick}
                                         size="md"
+                                        conteudo={latestUserMessage.current || ""} // Passa o conteúdo da mensagem
                                     />
                                 </div>
                             )}
@@ -449,19 +451,6 @@ function EcoBubbleInterface() {
                                 order: 2,
                             }}
                         />
-                        <button
-                            className={cn(
-                                "mic-button p-2 rounded-full transition-all duration-200",
-                                isListening
-                                    ? 'bg-red-500 text-white animate-pulse'
-                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            )}
-                            onClick={handleMicClick}
-                            aria-label={isListening ? "Parar gravação" : "Iniciar gravação"}
-                            style={{ order: 1 }}
-                        >
-                            <Mic size={20} />
-                        </button>
                         <button
                             className={cn(
                                 "send-button p-2 rounded-full transition-all duration-300",
@@ -497,7 +486,7 @@ function EcoBubbleInterface() {
                     </button>
                 </div>
             </div>
-             {error && (
+            {error && (
                 <div className="absolute bottom-36 left-4 right-4 max-w-lg">
                     <Alert variant="destructive">
                         <AlertTitle>Erro</AlertTitle>
@@ -532,4 +521,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
