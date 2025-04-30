@@ -1,42 +1,28 @@
-    import { supabase } from './supabaseClient';
+import { supabase } from './supabaseClient'; // Certifique-se de que o caminho está correto
 
-    /**
-     * @typedef {object} MemoryData
-     * @property {string} usuario_id
-     * @property {string} conteudo
-     * @property {string | null} sentimento
-     * @property {string | null} resumo_eco
-     * @property {string | null} emocao_principal
-     * @property {number | null} intensidade
-     */
+interface MemoryData {
+  usuario_id: string;
+  conteudo: string;
+  sentimento: string | null;
+  resumo_eco: string | null;
+  emocao_principal: string | null;
+  intensidade: number | null;
+}
 
-    /**
-     * Salva uma mensagem na tabela 'memorias' do Supabase.
-     *
-     * @param {MemoryData} memoryData - Os dados da memória a serem salvos.
-     * @returns {Promise<boolean>} - `true` se a mensagem for salva com sucesso, `false` caso contrário.
-     */
-    export const salvarMensagemComMemoria = async (memoryData) => {
-        try {
-            const { data, error } = await supabase
-                .from('memorias')
-                .insert([
-                    {
-                        usuario_id: memoryData.usuario_id,
-                        conteudo: memoryData.conteudo,
-                        sentimento: memoryData.sentimento,
-                        resumo_eco: memoryData.resumo_eco,
-                        emocao_principal: memoryData.emocao_principal,
-                        intensidade: memoryData.intensidade
-                    }
-                ]);
+export const salvarMensagemComMemoria = async (memoryData: MemoryData): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase
+      .from('memories') // Nome da tabela no Supabase
+      .insert([memoryData]);
 
-            if (error) throw error;
-            return true;
-        } catch (error) {
-            console.error("Erro ao salvar memória:", error);
-            return false;
-        }
-    };
-    
-
+    if (error) {
+      console.error("Erro ao inserir memória:", error);
+      throw new Error("Falha ao salvar memória"); // Lança erro para ser capturado no componente
+    }
+    console.log('Dados inseridos com sucesso:', data);
+    return true;
+  } catch (error) {
+    console.error("Erro geral ao salvar memória:", error);
+    return false; // Retorna false em caso de erro
+  }
+};

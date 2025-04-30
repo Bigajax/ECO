@@ -1,131 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { cn } from "@/lib/utils" // Supondo que isso seja para mesclar nomes de classes
+import { cn } from "@/lib/utils"
+import styles from './EcoAudio.module.css';
 
 // Define a fonte Inter globalmente (se já não estiver)
 const inter = "Inter";
 
-// Estilos (Considere mover para um arquivo CSS separado ou uma solução de CSS-in-JS)
-const styles = `
-:root {
-  --serylian-blue: #87CEEB;
-  --quartz-pink: #FFB7C5;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: linear-gradient(180deg, var(--serylian-blue) 0%, var(--quartz-pink) 100%);
-}
-
-.glass-bubble {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  transition: all 0.3s ease;
-}
-
-.glass-bubble:hover:not(:disabled) {
-  transform: scale(1.05);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
-}
-
-.glass-bubble:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.audio-wave {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.audio-wave span {
-  width: 4px;
-  height: 20px;
-  background: white;
-  border-radius: 2px;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-
-  50% {
-    transform: scaleY(0.5);
-  }
-}
-
-.animate-pulse {
-  animation: pulse 1s infinite;
-}
-
-.tab-button {
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  cursor: pointer;
-  margin-right: 10px;
-  border: 1px solid rgba(25, 255, 255, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-family: 'Inter', sans-serif;
-  backdrop-filter: blur(5px);
-}
-
-.tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.tab-button.active {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-  width: 100%;
-}
-`;
-
 const EcoAudio = () => {
-  const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (waveformRef.current) {
-      wavesurferRef.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: 'white',
-        progressColor: 'rgba(255, 255, 255, 0.5)',
-        cursorColor: 'transparent', // Make cursor invisible
-        barWidth: 4,
-        barGap: 3,
-        height: 40,
-        normalize: true,
-        backend: 'MediaElement', // Use MediaElement backend
-      });
+      try {
+        wavesurferRef.current = WaveSurfer.create({
+          container: waveformRef.current,
+          waveColor: 'white',
+          progressColor: 'rgba(255, 255, 255, 0.5)',
+          cursorColor: 'transparent',
+          barWidth: 4,
+          barGap: 3,
+          height: 40,
+          normalize: true,
+          backend: 'MediaElement',
+        });
 
         wavesurferRef.current.on('play', () => setIsPlaying(true));
         wavesurferRef.current.on('pause', () => setIsPlaying(false));
-        wavesurferRef.current.on('finish', () => setIsPlaying(false)); // Reset state
+        wavesurferRef.current.on('finish', () => setIsPlaying(false));
+      } catch (error) {
+        console.error("WaveSurfer initialization error:", error);
+      }
     }
 
     return () => {
@@ -133,60 +40,36 @@ const EcoAudio = () => {
     };
   }, []);
 
-    useEffect(() => {
-        if (audioUrl && wavesurferRef.current) {
-             wavesurferRef.current.load(audioUrl);
-        }
-    }, [audioUrl]);
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        chunksRef.current.push(e.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/wav' });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        if(wavesurferRef.current){
-           wavesurferRef.current.load(url);
-        }
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Erro ao acessar o microfone:', error);
+  useEffect(() => {
+    if (audioUrl && wavesurferRef.current) {
+      try{
+        wavesurferRef.current.load(audioUrl);
+      } catch(error){
+        console.error("WaveSurfer load error",error);
+      }
     }
-  };
+  }, [audioUrl]);
 
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
-  };
 
   const togglePlayback = () => {
     if (wavesurferRef.current) {
-      if (isPlaying) {
-        wavesurferRef.current.pause();
-      } else {
-        wavesurferRef.current.play();
+      try {
+        if (isPlaying) {
+          wavesurferRef.current.pause();
+        } else {
+          wavesurferRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
+      } catch(error){
+        console.error("WaveSurfer playback error", error)
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
   return (
-    <div className={cn(inter, "min-h-screen flex flex-col items-center justify-center relative p-4 tab-content active")} id="eco-audio-content">
-      <style>{styles}</style>
+    <div className={cn(inter, styles.root, "flex flex-col items-center justify-center relative p-4 tab-content active")} id="eco-audio-content">
       <div className="absolute top-8 left-8">
-        <button className="glass-bubble p-4 w-12 h-12 flex items-center justify-center">
+        <button className={cn(styles.glassBubble, "p-4 w-12 h-12 flex items-center justify-center")}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
             <path
@@ -198,18 +81,18 @@ const EcoAudio = () => {
         </button>
       </div>
 
-      <div className="glass-bubble w-20 h-20 flex items-center justify-center mb-20">
+      <div className={cn(styles.glassBubble, "w-20 h-20 flex items-center justify-center mb-20")}>
         <span className="text-white text-2xl font-light">ECO</span>
       </div>
 
-      <div className="glass-bubble w-64 h-64 flex items-center justify-center mb-16 p-4">
+      <div className={cn(styles.glassBubble, "w-64 h-64 flex items-center justify-center mb-16 p-4")}>
         <div ref={waveformRef} className="w-full h-full flex items-center">
-          {!audioUrl && !isRecording && (
-            <div className="audio-wave">
+          {!audioUrl && !isPlaying && (
+            <div className={styles.audioWave}>
               {[...Array(7)].map((_, i) => (
                 <span
                   key={i}
-                  className="animate-pulse"
+                  className={styles.animatePulse}
                   style={{
                     animationDelay: `${i * 0.1}s`,
                     height: i === 3 ? '32px' : i === 2 || i === 4 ? '24px' : '16px',
@@ -223,7 +106,7 @@ const EcoAudio = () => {
 
       <div className="flex gap-8">
         <button
-          className="glass-bubble w-16 h-16 flex items-center justify-center"
+          className={cn(styles.glassBubble, "w-16 h-16 flex items-center justify-center")}
           onClick={togglePlayback}
           disabled={!audioUrl}
         >
@@ -236,16 +119,7 @@ const EcoAudio = () => {
           </svg>
         </button>
         <button
-          className="glass-bubble w-20 h-20 flex items-center justify-center"
-          onClick={isRecording ? stopRecording : startRecording}
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill={isRecording ? '#ff4444' : 'white'}>
-            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-          </svg>
-        </button>
-        <button
-          className="glass-bubble w-16 h-16 flex items-center justify-center"
+          className={cn(styles.glassBubble, "w-16 h-16 flex items-center justify-center")}
           onClick={() => {
             setAudioUrl(null);
             setIsPlaying(false);
@@ -267,23 +141,23 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-serylian-blue to-quartz-pink">
-      <style>{styles}</style>
+      <div className={styles.root}>
       <div className="flex justify-center mt-8">
         <button
-          className={cn("tab-button", activeTab === 'home' && 'active')}
+          className={cn(styles.tabButton, activeTab === 'home' && styles.active)}
           onClick={() => setActiveTab('home')}
         >
           Home
         </button>
         <button
-          className={cn("tab-button", activeTab === 'eco-audio' && 'active')}
+          className={cn(styles.tabButton, activeTab === 'eco-audio' && styles.active)}
           onClick={() => setActiveTab('eco-audio')}
         >
           Eco Audio
         </button>
       </div>
 
-      <div className="tab-content active" id="home-content">
+      <div className={cn(styles.tabContent, activeTab === 'home' && styles.active)} id="home-content">
         <div className="flex flex-col items-center justify-center pt-20">
           <h1 className="text-4xl font-bold text-white mb-4">Bem-vindo à Página Inicial</h1>
           <p className="text-lg text-white">Esta é a página inicial do seu aplicativo.</p>
@@ -291,6 +165,7 @@ const HomePage = () => {
       </div>
 
       {activeTab === 'eco-audio' && <EcoAudio />}
+      </div>
     </div>
   );
 };
