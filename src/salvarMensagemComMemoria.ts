@@ -1,42 +1,46 @@
-    import { supabase } from './supabaseClient';
+import { supabase } from './supabaseClient'; // Importa a instância do Supabase
 
-    /**
-     * @typedef {object} MemoryData
-     * @property {string} usuario_id
-     * @property {string} conteudo
-     * @property {string | null} sentimento
-     * @property {string | null} resumo_eco
-     * @property {string | null} emocao_principal
-     * @property {number | null} intensidade
-     */
+/**
+ * Salva uma mensagem na tabela 'mensagem'.
+ *
+ * @param {string} usuario_id - O ID do usuário que enviou a mensagem.
+ * @param {string} conteudo - O conteúdo da mensagem.
+ * @param {Date} data_hora - A data e hora da mensagem.
+ * @param {string | null} sentimento - O sentimento associado à mensagem (opcional).
+ * @param {boolean} salvar_memoria - Indica se a mensagem deve ser salva na memória.
+ * @returns {Promise<void>} - Uma Promise que resolve quando a mensagem é salva com sucesso, ou rejeita com um erro.
+ */
+export const salvarMensagem = async (
+  usuario_id: string,
+  conteudo: string,
+  data_hora: Date,
+  sentimento: string | null,
+  salvar_memoria: boolean
+): Promise<void> => {
+  try {
+    // Insere a mensagem na tabela 'mensagem'
+    const { data, error } = await supabase
+      .from('mensagem')
+      .insert([
+        {
+          usuario_id,
+          conteudo,
+          data_hora,
+          sentimento,
+          salvar_memoria,
+        },
+      ]);
 
-    /**
-     * Salva uma mensagem na tabela 'memorias' do Supabase.
-     *
-     * @param {MemoryData} memoryData - Os dados da memória a serem salvos.
-     * @returns {Promise<boolean>} - `true` se a mensagem for salva com sucesso, `false` caso contrário.
-     */
-    export const salvarMensagemComMemoria = async (memoryData) => {
-        try {
-            const { data, error } = await supabase
-                .from('memorias')
-                .insert([
-                    {
-                        usuario_id: memoryData.usuario_id,
-                        conteudo: memoryData.conteudo,
-                        sentimento: memoryData.sentimento,
-                        resumo_eco: memoryData.resumo_eco,
-                        emocao_principal: memoryData.emocao_principal,
-                        intensidade: memoryData.intensidade
-                    }
-                ]);
+    if (error) {
+      console.error("Erro ao salvar mensagem:", error);
+      throw new Error(`Erro ao salvar mensagem: ${error.message}`); // Lança o erro para ser tratado no catch
+    }
 
-            if (error) throw error;
-            return true;
-        } catch (error) {
-            console.error("Erro ao salvar memória:", error);
-            return false;
-        }
-    };
-    
-
+    console.log("Mensagem salva com sucesso:", data);
+    // Se a inserção for bem-sucedida, a Promise resolve sem retornar nada (void)
+  } catch (error: any) {
+    // Captura erros durante a inserção
+    console.error("Erro ao salvar mensagem (catch):", error);
+    throw error; // Re-lança o erro para que o código que chamou a função possa tratá-lo
+  }
+};
