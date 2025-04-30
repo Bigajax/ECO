@@ -1,46 +1,28 @@
-import { supabase } from './supabaseClient'; // Importa a instância do Supabase
+import { supabase } from './supabaseClient'; // Certifique-se de que o caminho está correto
 
-/**
- * Salva uma mensagem na tabela 'mensagem'.
- *
- * @param {string} usuario_id - O ID do usuário que enviou a mensagem.
- * @param {string} conteudo - O conteúdo da mensagem.
- * @param {Date} data_hora - A data e hora da mensagem.
- * @param {string | null} sentimento - O sentimento associado à mensagem (opcional).
- * @param {boolean} salvar_memoria - Indica se a mensagem deve ser salva na memória.
- * @returns {Promise<void>} - Uma Promise que resolve quando a mensagem é salva com sucesso, ou rejeita com um erro.
- */
-export const salvarMensagem = async (
-  usuario_id: string,
-  conteudo: string,
-  data_hora: Date,
-  sentimento: string | null,
-  salvar_memoria: boolean
-): Promise<void> => {
+interface MemoryData {
+  usuario_id: string;
+  conteudo: string;
+  sentimento: string | null;
+  resumo_eco: string | null;
+  emocao_principal: string | null;
+  intensidade: number | null;
+}
+
+export const salvarMensagemComMemoria = async (memoryData: MemoryData): Promise<boolean> => {
   try {
-    // Insere a mensagem na tabela 'mensagem'
     const { data, error } = await supabase
-      .from('mensagem')
-      .insert([
-        {
-          usuario_id,
-          conteudo,
-          data_hora,
-          sentimento,
-          salvar_memoria,
-        },
-      ]);
+      .from('memories') // Nome da tabela no Supabase
+      .insert([memoryData]);
 
     if (error) {
-      console.error("Erro ao salvar mensagem:", error);
-      throw new Error(`Erro ao salvar mensagem: ${error.message}`); // Lança o erro para ser tratado no catch
+      console.error("Erro ao inserir memória:", error);
+      throw new Error("Falha ao salvar memória"); // Lança erro para ser capturado no componente
     }
-
-    console.log("Mensagem salva com sucesso:", data);
-    // Se a inserção for bem-sucedida, a Promise resolve sem retornar nada (void)
-  } catch (error: any) {
-    // Captura erros durante a inserção
-    console.error("Erro ao salvar mensagem (catch):", error);
-    throw error; // Re-lança o erro para que o código que chamou a função possa tratá-lo
+    console.log('Dados inseridos com sucesso:', data);
+    return true;
+  } catch (error) {
+    console.error("Erro geral ao salvar memória:", error);
+    return false; // Retorna false em caso de erro
   }
 };
