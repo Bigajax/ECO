@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen } from 'lucide-react';
-// import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Importe a função - REMOVED
+import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Importe a função
 import { usuarioService } from '../../usuarioService';
 
 interface MemoryButtonProps {
@@ -59,7 +59,15 @@ const MemoryButton: React.FC<MemoryButtonProps> = ({
                     emocao_principal: null, // Preencha com os dados reais se disponíveis
                     intensidade: null,    // Preencha com os dados reais se disponíveis
                 };
-                onMemoryButtonClick(memoryData); // Passa os dados para o componente pai
+                // Chama a função para salvar a mensagem com memória
+                salvarMensagemComMemoria(memoryData)
+                    .then(() => {
+                        onMemoryButtonClick(memoryData); // Passa os dados para o componente pai
+                    })
+                    .catch(error => {
+                        console.error("Erro ao salvar memória:", error);
+                        // Tratar o erro (exibir mensagem, redirecionar, etc.)
+                    });
             }
         }, 3000);
     };
