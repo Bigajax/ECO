@@ -9,12 +9,12 @@ import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Se
 // import { cn } from "@/lib/utils" // REMOVIDO
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from '../sendMessageToOpenAI'; // Removido @
-import { salvarMensagemComMemoria } from './salvarMensagemComMemoria'; // Removido @
-import { supabase } from './supabaseClient'; // Removido @
-import { salvarMensagem } from './salvarMensagem'; // Removido @
-import { usuarioService } from './usuarioService'; // Removido @
-import MemoryButton from './MemoryButton'; // Mudança aqui! // Removido @
+import { sendMessageToOpenAI } from './sendMessageToOpenAI';
+import { salvarMensagemComMemoria } from './salvarMensagemComMemoria';
+import { supabase } from './supabaseClient';
+import { salvarMensagem } from './salvarMensagem';
+import { usuarioService } from './usuarioService';
+import MemoryButton from './components/MemoryButton'; // Mudança aqui!
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -241,7 +241,7 @@ function EcoBubbleInterface() {
 
             console.log("Enviando para sendMessageToOpenAI:", { messageToSendToAI, userName, conversationToSend });
             try {
-                const aiResponse = await import('../sendMessageToOpenAI').then( // Importação atualizada
+                const aiResponse = await import('./sendMessageToOpenAI').then( // Importação atualizada
                     (module) => module.sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend)
                 );
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
