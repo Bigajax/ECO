@@ -9,7 +9,7 @@ import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Se
 import { cn } from "@/lib/utils"
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from '../sendMessageToOpenAI'; // Importação atualizada
+import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '@/salvarMensagemComMemoria';
 import { supabase } from '@/supabaseClient';
 import { salvarMensagem } from '@/salvarMensagem';
