@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 // import { Textarea } from "@/components/ui/textarea" // Removido
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert" // Removido
 import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 // import { cn } from "@/lib/utils" // REMOVIDO
@@ -406,8 +406,8 @@ function EcoBubbleInterface() {
                             style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
                         >
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
-                                {/* Remoção condicional do BubbleIcon */}
-                                {/* {!msg.isUser && <BubbleIcon />} */}
+                                 {/* Remoção condicional do BubbleIcon */}
+                                 {/* {!msg.isUser && <BubbleIcon />} */}
                                 <p
                                     className="text-sm break-words text-black"
                                     style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
@@ -494,10 +494,11 @@ function EcoBubbleInterface() {
             </div>
             {error && (
                 <div className="absolute bottom-36 left-4 right-4 max-w-lg">
-                    <Alert variant="destructive">
-                        <AlertTitle>Erro</AlertTitle>
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
+                    {/* Removendo Alert, AlertTitle e AlertDescription */}
+                    <div style={{backgroundColor: '#FECACA', borderColor: '#B91C1C', color: '#991B1B', padding: '1rem', borderRadius: '0.375rem', border: '1px solid'}}>
+                        <h2 style={{fontWeight: '600', fontSize: '1.25rem'}}>Erro</h2>
+                        <p>{error}</p>
+                    </div>
                 </div>
             )}
             {audioPlayer && (
