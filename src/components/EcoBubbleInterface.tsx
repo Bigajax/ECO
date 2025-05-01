@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import * as Lucide from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+// import { Textarea } from "@/components/ui/textarea" // Removido
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert" // Removido
 import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 // import { cn } from "@/lib/utils" // REMOVIDO
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from './sendMessageToOpenAI';
-import { salvarMensagemComMemoria } from './salvarMensagemComMemoria';
-import { supabase } from './supabaseClient';
-import { salvarMensagem } from './salvarMensagem';
-import { usuarioService } from './usuarioService';
-import MemoryButton from './components/MemoryButton'; // Mudança aqui!
+import { sendMessageToOpenAI } from '../sendMessageToOpenAI'; // Caminho corrigido
+import { salvarMensagemComMemoria } from '../salvarMensagemComMemoria'; // Caminho corrigido
+import { supabase } from '../supabaseClient'; // Caminho corrigido
+import { salvarMensagem } from '../salvarMensagem';  // Caminho corrigido
+import { usuarioService } from '../usuarioService';  // Caminho corrigido
+import MemoryButton from './MemoryButton'; // Mudança aqui!
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -55,7 +54,7 @@ const PlusButton = ({ className, onClick, ariaLabel, style, children }: { classN
 );
 
 // Declare a função sendMessageToOpenAI como uma declaração de módulo
-declare module '@/sendMessageToOpenAI' {
+declare module '../sendMessageToOpenAI' { // Caminho corrigido
     export const sendMessageToOpenAI: (
         message: string,
         userName?: string,
@@ -241,9 +240,7 @@ function EcoBubbleInterface() {
 
             console.log("Enviando para sendMessageToOpenAI:", { messageToSendToAI, userName, conversationToSend });
             try {
-                const aiResponse = await import('./sendMessageToOpenAI').then( // Importação atualizada
-                    (module) => module.sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend)
-                );
+                const aiResponse = await sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend); // Chamada direta
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
@@ -404,12 +401,12 @@ function EcoBubbleInterface() {
                         <div
                             key={index}
                             className=
-                                "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2"
+                            "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2"
 
                             style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
                         >
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
-                                {/* Remoção condicional do BubbleIcon */}
+                                 {/* Remoção condicional do BubbleIcon */}
                                  {/* {!msg.isUser && <BubbleIcon />} */}
                                 <p
                                     className="text-sm break-words text-black"
@@ -427,20 +424,17 @@ function EcoBubbleInterface() {
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
                 <div className="relative flex items-center gap-2 w-full input-controls-container">
                     <div className="flex items-center gap-2 w-full" style={{ flexDirection: 'row-reverse' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
+                         <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
                             <PlusButton
                                 className="plus-button"
                                 onClick={toggleMemoryButtonVisibility}
                                 aria-label="Mostrar opções de memória"
-                                style={{ marginTop: '8px' }}
+                                style={{marginTop: '8px'}}
                             >
                                 <Plus size={20} />
                             </PlusButton>
                             {isMemoryButtonVisible && (
-                                <div
-                                    className="memory-button-wrapper visible"
-                                    style={{ position: 'relative' }}
-                                >
+                                <div className="memory-button-wrapper visible" style={{position: 'relative'}}>
                                     <MemoryButton
                                         onMemoryButtonClick={handleMemoryButtonClick}
                                         size="md"
@@ -449,7 +443,7 @@ function EcoBubbleInterface() {
                                 </div>
                             )}
                         </div>
-                        <Textarea
+                        <textarea
                             ref={inputRef}
                             value={message}
                             onChange={handleInputChange}
@@ -459,17 +453,17 @@ function EcoBubbleInterface() {
                             style={{
                                 height: Math.min(160, Math.max(60, 20 + message.split('\n').length * 20)),
                                 width: 'calc(100% - 100px)',
-                                order: 2,
+                                order: 2
                             }}
                         />
                         <button
                             className=
-                                "send-button p-2 rounded-full transition-all duration-300"
+                            "send-button p-2 rounded-full transition-all duration-300"
 
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
-                            style={{ order: 0 }}
+                            style={{order: 0}}
                         >
                             <Send size={20} />
                         </button>
@@ -497,10 +491,11 @@ function EcoBubbleInterface() {
             </div>
             {error && (
                 <div className="absolute bottom-36 left-4 right-4 max-w-lg">
-                    <Alert variant="destructive">
-                        <AlertTitle>Erro</AlertTitle>
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
+                    {/* Removendo Alert, AlertTitle e AlertDescription */}
+                    <div style={{backgroundColor: '#FECACA', borderColor: '#B91C1C', color: '#991B1B', padding: '1rem', borderRadius: '0.375rem', border: '1px solid'}}>
+                        <h2 style={{fontWeight: '600', fontSize: '1.25rem'}}>Erro</h2>
+                        <p>{error}</p>
+                    </div>
                 </div>
             )}
             {audioPlayer && (
