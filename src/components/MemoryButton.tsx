@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen } from 'lucide-react';
-import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Importe a função
+// import { salvarMensagemComMemoria } from '../../salvarMensagemComMemoria'; // Importe a função - REMOVED
 import { usuarioService } from '../../usuarioService';
-import { useEffect } from 'react';
 
 interface MemoryButtonProps {
     onMemoryButtonClick?: (memoryData: MemoryData) => void;
@@ -32,7 +31,7 @@ const MemoryButton: React.FC<MemoryButtonProps> = ({
     const [showMessage, setShowMessage] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
 
-     useEffect(() => {
+    useEffect(() => {
         const getUserId = async () => {
             try {
                 //Obtém o ID do usuário logado.
@@ -56,9 +55,9 @@ const MemoryButton: React.FC<MemoryButtonProps> = ({
                     usuario_id: userId,
                     conteudo: conteudo,
                     sentimento: null,  // Preencha com os dados reais se disponíveis
-                    resumo_eco: null,    // Preencha com os dados reais se disponíveis
+                    resumo_eco: null,     // Preencha com os dados reais se disponíveis
                     emocao_principal: null, // Preencha com os dados reais se disponíveis
-                    intensidade: null,   // Preencha com os dados reais se disponíveis
+                    intensidade: null,    // Preencha com os dados reais se disponíveis
                 };
                 onMemoryButtonClick(memoryData); // Passa os dados para o componente pai
             }
