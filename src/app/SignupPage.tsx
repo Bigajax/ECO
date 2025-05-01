@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from 'supabaseClient';
+import { supabase } from '@/supabaseClient';
 import { FaUser, FaLock, FaEye as FaEyeIcon, FaEyeSlash } from 'react-icons/fa';
 import { BiLoaderCircle } from 'react-icons/bi';
 
