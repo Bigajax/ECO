@@ -424,20 +424,17 @@ function EcoBubbleInterface() {
             <div className="sticky bottom-0 bg-white/80 backdrop-blur-lg p-3 w-full max-w-lg flex flex-col items-center rounded-b-2xl shadow-lg">
                 <div className="relative flex items-center gap-2 w-full input-controls-container">
                     <div className="flex items-center gap-2 w-full" style={{ flexDirection: 'row-reverse' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
+                         <div style={{ display: 'flex', alignItems: 'flex-start', order: 4, alignSelf: 'flex-end' }}>
                             <PlusButton
                                 className="plus-button"
                                 onClick={toggleMemoryButtonVisibility}
                                 aria-label="Mostrar opções de memória"
-                                style={{ marginTop: '8px' }}
+                                style={{marginTop: '8px'}}
                             >
                                 <Plus size={20} />
                             </PlusButton>
                             {isMemoryButtonVisible && (
-                                <div
-                                    className="memory-button-wrapper visible"
-                                    style={{ position: 'relative' }}
-                                >
+                                <div className="memory-button-wrapper visible" style={{position: 'relative'}}>
                                     <MemoryButton
                                         onMemoryButtonClick={handleMemoryButtonClick}
                                         size="md"
@@ -456,7 +453,7 @@ function EcoBubbleInterface() {
                             style={{
                                 height: Math.min(160, Math.max(60, 20 + message.split('\n').length * 20)),
                                 width: 'calc(100% - 100px)',
-                                order: 2,
+                                order: 2
                             }}
                         />
                         <button
@@ -466,7 +463,7 @@ function EcoBubbleInterface() {
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
-                            style={{ order: 0 }}
+                            style={{order: 0}}
                         >
                             <Send size={20} />
                         </button>
@@ -528,3 +525,4 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
+
