@@ -9,7 +9,7 @@ import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Se
 import { cn } from "@/lib/utils"
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from '@/sendMessageToOpenAI';
+import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
 import { salvarMensagemComMemoria } from '@/salvarMensagemComMemoria';
 import { supabase } from '@/supabaseClient';
 import { salvarMensagem } from '@/salvarMensagem';
@@ -54,6 +54,15 @@ const PlusButton = ({ className, onClick, ariaLabel, style, children }: { classN
     </button>
 );
 
+// Declare a função sendMessageToOpenAI como uma declaração de módulo
+declare module '@/sendMessageToOpenAI' {
+    export const sendMessageToOpenAI: (
+        message: string,
+        userName?: string,
+        conversationHistory?: { role: 'user' | 'assistant'; content: string }[]
+    ) => Promise<{ text: string | null; audio: string | null; resumo?: string; emocao?: string; intensidade?: number }>;
+}
+
 function EcoBubbleInterface() {
     const [message, setMessage] = useState('');
     const [conversation, setConversation] = useState<Message[]>([]);
@@ -74,6 +83,7 @@ function EcoBubbleInterface() {
     const conversationLengthRef = useRef(conversation.length);
     const [isMemoryButtonVisible, setIsMemoryButtonVisible] = useState(false);
     const [error, setError] = useState<string | null>(null); // Estado para armazenar mensagens de erro
+    const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleGoBack = useCallback(() => {
         console.log("handleGoBack chamado");
@@ -229,9 +239,11 @@ function EcoBubbleInterface() {
                 content: msg.text,
             }));
 
-            console.log("Enviando para sendMessageToOpenAI:", { messageToSendAI, userName, conversationToSend });
+            console.log("Enviando para sendMessageToOpenAI:", { messageToSendToAI, userName, conversationToSend });
             try {
-                const aiResponse = await sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend);
+                const aiResponse = await import('../sendMessageToOpenAI').then( // Importação atualizada
+                    (module) => module.sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend)
+                );
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;

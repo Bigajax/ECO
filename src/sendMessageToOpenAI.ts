@@ -48,19 +48,20 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
         ];
 
         const requestBody = {
-            model: 'openai/gpt-4', // Você pode mudar para 'gpt-3.5-turbo' se preferir
+            model: 'openai/gpt-3.5-turbo', // Alterado para gpt-3.5-turbo
             messages: messages,
         };
 
         // Verifica se a chave da API está definida
         if (!import.meta.env.VITE_OPENAI_API_KEY) {
             console.warn("A variável de ambiente VITE_OPENAI_API_KEY não está definida!");
+            throw new Error("VITE_OPENAI_API_KEY não está definida"); // Lança um erro para ser capturado
         }
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`, // Usa Authorization
-            'apikey': import.meta.env.VITE_OPENAI_API_KEY,             // Tenta também com 'apikey'
+            'apikey': import.meta.env.VITE_OPENAI_API_KEY,                                 // Tenta também com 'apikey'
             'X-Title': 'ECOApp', // Adicionado cabeçalho X-Title
         };
 
@@ -99,7 +100,7 @@ Sempre responda como se estivesse tocando o espírito do explorador, e não apen
             } else {
                 errorMessage += ` - ${JSON.stringify(openAiData)}`;
             }
-            throw new Error(errorMessage);
+            throw new Error(errorMessage); // Lança o erro para ser tratado no catch
         }
 
         const rawReply = openAiData.choices?.[0]?.message?.content;
