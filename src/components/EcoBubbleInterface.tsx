@@ -14,7 +14,7 @@ import { salvarMensagemComMemoria } from '@/salvarMensagemComMemoria';
 import { supabase } from '@/supabaseClient';
 import { salvarMensagem } from '@/salvarMensagem';
 import { usuarioService } from '@/usuarioService';
-import MemoryButton from '../../components/MemoryButton';
+import MemoryButton from './MemoryButton'; // Mudança aqui!
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
