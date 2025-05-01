@@ -6,15 +6,15 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Settings } from 'lucide-react';
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils" // REMOVIDO
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from '../sendMessageToOpenAI';
-import { salvarMensagemComMemoria } from '@/salvarMensagemComMemoria';
-import { supabase } from '@/supabaseClient';
-import { salvarMensagem } from '@/salvarMensagem';
-import { usuarioService } from '@/usuarioService';
-import MemoryButton from './MemoryButton'; // Mudança aqui!
+import { sendMessageToOpenAI } from './sendMessageToOpenAI';
+import { salvarMensagemComMemoria } from './salvarMensagemComMemoria';
+import { supabase } from './supabaseClient';
+import { salvarMensagem } from './salvarMensagem';
+import { usuarioService } from './usuarioService';
+import MemoryButton from './components/MemoryButton'; // Mudança aqui!
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -241,7 +241,7 @@ function EcoBubbleInterface() {
 
             console.log("Enviando para sendMessageToOpenAI:", { messageToSendToAI, userName, conversationToSend });
             try {
-                const aiResponse = await import('../sendMessageToOpenAI').then( // Importação atualizada
+                const aiResponse = await import('./sendMessageToOpenAI').then( // Importação atualizada
                     (module) => module.sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend)
                 );
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
@@ -403,15 +403,14 @@ function EcoBubbleInterface() {
                     return (
                         <div
                             key={index}
-                            className={cn(
-                                "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2",
-                                msg.isUser ? 'ml-auto' : 'mr-auto',
-                            )}
+                            className=
+                                "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2"
+
                             style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
                         >
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                                 {/* Remoção condicional do BubbleIcon */}
-                                {/* {!msg.isUser && <BubbleIcon />} */}
+                                 {/* {!msg.isUser && <BubbleIcon />} */}
                                 <p
                                     className="text-sm break-words text-black"
                                     style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
@@ -464,12 +463,9 @@ function EcoBubbleInterface() {
                             }}
                         />
                         <button
-                            className={cn(
-                                "send-button p-2 rounded-full transition-all duration-300",
-                                message.trim()
-                                    ? 'bg-blue-500 text-white hover:bg-blue-600'
-                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            )}
+                            className=
+                                "send-button p-2 rounded-full transition-all duration-300"
+
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
                             aria-label="Enviar mensagem"
