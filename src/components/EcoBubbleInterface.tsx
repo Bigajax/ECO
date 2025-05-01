@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import * as Lucide from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+// import { Textarea } from "@/components/ui/textarea" // Removido
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 // import { cn } from "@/lib/utils" // REMOVIDO
 
 // Supondo que estes arquivos estejam na raiz do projeto
@@ -447,7 +446,7 @@ function EcoBubbleInterface() {
                                 </div>
                             )}
                         </div>
-                        <Textarea
+                        <textarea
                             ref={inputRef}
                             value={message}
                             onChange={handleInputChange}
