@@ -9,12 +9,12 @@ import { Loader2, Mic, Send, Plus, ArrowLeft, Play, Pause, Moon, Heart, Book, Se
 // import { cn } from "@/lib/utils" // REMOVIDO
 
 // Supondo que estes arquivos estejam na raiz do projeto
-import { sendMessageToOpenAI } from './sendMessageToOpenAI';
-import { salvarMensagemComMemoria } from './salvarMensagemComMemoria';
-import { supabase } from './supabaseClient';
-import { salvarMensagem } from './salvarMensagem';
-import { usuarioService } from './usuarioService';
-import MemoryButton from './components/MemoryButton'; // Mudança aqui!
+import { sendMessageToOpenAI } from '../sendMessageToOpenAI'; // Caminho corrigido
+import { salvarMensagemComMemoria } from '../salvarMensagemComMemoria'; // Caminho corrigido
+import { supabase } from '../supabaseClient'; // Caminho corrigido
+import { salvarMensagem } from '../salvarMensagem';  // Caminho corrigido
+import { usuarioService } from '../usuarioService';  // Caminho corrigido
+import MemoryButton from './MemoryButton'; // Mudança aqui!
 
 const seryldaBlue = '#6495ED';
 const quartzPink = '#F7CAC9';
@@ -55,7 +55,7 @@ const PlusButton = ({ className, onClick, ariaLabel, style, children }: { classN
 );
 
 // Declare a função sendMessageToOpenAI como uma declaração de módulo
-declare module '@/sendMessageToOpenAI' {
+declare module '../sendMessageToOpenAI' { // Caminho corrigido
     export const sendMessageToOpenAI: (
         message: string,
         userName?: string,
@@ -241,9 +241,7 @@ function EcoBubbleInterface() {
 
             console.log("Enviando para sendMessageToOpenAI:", { messageToSendToAI, userName, conversationToSend });
             try {
-                const aiResponse = await import('./sendMessageToOpenAI').then( // Importação atualizada
-                    (module) => module.sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend)
-                );
+                const aiResponse = await sendMessageToOpenAI(messageToSendToAI, userName, conversationToSend); // Chamada direta
                 console.log("sendMessageToOpenAI resultado:", aiResponse);
                 const ecoText = aiResponse?.text || '...';
                 const audioUrl = aiResponse?.audio;
@@ -404,13 +402,13 @@ function EcoBubbleInterface() {
                         <div
                             key={index}
                             className=
-                                "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2"
+                            "flex flex-col w-fit max-w-[98%] rounded-lg p-4 my-2"
 
                             style={{ marginLeft: msg.isUser ? 'auto' : '10px', backgroundColor: 'white' }}
                         >
                             <div className="flex items-start gap-2" style={{ maxWidth: '98%' }}>
                                 {/* Remoção condicional do BubbleIcon */}
-                                 {/* {!msg.isUser && <BubbleIcon />} */}
+                                {/* {!msg.isUser && <BubbleIcon />} */}
                                 <p
                                     className="text-sm break-words text-black"
                                     style={{ wordBreak: 'break-word', fontSize: '0.95rem', whiteSpace: 'pre-wrap' }}
@@ -464,7 +462,7 @@ function EcoBubbleInterface() {
                         />
                         <button
                             className=
-                                "send-button p-2 rounded-full transition-all duration-300"
+                            "send-button p-2 rounded-full transition-all duration-300"
 
                             onClick={handleSendMessage}
                             disabled={!message.trim() || isSending || !userId}
@@ -530,4 +528,3 @@ function EcoBubbleInterface() {
 }
 
 export default EcoBubbleInterface;
-
